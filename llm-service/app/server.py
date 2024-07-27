@@ -4,9 +4,19 @@ from fastapi.responses import RedirectResponse
 from langserve import add_routes
 from langchain_google_genai import GoogleGenerativeAI
 from langchain.prompts import ChatPromptTemplate
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+# Set all CORS enabled origins
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*"],
+)
 
 @app.get("/")
 async def redirect_root_to_docs():
@@ -16,7 +26,7 @@ model = GoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=config("GOOG
 prompt = ChatPromptTemplate.from_template("""You are a world-class professor in a prestigious university. Write an easy to follow Roadmap for a study guide on '{topic}'. 
 The Roadmap should have 4-8 main topics that need to be studied, ordered from most basic to advanced.
 These topics can have 3-5 subtopics, ordered the same way.
-If the student asks for something that is not a topic of study or if you cannot create it for any reason return an empty message.
+IF the student asks for something that is not a valid topic write the message "TOPIC NOT VALID".
 WRITE ONLY THE ROADMAP AND NOTHING ELSE.
 # EXAMPLE
 1. **Topic 1:** 1-line description of the topic
