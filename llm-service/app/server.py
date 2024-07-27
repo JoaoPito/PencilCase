@@ -16,7 +16,7 @@ model = GoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=config("GOOG
 prompt = ChatPromptTemplate.from_template("""You are a world-class professor in a prestigious university. Write an easy to follow Roadmap for a study guide on '{topic}'. 
 The Roadmap should have 4-8 main topics that need to be studied, ordered from most basic to advanced.
 These topics can have 3-5 subtopics, ordered the same way.
-If the student asks for something that is not a topic of study or if you cannot create it for any reason return an empty message.
+IF the student asks for something that is not a valid topic write the message "TOPIC NOT VALID".
 WRITE ONLY THE ROADMAP AND NOTHING ELSE.
 # EXAMPLE
 1. **Topic 1:** 1-line description of the topic
