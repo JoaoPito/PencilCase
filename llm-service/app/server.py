@@ -4,9 +4,19 @@ from fastapi.responses import RedirectResponse
 from langserve import add_routes
 from langchain_google_genai import GoogleGenerativeAI
 from langchain.prompts import ChatPromptTemplate
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+# Set all CORS enabled origins
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*"],
+)
 
 @app.get("/")
 async def redirect_root_to_docs():
