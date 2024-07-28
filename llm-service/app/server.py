@@ -24,12 +24,12 @@ async def redirect_root_to_docs():
 
 model = GoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=config("GOOGLE_API_KEY"))
 prompt = ChatPromptTemplate.from_template("""You are a world-class professor in a prestigious university. Write an easy to follow Roadmap for a study guide on '{topic}'. 
-The Roadmap should have 4-8 main topics that need to be studied, ordered from most basic to advanced.
-These topics can have 3-5 subtopics, ordered the same way.
+The Roadmap should have 3-5 main topics that need to be studied, ordered from most basic to advanced.
+Each main topic can have 2-5 subtopics, ordered the same way.
 IF the student asks for something that is not a valid topic write the message "TOPIC NOT VALID".
 WRITE ONLY THE ROADMAP AND NOTHING ELSE.
 # EXAMPLE
-1. **Topic 1:** 1-line description of the topic
+ 1. **Topic 1:** 1-line description of the topic
     1.1. **Subtopic 1.1:** 1-line Description
     1.2. **Subtopic 1.2:** 1-line Description
     1.3. **Subtopic 1.3:** 1-line Description
