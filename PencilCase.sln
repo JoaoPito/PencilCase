@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C78939C2-9EB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PencilCase.Web", "src\PencilCase.Web\PencilCase.Web.csproj", "{289B9A84-550E-4FF0-835C-2C53B6ECBA76}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PencilCase.Shared.Models", "PencilCase.Shared.Models\PencilCase.Shared.Models.csproj", "{158F8002-7249-418A-9534-22BDC5F2995F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,10 @@ Global
 		{289B9A84-550E-4FF0-835C-2C53B6ECBA76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{289B9A84-550E-4FF0-835C-2C53B6ECBA76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{289B9A84-550E-4FF0-835C-2C53B6ECBA76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{158F8002-7249-418A-9534-22BDC5F2995F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{158F8002-7249-418A-9534-22BDC5F2995F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{158F8002-7249-418A-9534-22BDC5F2995F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{158F8002-7249-418A-9534-22BDC5F2995F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
