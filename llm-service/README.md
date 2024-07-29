@@ -1,6 +1,6 @@
 # PencilCase llm-service
 
-This is responsible for providing LLM-based services.
+This is responsible for providing LLM-based services. It's based on Langserve.
 
 Run this service with `poetry run langchain serve`.
 
@@ -14,5 +14,5 @@ The API builder builds a list of generators available, exposing its properties t
 ### Attributes of a generator
 - **Name:** This name will be displayed to the user
 - **Description:** This is also showed to the user. It should communicate what this generator is and does.
-- **Endpoint:** The API endpoint that will be used to call this generator's chain
+- **Endpoint:** The API endpoint that will be used to call this generator's chain. A generator can be called with `[ENDPOINT]\invoke` with a *POST* request, default for Langserve.
 - **Chain:** The LLM chain that will be executed when the endpoint is requested
