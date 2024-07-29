@@ -22,7 +22,7 @@ class ApiBuilder:
             return [{gen.name: {"description":gen.description,
                                 "endpoint": gen.endpoint}} 
                                 for gen in self.generators]
-                        
+
     def build(self):
         app = FastAPI()
         self.__add_generators_routes__(app)

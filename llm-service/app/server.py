@@ -18,16 +18,6 @@ app.add_middleware(
     expose_headers=["*"],
 )
 
-@app.get("/")
-async def get_list():
-    return [{gen.name: {"description":gen.description,
-                        "endpoint": gen.endpoint}} 
-                        for gen in builder.generators]
-
-#@app.get("/")
-#async def redirect_root_to_docs():
-#    return RedirectResponse("/docs")
-
 if __name__ == "__main__":
     import uvicorn
 
