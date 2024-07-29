@@ -1,0 +1,40 @@
+﻿@page "/"
+@using PencilCase.Web.Components
+@using PencilCase.Web.Services
+@inject RoadmapAPI RoadmapApi
+
+<PageTitle>PencilCase</PageTitle>
+<MudText Class="mb-4" Typo="Typo.h4">@_pageTitle</MudText>
+
+<div>
+    <MudTextField Label="Write any subject you want to study" Variant="Variant.Outlined" @bind-Value="_topic"></MudTextField>
+    <MudButton @onclick="GenerateRoadmap" Variant="Variant.Filled">Generate</MudButton>
+    
+    @if (_isGeneratingContent)
+    {
+        <MudProgressLinear Color="Color.Secondary" Indeterminate="true" Class="my-7"/>
+    }
+    
+    <MudPaper Elevation="4" Outlined="true">
+        <MudMarkdown Value="@_roadmapContent"></MudMarkdown>
+    </MudPaper>
+    
+</div>
+
+@code{
+    String _pageTitle = "New Study Guide";
+    String _topic = String.Empty;
+    Roadmap _roadmap = new();
+    String _roadmapContent = String.Empty;
+    Boolean _isGeneratingContent = false;
+
+    async void GenerateRoadmap()
+    {
+        _isGeneratingContent = true;
+        _pageTitle = _topic;
+        _roadmap = await RoadmapApi.Generate(_topic);
+        _isGeneratingContent = false;
+        _roadmapContent = _roadmap.Content;
+        this.StateHasChanged();
+    }
+}
