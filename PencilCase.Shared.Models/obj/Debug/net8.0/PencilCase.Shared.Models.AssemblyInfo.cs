@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PencilCase.Shared.Models")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+adb21d939808b2d5360000a66a07830c406c5620")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+99c489886e7a829c5afb554b9278165b99c2d709")]
 [assembly: System.Reflection.AssemblyProductAttribute("PencilCase.Shared.Models")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PencilCase.Shared.Models")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
