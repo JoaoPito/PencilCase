@@ -19,9 +19,10 @@ class ApiBuilder:
     def __add_generators_list_endpoint__(self, app):
         @app.get("/")
         async def get_list():
-            return [{gen.name: {"description":gen.description,
-                                "endpoint": gen.endpoint}} 
-                                for gen in self.generators]
+            return [{"name": gen.name,
+                     "description": gen.description,
+                     "endpoint": gen.endpoint} 
+                     for gen in self.generators]
 
     def build(self):
         app = FastAPI()
