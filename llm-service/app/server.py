@@ -1,10 +1,13 @@
 from fastapi.middleware.cors import CORSMiddleware
 from app.api_builder import ApiBuilder
 from app.generators.roadmap import RoadmapGenerator
+from app.generators.introduction import IntroductionGenerator
+
 
 builder = ApiBuilder()
 
 builder.add_generator(RoadmapGenerator())
+builder.add_generator(IntroductionGenerator())
 
 app = builder.build()
 
