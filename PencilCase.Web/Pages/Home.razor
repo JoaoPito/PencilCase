@@ -50,7 +50,7 @@
     {
         dropItem.Item.Identifier = dropItem.DropzoneIdentifier;
         // Add to study guide
-        if (dropItem.Item.Identifier == "Study Guide")
+        if (dropItem.Item.Identifier == "Study Guide" && dropItem.Item.Fragment == null)
         {
             dropItem.Item.Fragment = await GenerateFragmentWithGenerator(dropItem.Item.Generator);
         }
