@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C78939C2-9EB0-4A67-8091-2513D0211889}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PencilCase.Web", "src\PencilCase.Web\PencilCase.Web.csproj", "{289B9A84-550E-4FF0-835C-2C53B6ECBA76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PencilCase.Web", "PencilCase.Web\PencilCase.Web.csproj", "{289B9A84-550E-4FF0-835C-2C53B6ECBA76}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PencilCase.Shared.Models", "PencilCase.Shared.Models\PencilCase.Shared.Models.csproj", "{158F8002-7249-418A-9534-22BDC5F2995F}"
 EndProject
