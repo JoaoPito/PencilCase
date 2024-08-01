@@ -1,6 +1,6 @@
 namespace PencilCase.Shared.Models;
 
-public class GeneratedFragment
+public record Fragment
 {
     DateTime created = DateTime.UtcNow;
     DateTime lastModified = DateTime.UtcNow;
