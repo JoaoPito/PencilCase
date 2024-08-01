@@ -22,4 +22,10 @@
     <ProjectReference Include="..\PencilCase.Shared.Models\PencilCase.Shared.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Remove="Components\FragmentDropZone.razor" />
+    <Content Remove="Components\FragmentGeneratorsList.razor" />
+    <Content Remove="Components\StudyGuideList.razor" />
+  </ItemGroup>
+
 </Project>

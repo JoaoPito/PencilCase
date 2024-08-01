@@ -1,11 +1,75 @@
 ﻿@page "/"
+@using PencilCase.Shared.Models
 @using PencilCase.Web.Components
+@using PencilCase.Web.Models
 @using PencilCase.Web.Services
+@inject FragmentApi FragmentApi;
 
 <PageTitle>PencilCase</PageTitle>
 
-<AvailableFragmentsList/>
+<MudDropContainer T="FragmentDropItem" Items="_items"
+                  ItemsSelector="@((item,dropzone) => item.Identifier == dropzone)" 
+                  ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1">
+    <ChildContent>
+        <MudDropZone T="FragmentDropItem" Identifier="Study Guide" 
+                     Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1" 
+                     AllowReorder="true">
+            <StudyGuideList/>
+        </MudDropZone>
+        <MudDropZone  T="FragmentDropItem" Identifier="Sections"
+                      Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
+            <FragmentGeneratorsList/>
+        </MudDropZone>
+        
+    </ChildContent>
+    <ItemRenderer>
+        @if (@context.Identifier == "Sections")
+        {
+            <FragmentGeneratorCard FragmentGenerator=@context.Generator/>
+        }
+        else
+        {
+            <MudText Typo="Typo.body2">@context.Generator.Name</MudText>
+        }
+        
+    </ItemRenderer>
+</MudDropContainer>
 
 @code{
 
+    private List<FragmentDropItem> _items { get; set; } = new();
+
+    public class FragmentDropItem
+    {
+        public String Identifier { get; set; }
+        public FragmentGenerator Generator { get; set; }
+        public Fragment? Fragment { get; set; } = null;
+    }
+    
+    private void ItemUpdated(MudItemDropInfo<FragmentDropItem> dropItem)
+    {
+        dropItem.Item.Identifier = dropItem.DropzoneIdentifier;
+        // Add to study guide
+    }
+    
+    public List<Models.FragmentGenerator>? Generators;
+
+    protected override async Task OnInitializedAsync(){
+        Generators = await FragmentApi.GetAllGenerators();
+        if (Generators != null)
+            PopulateFragmentGenerators();
+    }
+
+    private void PopulateFragmentGenerators()
+    {
+        foreach (var generator in Generators)
+        {
+            _items.Add(new FragmentDropItem()
+            {
+                Identifier = "Sections",
+                Generator = generator
+            });
+        }
+        
+    }
 }

@@ -1,18 +1,19 @@
-@using PencilCase.Web.Components
 @using PencilCase.Web.Services
-@using PencilCase.Web.Models
 @inject FragmentApi FragmentApi;
 
-<MudStack>
-    @foreach(var fragment in fragments){
-        <FragmentGeneratorCard FragmentGenerator=@fragment />
+@if (Generators != null)
+{
+    foreach (var fragment in Generators)
+    {
+        <FragmentGeneratorCard FragmentGenerator=@fragment/>
     }
-</MudStack>
+}
+else
+{
+    <MudText Typo="Typo.body2">Error retrieving available study guide fragments. :\</MudText>
+}
 
 @code{
-    public List<Models.FragmentGenerator>? fragments;
-
-    protected override async Task OnInitializedAsync(){
-        fragments = await FragmentApi.GetAllGenerators();
-    }
+    [Parameter]
+    public List<Models.FragmentGenerator>? Generators;
 }
