@@ -1,18 +1,18 @@
 @using PencilCase.Web.Components
 @using PencilCase.Web.Services
 @using PencilCase.Web.Models
-@inject FragmentAPI FragmentApi;
+@inject FragmentApi FragmentApi;
 
 <MudStack>
     @foreach(var fragment in fragments){
-        <AvailableFragment Fragment=@fragment />
+        <FragmentGeneratorCard FragmentGenerator=@fragment />
     }
 </MudStack>
 
 @code{
-    public List<FragmentEndpoint>? fragments;
+    public List<Models.FragmentGenerator>? fragments;
 
     protected override async Task OnInitializedAsync(){
-        fragments = await FragmentApi.GetAvailableFragments();
+        fragments = await FragmentApi.GetAllGenerators();
     }
 }
