@@ -2,9 +2,8 @@ namespace PencilCase.Shared.Models;
 
 public record Fragment
 {
-    DateTime created = DateTime.UtcNow;
-    DateTime lastModified = DateTime.UtcNow;
-    String name = String.Empty;
-    String content = String.Empty;
-
+    public DateTime Created = DateTime.UtcNow;
+    public DateTime LastModified = DateTime.UtcNow;
+    public String Name = String.Empty;
+    public String Content = String.Empty;
 }

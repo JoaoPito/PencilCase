@@ -1,0 +1,12 @@
+/run/media/joaopito/Arquivos/Projetos/2024/PencilCase/src/PencilCase.Shared.Models/bin/Debug/net8.0/PencilCase.Shared.Models.deps.json
+/run/media/joaopito/Arquivos/Projetos/2024/PencilCase/src/PencilCase.Shared.Models/bin/Debug/net8.0/PencilCase.Shared.Models.dll
+/run/media/joaopito/Arquivos/Projetos/2024/PencilCase/src/PencilCase.Shared.Models/bin/Debug/net8.0/PencilCase.Shared.Models.pdb
+/run/media/joaopito/Arquivos/Projetos/2024/PencilCase/src/PencilCase.Shared.Models/obj/Debug/net8.0/PencilCase.Shared.Models.GeneratedMSBuildEditorConfig.editorconfig
+/run/media/joaopito/Arquivos/Projetos/2024/PencilCase/src/PencilCase.Shared.Models/obj/Debug/net8.0/PencilCase.Shared.Models.AssemblyInfoInputs.cache
+/run/media/joaopito/Arquivos/Projetos/2024/PencilCase/src/PencilCase.Shared.Models/obj/Debug/net8.0/PencilCase.Shared.Models.AssemblyInfo.cs
+/run/media/joaopito/Arquivos/Projetos/2024/PencilCase/src/PencilCase.Shared.Models/obj/Debug/net8.0/PencilCase.Shared.Models.csproj.CoreCompileInputs.cache
+/run/media/joaopito/Arquivos/Projetos/2024/PencilCase/src/PencilCase.Shared.Models/obj/Debug/net8.0/PencilCase.Shared.Models.sourcelink.json
+/run/media/joaopito/Arquivos/Projetos/2024/PencilCase/src/PencilCase.Shared.Models/obj/Debug/net8.0/PencilCase.Shared.Models.dll
+/run/media/joaopito/Arquivos/Projetos/2024/PencilCase/src/PencilCase.Shared.Models/obj/Debug/net8.0/refint/PencilCase.Shared.Models.dll
+/run/media/joaopito/Arquivos/Projetos/2024/PencilCase/src/PencilCase.Shared.Models/obj/Debug/net8.0/PencilCase.Shared.Models.pdb
+/run/media/joaopito/Arquivos/Projetos/2024/PencilCase/src/PencilCase.Shared.Models/obj/Debug/net8.0/ref/PencilCase.Shared.Models.dll
