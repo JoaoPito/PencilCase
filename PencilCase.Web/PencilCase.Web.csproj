@@ -18,4 +18,8 @@
     <Folder Include="Models\Requests\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PencilCase.Shared.Models\PencilCase.Shared.Models.csproj" />
+  </ItemGroup>
+
 </Project>

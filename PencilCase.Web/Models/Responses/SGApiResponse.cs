@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace PencilCase.Web.Components;
+namespace PencilCase.Web.Models.Responses;
 
 public record SGApiResponse(
     [property: JsonPropertyName("output")] String Output, 

@@ -1,0 +1,18 @@
+@using PencilCase.Web.Components
+@using PencilCase.Web.Services
+@using PencilCase.Web.Models
+@inject FragmentAPI FragmentApi;
+
+<MudStack>
+    @foreach(var fragment in fragments){
+        <AvailableFragment Fragment=@fragment />
+    }
+</MudStack>
+
+@code{
+    public List<FragmentEndpoint>? fragments;
+
+    protected override async Task OnInitializedAsync(){
+        fragments = await FragmentApi.GetAvailableFragments();
+    }
+}

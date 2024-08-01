@@ -16,7 +16,7 @@ builder.Services.AddHttpClient("API", client =>
     client.BaseAddress = new Uri(builder.Configuration["APIServer:url"]!);
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
-builder.Services.AddTransient<RoadmapAPI>();
+builder.Services.AddTransient<FragmentAPI>();
 
 builder.Services.AddMudServices();
 builder.Services.AddMudMarkdownServices();
