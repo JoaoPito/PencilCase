@@ -10,6 +10,7 @@ namespace PencilCase.Web.Services;
 public class FragmentApi
 {
     private readonly HttpClient _httpClient;
+    private const String InvokeEndpoint = "/invoke";
 
     public FragmentApi(IHttpClientFactory httpClientFactory)
     {
@@ -25,7 +26,7 @@ public class FragmentApi
 
     public async Task<Fragment> GenerateFragment(FragmentGenerator fragmentGenerator, string topic){
         var requestContent = GetGenerationRequest(topic);
-        var response = await _httpClient.PostAsync(fragmentGenerator.Endpoint, requestContent);
+        var response = await _httpClient.PostAsync(fragmentGenerator.Endpoint+InvokeEndpoint, requestContent);
         response.EnsureSuccessStatusCode();
         var responseObj = await JsonSerializer.DeserializeAsync<InvokeResponse>(await response.Content.ReadAsStreamAsync());
 
