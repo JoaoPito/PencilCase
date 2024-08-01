@@ -29,7 +29,7 @@
         }
         else
         {
-            <MudText Typo="Typo.body2">@context.Generator.Name</MudText>
+            <FragmentCard Fragment=@context.Fragment />
         }
         
     </ItemRenderer>
@@ -46,10 +46,15 @@
         public Fragment? Fragment { get; set; } = null;
     }
     
-    private void ItemUpdated(MudItemDropInfo<FragmentDropItem> dropItem)
+    private async void ItemUpdated(MudItemDropInfo<FragmentDropItem> dropItem)
     {
         dropItem.Item.Identifier = dropItem.DropzoneIdentifier;
         // Add to study guide
+        if (dropItem.Item.Identifier == "Study Guide")
+        {
+            dropItem.Item.Fragment = await GenerateFragmentWithGenerator(dropItem.Item.Generator);
+        }
+        this.StateHasChanged();
     }
     
     public List<Models.FragmentGenerator>? Generators;
@@ -71,5 +76,10 @@
             });
         }
         
+    }
+
+    private async Task<Fragment> GenerateFragmentWithGenerator(FragmentGenerator generator)
+    {
+        return await FragmentApi.GenerateFragment(generator, "rockets");
     }
 }

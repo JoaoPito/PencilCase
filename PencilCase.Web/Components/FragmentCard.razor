@@ -1,0 +1,39 @@
+@using PencilCase.Shared.Models
+<MudCard Elevation="10">
+    <MudCardHeader>
+        <CardHeaderContent>
+            @if (Fragment != null)
+            {
+                <MudStack Row="true">
+                    <MudText Typo="Typo.h6">@Fragment.Name</MudText>
+                </MudStack>
+            }
+            else
+            {
+                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="50pt" Height="25px" />
+            }
+            
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <MudButton>Generate</MudButton>
+            <MudButton>Delete</MudButton>
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent>
+        @if (Fragment != null)
+        {
+            <MudMarkdown Value="@Fragment.Content"></MudMarkdown>
+        }
+        else
+        {
+            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="250pt" Height="200px" />
+        }
+    </MudCardContent>
+    <MudCardActions>
+        
+    </MudCardActions>
+</MudCard>
+
+@code {
+    [Parameter] public Fragment? Fragment { get; set; } = new();
+}
