@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace PencilCase.Web.Models.Responses.StudyGuide;
+namespace PencilCase.Web.StudyGuide.Models.Responses;
 
 public record InvokeResponse(
     [property: JsonPropertyName("output")] String Output, 

@@ -1,8 +1,5 @@
 ﻿@page "/"
-@using PencilCase.Shared.Models
-@using PencilCase.Web.Components
-@using PencilCase.Web.Models
-@using PencilCase.Web.Services
+
 @inject FragmentApi FragmentApi;
 
 <PageTitle>PencilCase</PageTitle>
@@ -14,11 +11,11 @@
         <MudDropZone T="FragmentDropItem" Identifier="Study Guide" 
                      Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1" 
                      AllowReorder="true">
-            <StudyGuideList/>
+            <MudText>Study Guide Blueprint</MudText>
         </MudDropZone>
         <MudDropZone  T="FragmentDropItem" Identifier="Sections"
                       Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
-            <FragmentGeneratorsList/>
+            <MudText>Sections</MudText>
         </MudDropZone>
         
     </ChildContent>
@@ -36,7 +33,6 @@
 </MudDropContainer>
 
 @code{
-
     private List<FragmentDropItem> _items { get; set; } = new();
 
     public class FragmentDropItem
@@ -45,6 +41,8 @@
         public FragmentGenerator Generator { get; set; }
         public Fragment? Fragment { get; set; } = null;
     }
+
+    public List<FragmentGenerator>? Generators;
     
     private async void ItemUpdated(MudItemDropInfo<FragmentDropItem> dropItem)
     {
@@ -57,8 +55,6 @@
         this.StateHasChanged();
     }
     
-    public List<Models.FragmentGenerator>? Generators;
-
     protected override async Task OnInitializedAsync(){
         Generators = await FragmentApi.GetAllGenerators();
         if (Generators != null)

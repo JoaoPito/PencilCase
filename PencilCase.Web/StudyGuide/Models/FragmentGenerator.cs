@@ -1,4 +1,4 @@
-namespace PencilCase.Web.Models;
+namespace PencilCase.Web.StudyGuide.Models;
 
 public record FragmentGenerator
 {

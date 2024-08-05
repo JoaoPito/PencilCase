@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace PencilCase.Web.Models.Responses.StudyGuide;
+namespace PencilCase.Web.StudyGuide.Models.Responses;
 
 public record MetadataResponse(
     [property: JsonPropertyName("run_id")] string RunId, 
