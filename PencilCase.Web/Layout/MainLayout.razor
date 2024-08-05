@@ -1,15 +1,58 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider/>
+<MudThemeProvider  @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode"/>
 <MudPopoverProvider/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 
 <MudLayout>
     <MudAppBar Color="Color.Surface" Fixed="false" Elevation="2">
-        <MudText Typo="Typo.h5">PencilCase</MudText>
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
+        <MudLink Href="/" Color="Color.Inherit" Typo="Typo.h5">PencilCase</MudLink>
+        <MudSpacer/>
+        <MudIconButton Icon="@Icons.Material.Filled.WbSunny" Color="Color.Inherit" @onclick="ToggleDarkMode"></MudIconButton>
     </MudAppBar>
-    <MudMainContent class="main-content pa-10">
-        @Body
+    <MudPaper Style="overflow:hidden;">
+        <MudDrawerContainer Class="mud-height-full">
+            <MudDrawer @bind-Open="@_open" 
+                    Fixed="false" 
+                    Elevation="3" 
+                    Variant="@DrawerVariant.Mini" 
+                    OpenMiniOnHover="true">
+                <MudNavMenu>
+                    <MudNavLink Href="/studyguide" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.LibraryBooks">Study Guides</MudNavLink>
+                    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Timer">Pomodoro Tracker</MudNavLink>
+                    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.FormatListBulleted">Flashcards</MudNavLink>
+                </MudNavMenu>
+            </MudDrawer>
+        </MudDrawerContainer>
+        
+    </MudPaper>
+    <MudMainContent>
+            @Body
     </MudMainContent>
 </MudLayout>
+
+@code {
+    private MudThemeProvider _mudThemeProvider;
+    private bool _open = false;
+    private bool _isDarkMode = false;
+
+    private void ToggleDrawer()
+    {
+        _open = !_open;
+    } 
+
+    private void ToggleDarkMode(){
+        _isDarkMode = !_isDarkMode;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _isDarkMode = await _mudThemeProvider.GetSystemPreference();
+            StateHasChanged();
+        }
+    }
+}
