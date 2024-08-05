@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@using PencilCase.Web.Components
 
 <MudThemeProvider  @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode"/>
 <MudPopoverProvider/>
@@ -9,38 +10,23 @@
     <MudAppBar Color="Color.Surface" Fixed="false" Elevation="2">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
         <MudLink Href="/" Color="Color.Inherit" Typo="Typo.h5">PencilCase</MudLink>
-        <MudSpacer/>
+        <MudSpacer/>    
         <MudIconButton Icon="@Icons.Material.Filled.WbSunny" Color="Color.Inherit" @onclick="ToggleDarkMode"></MudIconButton>
     </MudAppBar>
-    <MudPaper Style="overflow:hidden;">
-        <MudDrawerContainer Class="mud-height-full">
-            <MudDrawer @bind-Open="@_open" 
-                    Fixed="false" 
-                    Elevation="3" 
-                    Variant="@DrawerVariant.Mini" 
-                    OpenMiniOnHover="true">
-                <MudNavMenu>
-                    <MudNavLink Href="/studyguide" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.LibraryBooks">Study Guides</MudNavLink>
-                    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Timer">Pomodoro Tracker</MudNavLink>
-                    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.FormatListBulleted">Flashcards</MudNavLink>
-                </MudNavMenu>
-            </MudDrawer>
-        </MudDrawerContainer>
-        
-    </MudPaper>
-    <MudMainContent>
+    <MainDrawer Open="@_drawerOpen"/>
+    <MudMainContent class="main-content pa-10">
             @Body
     </MudMainContent>
 </MudLayout>
 
 @code {
-    private MudThemeProvider _mudThemeProvider;
-    private bool _open = false;
+    private MudThemeProvider? _mudThemeProvider;
+    private bool _drawerOpen = false;
     private bool _isDarkMode = false;
 
     private void ToggleDrawer()
     {
-        _open = !_open;
+        _drawerOpen = !_drawerOpen;
     } 
 
     private void ToggleDarkMode(){
