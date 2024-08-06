@@ -8,21 +8,31 @@
                 ItemsSelector="@((item,dropzone) => item.Identifier == dropzone)" 
                 ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1">
     <ChildContent>
-        <MudStack Row="true" Justify="Justify.Center"
-                StretchItems="StretchItems.Start" Class="d-flex flex-grow-1 align-content-stretch">
-            <MudPaper Width="100%" Class="flex-grow-1">
-                <MudText Typo="Typo.h6" Align="Align.Center">Blueprint</MudText>
-                <MudDropZone T="FragmentDropItem" Identifier="Study Guide" 
-                    Class="rounded mud-background-gray pa-4 ma-2 flex-grow-1" 
+        <MudStack Row="true" Justify="Justify.Center" StretchItems="StretchItems.Start" 
+                Class="d-flex flex-grow-1">
+            <MudCard Class="d-flex flex-grow-1 flex-column" Style="width:60%">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6" Align="Align.Center">Blueprint</MudText>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        <StudyGuideTitleBar />
+                    </CardHeaderActions>
+                </MudCardHeader>
+                <MudCardContent Class="d-flex flex-grow-1 flex-column">
+                    <MudDropZone T="FragmentDropItem" Identifier="Study Guide" 
+                    Class="rounded mud-background-gray pa-4 flex-grow-1" 
                     AllowReorder="true">
-                    <StudyGuideList/>
+                    <div></div>
                 </MudDropZone>
-            </MudPaper>
-            <MudPaper Width="30%" MinHeight="800pt">
+                </MudCardContent>
+                
+            </MudCard>
+            <MudPaper Width="30%" Class="d-flex flex-grow-1 flex-column">
                 <MudText Typo="Typo.h6" Align="Align.Center">Sections</MudText>
                 <MudDropZone  T="FragmentDropItem" Identifier="Sections"
                         Class="rounded mud-background-gray pa-2 ma-2 flex-grow-1">
-                    <FragmentGeneratorsList/>
+                    <div></div>
                 </MudDropZone>
             </MudPaper>
         </MudStack>
@@ -84,7 +94,6 @@
                 Generator = generator
             });
         }
-        
     }
 
     private async Task<Fragment> GenerateFragmentWithGenerator(FragmentGenerator generator)
