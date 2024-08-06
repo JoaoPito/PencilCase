@@ -1,5 +1,4 @@
 ﻿@inherits LayoutComponentBase
-@using PencilCase.Web.Components
 
 <MudThemeProvider  @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode"/>
 <MudPopoverProvider/>
@@ -7,14 +6,20 @@
 <MudSnackbarProvider/>
 
 <MudLayout>
-    <MudAppBar Color="Color.Surface" Fixed="false" Elevation="2">
+    <MudAppBar Color="Color.Surface" Elevation="2">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
         <MudLink Href="/" Color="Color.Inherit" Typo="Typo.h5">PencilCase</MudLink>
         <MudSpacer/>    
         <MudIconButton Icon="@Icons.Material.Filled.WbSunny" Color="Color.Inherit" @onclick="ToggleDarkMode"></MudIconButton>
     </MudAppBar>
-    <MainDrawer Open="@_drawerOpen"/>
-    <MudMainContent class="main-content pa-10">
+    <MudDrawer @bind-Open="@_drawerOpen"
+                ClipMode="DrawerClipMode.Always"
+                Elevation="3" 
+                Variant="@DrawerVariant.Mini" 
+                OpenMiniOnHover="true">
+        <NavMenu/>
+    </MudDrawer>
+    <MudMainContent class="mt-16 pa-4">
             @Body
     </MudMainContent>
 </MudLayout>
