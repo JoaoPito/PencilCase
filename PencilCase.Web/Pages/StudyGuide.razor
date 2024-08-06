@@ -1,0 +1,94 @@
+@page "/studyguide"
+
+@inject FragmentApi FragmentApi;
+
+<PageTitle>PencilCase</PageTitle>
+
+<MudDropContainer T="FragmentDropItem" Items="_items"
+                ItemsSelector="@((item,dropzone) => item.Identifier == dropzone)" 
+                ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1">
+    <ChildContent>
+        <MudStack Row="true" Justify="Justify.Center"
+                StretchItems="StretchItems.Start" Class="d-flex flex-grow-1 align-content-stretch">
+            <MudPaper Width="100%" Class="flex-grow-1">
+                <MudText Typo="Typo.h6" Align="Align.Center">Blueprint</MudText>
+                <MudDropZone T="FragmentDropItem" Identifier="Study Guide" 
+                    Class="rounded mud-background-gray pa-4 ma-2 flex-grow-1" 
+                    AllowReorder="true">
+                    <StudyGuideList/>
+                </MudDropZone>
+            </MudPaper>
+            <MudPaper Width="30%" MinHeight="800pt">
+                <MudText Typo="Typo.h6" Align="Align.Center">Sections</MudText>
+                <MudDropZone  T="FragmentDropItem" Identifier="Sections"
+                        Class="rounded mud-background-gray pa-2 ma-2 flex-grow-1">
+                    <FragmentGeneratorsList/>
+                </MudDropZone>
+            </MudPaper>
+        </MudStack>
+    </ChildContent>
+    <ItemRenderer>
+        @if (@context.Identifier == "Sections")
+        {
+            <div class="ma-4">
+                <FragmentGeneratorCard FragmentGenerator=@context.Generator/>
+            </div>
+        }
+        else
+        {
+            <div class="ma-4">
+                <FragmentCard Fragment=@context.Fragment />
+            </div>
+        }
+        
+    </ItemRenderer>
+</MudDropContainer>
+
+@code{
+
+    private List<FragmentDropItem> _items { get; set; } = new();
+
+    public class FragmentDropItem
+    {
+        public String Identifier { get; set; }
+        public FragmentGenerator Generator { get; set; }
+        public Fragment? Fragment { get; set; } = null;
+    }
+    
+    private async void ItemUpdated(MudItemDropInfo<FragmentDropItem> dropItem)
+    {
+        dropItem.Item.Identifier = dropItem.DropzoneIdentifier;
+        // Add to study guide
+        if (dropItem.Item.Identifier == "Study Guide" && dropItem.Item.Fragment == null)
+        {
+            dropItem.Item.Fragment = await GenerateFragmentWithGenerator(dropItem.Item.Generator);
+        }
+        this.StateHasChanged();
+    }
+    
+    public List<FragmentGenerator>? Generators;
+
+    protected override async Task OnInitializedAsync(){
+        Generators = await FragmentApi.GetAllGenerators();
+        if (Generators != null)
+            PopulateFragmentGenerators();
+    }
+
+    private void PopulateFragmentGenerators()
+    {
+        foreach (var generator in Generators)
+        {
+            _items.Add(new FragmentDropItem()
+            {
+                Identifier = "Sections",
+                Generator = generator
+            });
+        }
+        
+    }
+
+    private async Task<Fragment> GenerateFragmentWithGenerator(FragmentGenerator generator)
+    {
+        return await FragmentApi.GenerateFragment(generator, "rockets");
+    }
+}

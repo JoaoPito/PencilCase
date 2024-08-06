@@ -1,5 +1,5 @@
 @using PencilCase.Shared.Models
-<MudCard Elevation="10">
+<MudCard Elevation="10" Class="d-flex flex-grow-1">
     <MudCardHeader>
         <CardHeaderContent>
             @if (Fragment != null)
@@ -10,7 +10,7 @@
             }
             else
             {
-                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="50pt" Height="25px" />
+                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="50pt" Height="25px" Class="flex-grow-1"/>
             }
             
         </CardHeaderContent>
