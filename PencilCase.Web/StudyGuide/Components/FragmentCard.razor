@@ -1,4 +1,5 @@
 @using PencilCase.Shared.Models
+
 <MudCard Elevation="10" Class="d-flex flex-grow-1">
     <MudCardHeader>
         <CardHeaderContent>
@@ -10,13 +11,14 @@
             }
             else
             {
-                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="50pt" Height="25px" Class="flex-grow-1"/>
+                <div class="d-flex flex-shrink-1">
+                    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="33%" Height="20pt" Class="flex-shrink-1"/>
+                </div>
             }
             
         </CardHeaderContent>
         <CardHeaderActions>
-            <MudButton>Generate</MudButton>
-            <MudButton>Delete</MudButton>
+            <StudyGuideToolBar />
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
@@ -26,7 +28,9 @@
         }
         else
         {
-            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="250pt" Height="200px" />
+            <div class="d-flex flex-grow-1">
+                    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="250pt" Height="200px" Class="flex-grow-1"/>
+            </div>
         }
     </MudCardContent>
     <MudCardActions>
