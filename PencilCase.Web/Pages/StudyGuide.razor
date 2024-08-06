@@ -13,7 +13,7 @@
             <MudCard Class="d-flex flex-grow-1 flex-column" Style="width:60%">
                 <MudCardHeader>
                     <CardHeaderContent>
-                        <MudText Typo="Typo.h6" Align="Align.Center">Blueprint</MudText>
+                        <MudText Typo="Typo.h5" Align="Align.Center">Blueprint</MudText>
                     </CardHeaderContent>
                     <CardHeaderActions>
                         <StudyGuideTitleBar />
@@ -28,13 +28,23 @@
                 </MudCardContent>
                 
             </MudCard>
-            <MudPaper Width="30%" Class="d-flex flex-grow-1 flex-column">
-                <MudText Typo="Typo.h6" Align="Align.Center">Sections</MudText>
-                <MudDropZone  T="FragmentDropItem" Identifier="Sections"
-                        Class="rounded mud-background-gray pa-2 ma-2 flex-grow-1">
-                    <div></div>
-                </MudDropZone>
-            </MudPaper>
+            
+            <div style="position: fixed;bottom: 0pt;right: 0pt;">
+                <MudStack Wrap="Wrap.WrapReverse" Spacing="0" Class="mx-4">
+                    @if(_showTools){
+                        <MudPaper Elevation="6" Width="250pt" Class="d-flex flex-grow-1 flex-column">
+                            <MudText Typo="Typo.h6" Align="Align.Center">Sections</MudText>
+                                <MudDropZone  T="FragmentDropItem" Identifier="Sections"
+                                        Class="rounded mud-background-gray pa-2 ma-2 flex-grow-1">
+                                    <div></div>
+                                </MudDropZone>
+                        </MudPaper>
+                    }
+                    <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Edit" 
+                        OnClick="ToggleTools" Size="Size.Large" Class="ma-4"/>
+                </MudStack>
+                
+            </div>
         </MudStack>
     </ChildContent>
     <ItemRenderer>
@@ -78,6 +88,8 @@
     
     public List<FragmentGenerator>? Generators;
 
+    private bool _showTools = true;
+
     protected override async Task OnInitializedAsync(){
         Generators = await FragmentApi.GetAllGenerators();
         if (Generators != null)
@@ -99,5 +111,10 @@
     private async Task<Fragment> GenerateFragmentWithGenerator(FragmentGenerator generator)
     {
         return await FragmentApi.GenerateFragment(generator, "rockets");
+    }
+
+    private void ToggleTools(){
+        _showTools = !_showTools;
+        this.StateHasChanged();
     }
 }
