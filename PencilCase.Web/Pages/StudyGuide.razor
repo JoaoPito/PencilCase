@@ -16,11 +16,11 @@
                         <MudText Typo="Typo.h5" Align="Align.Center">Blueprint</MudText>
                     </CardHeaderContent>
                     <CardHeaderActions>
-                        <StudyGuideTitleBar />
+                        <StudyGuideToolBar />
                     </CardHeaderActions>
                 </MudCardHeader>
                 <MudCardContent Class="d-flex flex-grow-1 flex-column">
-                    <MudDropZone T="FragmentDropItem" Identifier="Study Guide" 
+                    <MudDropZone T="FragmentDropItem" Identifier="@StudyGuideIdentifier" 
                     Class="rounded mud-background-gray pa-4 flex-grow-1" 
                     AllowReorder="true">
                     <div></div>
@@ -28,13 +28,12 @@
                 </MudCardContent>
                 
             </MudCard>
-            
             <div style="position: fixed;bottom: 0pt;right: 0pt;">
                 <MudStack Wrap="Wrap.WrapReverse" Spacing="0" Class="mx-4">
                     @if(_showTools){
                         <MudPaper Elevation="6" Width="250pt" Class="d-flex flex-grow-1 flex-column">
                             <MudText Typo="Typo.h6" Align="Align.Center">Sections</MudText>
-                                <MudDropZone  T="FragmentDropItem" Identifier="Sections"
+                                <MudDropZone  T="FragmentDropItem" Identifier="@FragmentGeneratorIdentifier"
                                         Class="rounded mud-background-gray pa-2 ma-2 flex-grow-1">
                                     <div></div>
                                 </MudDropZone>
@@ -43,12 +42,11 @@
                     <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Edit" 
                         OnClick="ToggleTools" Size="Size.Large" Class="ma-4"/>
                 </MudStack>
-                
             </div>
         </MudStack>
     </ChildContent>
     <ItemRenderer>
-        @if (@context.Identifier == "Sections")
+        @if (@context.Identifier == FragmentGeneratorIdentifier)
         {
             <div class="ma-4">
                 <FragmentGeneratorCard FragmentGenerator=@context.Generator/>
@@ -60,26 +58,20 @@
                 <FragmentCard Fragment=@context.Fragment />
             </div>
         }
-        
     </ItemRenderer>
 </MudDropContainer>
 
 @code{
+    private const String StudyGuideIdentifier = "StudyGuide";
+    private const String FragmentGeneratorIdentifier = "Generators";
 
     private List<FragmentDropItem> _items { get; set; } = new();
 
-    public class FragmentDropItem
-    {
-        public String Identifier { get; set; }
-        public FragmentGenerator Generator { get; set; }
-        public Fragment? Fragment { get; set; } = null;
-    }
-    
     private async void ItemUpdated(MudItemDropInfo<FragmentDropItem> dropItem)
     {
         dropItem.Item.Identifier = dropItem.DropzoneIdentifier;
         // Add to study guide
-        if (dropItem.Item.Identifier == "Study Guide" && dropItem.Item.Fragment == null)
+        if (dropItem.Item.Identifier == StudyGuideIdentifier && dropItem.Item.Fragment == null)
         {
             dropItem.Item.Fragment = await GenerateFragmentWithGenerator(dropItem.Item.Generator);
         }
@@ -102,7 +94,7 @@
         {
             _items.Add(new FragmentDropItem()
             {
-                Identifier = "Sections",
+                Identifier = FragmentGeneratorIdentifier,
                 Generator = generator
             });
         }
