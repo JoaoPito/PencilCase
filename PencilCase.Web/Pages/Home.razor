@@ -3,13 +3,27 @@
 
 <PageTitle>PencilCase</PageTitle>
 
-<MudGrid Justify="Justify.Center">
+<MudGrid Justify="Justify.Center" Spacing="0">
     <MudItem xs="12">
         <MudText Typo="Typo.h1" Align="Align.Center">Level up your habits.</MudText>
     </MudItem>
     <MudItem xs="10">
         <SearchBar OnSubmit="@SearchBarSubmit" TextValue="@searchBarText"
             Label="Choose a topic."/>
+    </MudItem>
+    <MudFlexBreak />
+    <MudItem xs="9">
+        <MudStack Row="true" Spacing="0" Justify="Justify.FlexStart">
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" 
+            Color="Color.Secondary" DropShadow="false" Size="Size.Large"
+            Style="border-radius: 0px;"Class="rounded-bl-lg">Delete</MudButton>
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" 
+            Color="Color.Secondary" DropShadow="false" Size="Size.Large"
+            Style="border-radius: 0px;"Class="rounded-0">Delete</MudButton>
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" 
+            Color="Color.Secondary" DropShadow="false" Size="Size.Large"
+            Style="border-radius: 0px;"Class="rounded-br-lg">Delete</MudButton>
+        </MudStack>
     </MudItem>
 </MudGrid>
 
