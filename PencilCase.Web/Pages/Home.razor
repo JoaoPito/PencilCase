@@ -2,7 +2,7 @@
 
 <PageTitle>PencilCase</PageTitle>
 
-<MudGrid Justify="Justify.Center" Spacing="0">
+<MudGrid Justify="Justify.Center" Spacing="2">
     <MudItem xs="12">
         <MudText Typo="Typo.h1" Align="Align.Center">Level up your habits.</MudText>
     </MudItem>
@@ -29,8 +29,8 @@
 
 @code{
     private String searchBarText = String.Empty;
-    void SearchBarSubmit(){
-        Console.WriteLine("Search submit");
+    void SearchBarSubmit(String searchText){
+        Console.WriteLine($"Search submit: {searchText}");
     }
 
 }
