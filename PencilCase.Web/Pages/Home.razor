@@ -6,6 +6,9 @@
     <MudItem xs="12">
         <MudText Typo="Typo.h1" Align="Align.Center">Level up your habits.</MudText>
     </MudItem>
+    <MudItem xs="8">
+        <MudText Typo="Typo.h3" Align="Align.Center">Prepare everything you need to do your best work.</MudText>
+    </MudItem>
     <MudItem xs="10">
         <SearchBar OnSubmit="@SearchBarSubmit" TextValue="@searchBarText"
             Label="Choose a topic."/>
@@ -13,16 +16,29 @@
     <MudFlexBreak />
     <MudItem xs="9">
         <MudStack Row="true" Spacing="0" Justify="Justify.FlexStart">
-            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" 
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Rounded.LibraryBooks" 
             Color="Color.Secondary" DropShadow="false" Size="Size.Large"
-            Style="border-radius: 0px;"Class="rounded-bl-lg">Delete</MudButton>
-            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" 
+            Style="border-radius: 0px;"Class="rounded-bl-lg">Tool</MudButton>
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Rounded.LibraryBooks" 
             Color="Color.Secondary" DropShadow="false" Size="Size.Large"
-            Style="border-radius: 0px;"Class="rounded-0">Delete</MudButton>
-            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" 
+            Style="border-radius: 0px;"Class="rounded-0">Tool</MudButton>
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Rounded.LibraryBooks" 
             Color="Color.Secondary" DropShadow="false" Size="Size.Large"
-            Style="border-radius: 0px;"Class="rounded-br-lg">Delete</MudButton>
+            Style="border-radius: 0px;"Class="rounded-br-lg">Tool</MudButton>
         </MudStack>
+    </MudItem>
+    
+    <MudItem xs="4" Class="my-8">
+        <MudText Typo="Typo.h2" Align="Align.Center">Study Guides</MudText>
+        <MudText Typo="Typo.h6" Align="Align.Center">Transform hours of preparation into seconds. No more endless searching for the info you need.</MudText>
+    </MudItem>
+     <MudItem xs="4" Class="my-8">
+        <MudText Typo="Typo.h2" Align="Align.Center">Dashboard</MudText>
+        <MudText Typo="Typo.h6" Align="Align.Center">Gather insights about your own habits to take yourself to the next level.</MudText>
+    </MudItem>
+     <MudItem xs="4" Class="my-8">
+        <MudText Typo="Typo.h2" Align="Align.Center">Flashcards</MudText>
+        <MudText Typo="Typo.h6" Align="Align.Center">Get everything you need to be prepared for your next exam. We take care of the tedious work for you.</MudText>
     </MudItem>
 </MudGrid>
 
