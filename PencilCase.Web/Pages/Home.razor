@@ -1,6 +1,23 @@
 ﻿@page "/"
+@using PencilCase.Web.Components
 
 <PageTitle>PencilCase</PageTitle>
 
+<MudGrid Justify="Justify.Center">
+    <MudItem xs="12">
+        <MudText Typo="Typo.h1" Align="Align.Center">Level up your habits.</MudText>
+    </MudItem>
+    <MudItem xs="10">
+        <SearchBar OnSubmit="@SearchBarSubmit" TextValue="@searchBarText"
+            Label="Choose a topic."/>
+    </MudItem>
+</MudGrid>
+
+
 @code{
+    private String searchBarText = String.Empty;
+    void SearchBarSubmit(){
+        Console.WriteLine("Search submit");
+    }
+
 }

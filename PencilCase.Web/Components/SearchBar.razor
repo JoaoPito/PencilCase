@@ -1,0 +1,30 @@
+<div>
+    <MudStack Row="true">
+        <MudTextField @bind-Value="TextValue" Label="@Label" 
+            Immediate="true" OnKeyDown="@OnKeyDown" 
+            Variant="Variant.Outlined"></MudTextField>
+        <MudIconButton OnClick="@InvokeOnSubmitMethod" Icon="@Icons.Material.Filled.Search" 
+            Variant="Variant.Filled" Color="Color.Inherit"/>
+    </MudStack>
+    
+</div>
+
+@code{
+    [Parameter] public String TextValue { get; set; } = String.Empty;
+    [Parameter] public String Label { get; set; } = String.Empty;
+    [Parameter] public Action? OnSubmit { get; set; }
+    [Parameter] public bool SubmitOnEnter { get; set; } = true;
+
+    private void InvokeOnSubmitMethod(){
+        OnSubmit?.Invoke();
+    }
+
+    private void OnKeyDown(KeyboardEventArgs args){
+        if (SubmitOnEnter && args.Key=="Enter") 
+        {
+            InvokeOnSubmitMethod();
+            TextValue = String.Empty;
+            StateHasChanged();
+        }
+    }
+}
