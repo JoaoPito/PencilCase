@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace PencilCase.Web.StudyGuide.Models.Responses;
+namespace PencilCase.Web.StudyGuideGenerator.Models.Responses;
 
 public record FragmentResponse([property: JsonPropertyName("name")] String Name,
     [property: JsonPropertyName("description")] String Description,

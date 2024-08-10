@@ -1,6 +1,6 @@
 using PencilCase.Shared.Models;
 
-namespace PencilCase.Web.StudyGuide.Models;
+namespace PencilCase.Web.StudyGuideGenerator.Models;
 
 public class FragmentDropItem
     {
