@@ -23,17 +23,17 @@
     private const String FragmentGeneratorIdentifier = "Generators";
 
     private List<FragmentDropItem> _items { get; set; } = new();
-    public List<FragmentGenerator>? Generators;
     private String _topic = String.Empty;
 
     protected override async Task OnInitializedAsync(){
+        List<FragmentGenerator>? generators = new();
         try{
-            Generators = await FragmentApi.GetAllGenerators();
+            generators = await FragmentApi.GetAllGenerators();
         }
         catch(HttpRequestException err) {
             Console.WriteLine(err.Message);
         }
-        PopulateFragmentGenerators();
+        if (generators != null) PopulateItemsWithGenerators(generators);
     }
 
     private async void ItemUpdated(MudItemDropInfo<FragmentDropItem> dropItem)
@@ -46,17 +46,15 @@
         }
     }
 
-    private void PopulateFragmentGenerators()
+    private void PopulateItemsWithGenerators(List<FragmentGenerator> generators)
     {
-        if (Generators != null){
-            foreach (var generator in Generators)
+        foreach (var generator in generators)
+        {
+            _items.Add(new FragmentDropItem()
             {
-                _items.Add(new FragmentDropItem()
-                {
-                    Identifier = FragmentGeneratorIdentifier,
-                    Generator = generator
-                });
-            }
+                Identifier = FragmentGeneratorIdentifier,
+                Generator = generator
+            });
         }
     }
 
