@@ -45,7 +45,7 @@
         else
         {
             <div class="ma-4">
-                <FragmentCard Fragment=@context.Fragment ToolbarActions="@FragmentToolbar" />
+                <FragmentCard Fragment=@context.Fragment OnRegenerateClicked="@OnFragmentRegenerate" />
             </div>
         }
     </ItemRenderer>
@@ -56,7 +56,7 @@
     [Parameter] public String StudyGuideIdentifier { get; set; } = String.Empty;
     [Parameter] public String FragmentGeneratorIdentifier { get; set; } = String.Empty;
     [Parameter] public Action<MudItemDropInfo<FragmentDropItem>>? OnItemUpdated { get; set; }
-    [Parameter] public FragmentToolbarActions? FragmentToolbar { get; set; }
+    [Parameter] public Func<String, Task>? OnFragmentRegenerate { get; set; }
 
     private bool _showTools = true;
 

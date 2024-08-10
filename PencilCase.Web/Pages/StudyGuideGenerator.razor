@@ -13,7 +13,7 @@
         <StudyGuideBlueprint Items="@_items" OnItemUpdated="@ItemUpdated"
         StudyGuideIdentifier="@StudyGuideIdentifier" 
         FragmentGeneratorIdentifier="@FragmentGeneratorIdentifier"
-        FragmentToolbarActions="@(new FragmentToolbarActions{OnRegenerate=OnGenerateFragment, OnDelete=OnDeleteFragment})/>
+        OnFragmentRegenerate="@RegenerateFragment" />
     </MudItem>
 </MudGrid>
 
@@ -79,16 +79,21 @@
         this.StateHasChanged();
     }
 
-    private async void GenerateStudyGuide(List<FragmentGenerator> generators){
-        
-    }
-
-    public async void OnGenerateFragment(String name){
-        
+    public async Task RegenerateFragment(String name)
+    {
+        var item = _items.FirstOrDefault(i => {Console.WriteLine(i.Fragment?.Name); return i.Fragment?.Name == name;});
+        if(item == null){
+            throw new ArgumentException($"Could not find fragment with name '{name}'!");
+        }
+        item.Fragment = null;
+        this.StateHasChanged();
+        var generator = item.Generator;
+        item.Fragment = await GenerateFragmentWithGenerator(generator);
         this.StateHasChanged();
     }
 
-    public async void OnDeleteFragment(String name) {
-
+    public async void OnDeleteFragment(String name) 
+    {
+        
     }
 }

@@ -1,14 +1,20 @@
-<MudIconButton Icon="@Icons.Material.Rounded.Autorenew" aria-label="regenerate" OnClick="OnRegenerateClick" />
-<MudIconButton Icon="@Icons.Material.Rounded.Delete" aria-label="delete" OnClick="OnDeleteClick" />
+<MudIconButton Icon="@Icons.Material.Rounded.Autorenew" aria-label="regenerate" OnClick="OnRegenerateClick" Disabled="@_disabled" />
+<MudIconButton Icon="@Icons.Material.Rounded.Delete" aria-label="delete" OnClick="OnDeleteClick" Disabled="@_disabled" />
 
 @code {
     [Parameter] public String Name { get; set; } = String.Empty;
-    [Parameter] public Action<String>? OnRegenerate { get; set; } 
+    [Parameter] public Func<String, Task>? OnRegenerate { get; set; } 
     [Parameter] public Action<String>? OnDelete { get; set; } 
 
-    private void OnRegenerateClick(){
-        if(OnRegenerate != null)
-            OnRegenerate(Name);
+    private bool _disabled = false;
+
+    private async void OnRegenerateClick(){
+        if(OnRegenerate != null){
+            _disabled = true;
+            await OnRegenerate(Name);
+            _disabled = false;
+        }
+        this.StateHasChanged();
     }
 
     private void OnDeleteClick(){

@@ -18,8 +18,8 @@
             
         </CardHeaderContent>
         <CardHeaderActions>
-            @if(ToolbarActions != null){
-                <FragmentToolBar OnRegenerate="@ToolbarActions!.OnRegenerate" OnDelete="@ToolbarActions!.OnDelete"/>
+            @if(OnRegenerateClicked != null){
+                <FragmentToolBar Name="@Fragment?.Name" OnRegenerate="@OnRegenerateClicked" />
             }
         </CardHeaderActions>
     </MudCardHeader>
@@ -42,5 +42,5 @@
 
 @code {
     [Parameter] public Fragment? Fragment { get; set; } = new();
-    [Parameter] public FragmentToolbarActions? ToolbarActions { get; set; } = null;
+    [Parameter] public Func<String, Task>? OnRegenerateClicked { get; set; } = null;
 }
