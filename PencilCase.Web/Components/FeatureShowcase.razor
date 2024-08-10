@@ -1,0 +1,15 @@
+<MudPaper Elevation="3" Height="300px" class="glass pa-4 ma-2" href='/studyguide'>
+    <MudStack>
+        <MudText Typo="Typo.h2" Align="Align.Center">@Title</MudText>
+        <MudText Typo="Typo.h6" Align="Align.Center">@Description</MudText>
+        <MudText Typo="Typo.h6" Align="Align.Center">@Body</MudText>
+    </MudStack>
+    
+</MudPaper>
+
+@code{
+    [Parameter] public String Title { get; set; } = String.Empty;
+    [Parameter] public String Description { get; set; } = String.Empty;
+    [Parameter] public String Body { get; set; } = String.Empty;
+    
+}
