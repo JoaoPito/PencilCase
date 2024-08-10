@@ -79,9 +79,13 @@
         this.StateHasChanged();
     }
 
+    private GetItemByName(String name){
+        return _items.FirstOrDefault(i => {Console.WriteLine(i.Fragment?.Name); return i.Fragment?.Name == name;});
+    }
+
     public async Task RegenerateFragment(String name)
     {
-        var item = _items.FirstOrDefault(i => {Console.WriteLine(i.Fragment?.Name); return i.Fragment?.Name == name;});
+        var item = GetItemByName(name);
         if(item == null){
             throw new ArgumentException($"Could not find fragment with name '{name}'!");
         }
