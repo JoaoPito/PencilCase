@@ -12,17 +12,18 @@
     <MudItem xs="12">
         <StudyGuideBlueprint Items="@_items" OnItemUpdated="@ItemUpdated"
         StudyGuideIdentifier="@StudyGuideIdentifier" 
-        FragmentGeneratorIdentifier="@FragmentGeneratorIdentifier"/>
+        FragmentGeneratorIdentifier="@FragmentGeneratorIdentifier"
+        FragmentToolbarActions="@(new FragmentToolbarActions{OnRegenerate=OnGenerateFragment, OnDelete=OnDeleteFragment})/>
     </MudItem>
 </MudGrid>
 
 @code{
     private const String StudyGuideIdentifier = "StudyGuide";
     private const String FragmentGeneratorIdentifier = "Generators";
+
     private List<FragmentDropItem> _items { get; set; } = new();
     public List<FragmentGenerator>? Generators;
     private String _topic = String.Empty;
-    private StudyGuide? _studyGuide = null;
 
     protected override async Task OnInitializedAsync(){
         try{
@@ -57,6 +58,7 @@
             }
         }
     }
+
     private async Task<Fragment> GenerateFragmentWithGenerator(FragmentGenerator generator)
     {
         if(_topic == String.Empty || _topic == null){
@@ -70,13 +72,23 @@
 
     private async void GenerateNewStudyGuide(String topic){
         _topic = topic;
-        _studyGuide = new StudyGuide();
-        _studyGuide.Topic = topic;
         foreach(var item in _items.Where(i => i.Identifier == StudyGuideIdentifier)){
             var fragment = await GenerateFragmentWithGenerator(item.Generator);
-            _studyGuide.Fragments.Add(fragment);
             item.Fragment = fragment;
         }
         this.StateHasChanged();
+    }
+
+    private async void GenerateStudyGuide(List<FragmentGenerator> generators){
+        
+    }
+
+    public async void OnGenerateFragment(String name){
+        
+        this.StateHasChanged();
+    }
+
+    public async void OnDeleteFragment(String name) {
+
     }
 }
