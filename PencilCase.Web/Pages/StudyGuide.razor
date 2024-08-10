@@ -29,13 +29,13 @@
         catch(HttpRequestException err) {
             Console.WriteLine(err.Message);
         }
-        if (Generators != null)
+        
             PopulateFragmentGenerators();
     }
 
     private async void ItemUpdated(MudItemDropInfo<FragmentDropItem> dropItem)
     {
-        dropItem.Item.Identifier = dropItem.DropzoneIdentifier;
+        dropItem.Item!.Identifier = dropItem.DropzoneIdentifier!;
         // Add to study guide
         if (dropItem.Item.Identifier == StudyGuideIdentifier && dropItem.Item.Fragment == null)
         {
@@ -45,13 +45,15 @@
 
     private void PopulateFragmentGenerators()
     {
-        foreach (var generator in Generators)
-        {
-            _items.Add(new FragmentDropItem()
+        if (Generators != null){
+            foreach (var generator in Generators)
             {
-                Identifier = FragmentGeneratorIdentifier,
-                Generator = generator
-            });
+                _items.Add(new FragmentDropItem()
+                {
+                    Identifier = FragmentGeneratorIdentifier,
+                    Generator = generator
+                });
+            }
         }
     }
 
