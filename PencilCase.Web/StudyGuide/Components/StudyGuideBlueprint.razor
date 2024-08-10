@@ -59,9 +59,9 @@
 
     private bool _showTools = true;
 
-    private async void ItemUpdated(MudItemDropInfo<FragmentDropItem> dropItem)
+    private void ItemUpdated(MudItemDropInfo<FragmentDropItem> dropItem)
     {
-        OnItemUpdated(dropItem);
+        if(OnItemUpdated != null) OnItemUpdated(dropItem);
         this.StateHasChanged();
     }
 
