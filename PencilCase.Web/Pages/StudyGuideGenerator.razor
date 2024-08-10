@@ -80,7 +80,11 @@
     }
 
     private GetItemByName(String name){
-        return _items.FirstOrDefault(i => {Console.WriteLine(i.Fragment?.Name); return i.Fragment?.Name == name;});
+        var item = _items.FirstOrDefault(i => {Console.WriteLine(i.Fragment?.Name); return i.Fragment?.Name == name;});
+        if(item == null){
+            throw new ArgumentException($"Could not find fragment with name '{name}'!");
+        }
+        return item;
     }
 
     public async Task RegenerateFragment(String name)
@@ -98,6 +102,6 @@
 
     public async void OnDeleteFragment(String name) 
     {
-        
+
     }
 }
