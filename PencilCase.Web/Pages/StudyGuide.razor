@@ -10,19 +10,16 @@
     </MudItem>
     <MudFlexBreak />
     <MudItem xs="12">
-        <StudyGuideBlueprint Items="@_items" OnItemUpdated="@ItemUpdated" Topic="@_topic" ApiService="@FragmentApi"
+        <StudyGuideBlueprint Items="@_items" OnItemUpdated="@ItemUpdated" Topic="@_topic"
         StudyGuideIdentifier="@StudyGuideIdentifier" FragmentGeneratorIdentifier="@FragmentGeneratorIdentifier"/>
     </MudItem>
 </MudGrid>
-
-
 
 @code{
     private const String StudyGuideIdentifier = "StudyGuide";
     private const String FragmentGeneratorIdentifier = "Generators";
     private List<FragmentDropItem> _items { get; set; } = new();
     public List<FragmentGenerator>? Generators;
-    private bool _showTools = true;
     private String _topic = String.Empty;
 
     protected override async Task OnInitializedAsync(){
@@ -38,7 +35,12 @@
 
     private async void ItemUpdated(MudItemDropInfo<FragmentDropItem> dropItem)
     {
-        
+        dropItem.Item.Identifier = dropItem.DropzoneIdentifier;
+        // Add to study guide
+        if (dropItem.Item.Identifier == StudyGuideIdentifier && dropItem.Item.Fragment == null)
+        {
+            dropItem.Item.Fragment = await GenerateFragmentWithGenerator(dropItem.Item.Generator);
+        }
     }
 
     private void PopulateFragmentGenerators()

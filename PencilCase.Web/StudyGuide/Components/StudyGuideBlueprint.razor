@@ -52,24 +52,15 @@
 </MudDropContainer>
 
 @code {
-    [Parameter] public String Topic { get; set; } = String.Empty;
     [Parameter] public IEnumerable<FragmentDropItem> Items { get; set; } = new List<FragmentDropItem>();
     [Parameter] public String StudyGuideIdentifier { get; set; } = String.Empty;
     [Parameter] public String FragmentGeneratorIdentifier { get; set; } = String.Empty;
     [Parameter] public Action<MudItemDropInfo<FragmentDropItem>>? OnItemUpdated { get; set; }
-    [Parameter] public FragmentApi ApiService { get; set; }
 
     private bool _showTools = true;
 
     private async void ItemUpdated(MudItemDropInfo<FragmentDropItem> dropItem)
     {
-        dropItem.Item.Identifier = dropItem.DropzoneIdentifier;
-        // Add to study guide
-        if (dropItem.Item.Identifier == StudyGuideIdentifier && dropItem.Item.Fragment == null)
-        {
-            dropItem.Item.Fragment = await GenerateFragmentWithGenerator(dropItem.Item.Generator);
-        }
-
         OnItemUpdated(dropItem);
         this.StateHasChanged();
     }
@@ -77,16 +68,5 @@
     private void ToggleTools(){
         _showTools = !_showTools;
         this.StateHasChanged();
-    }
-
-    private async Task<Fragment> GenerateFragmentWithGenerator(FragmentGenerator generator)
-    {
-        if(Topic == String.Empty || Topic == null){
-            return new Fragment{
-                Name = generator.Name,
-                Content = String.Empty
-            };
-        }
-        return await ApiService.GenerateFragment(generator, Topic);
     }
 }
