@@ -4,11 +4,11 @@
 @code {
     [Parameter] public String Name { get; set; } = String.Empty;
     [Parameter] public Func<String, Task>? OnRegenerate { get; set; } 
-    [Parameter] public Action<String>? OnDelete { get; set; } 
+    [Parameter] public Func<String, Task>? OnDelete { get; set; } 
 
     private bool _disabled = false;
 
-    private async void OnRegenerateClick(){
+    private async Task OnRegenerateClick(){
         if(OnRegenerate != null){
             _disabled = true;
             await OnRegenerate(Name);
@@ -17,8 +17,11 @@
         this.StateHasChanged();
     }
 
-    private void OnDeleteClick(){
-        if(OnDelete != null)
-            OnDelete(Name);
+    private async Task OnDeleteClick(){
+        if(OnDelete != null){
+            _disabled = true;
+            await OnDelete(Name);
+            _disabled = false;
+        }
     }
 }

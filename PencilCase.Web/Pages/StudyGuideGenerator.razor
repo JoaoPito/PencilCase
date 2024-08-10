@@ -13,7 +13,8 @@
         <StudyGuideBlueprint Items="@_items" OnItemUpdated="@ItemUpdated"
         StudyGuideIdentifier="@StudyGuideIdentifier" 
         FragmentGeneratorIdentifier="@FragmentGeneratorIdentifier"
-        OnFragmentRegenerate="@RegenerateFragment" />
+        OnFragmentRegenerate="@RegenerateFragment"
+        OnFragmentDelete="@OnDeleteFragment" />
     </MudItem>
 </MudGrid>
 
@@ -97,7 +98,7 @@
         this.StateHasChanged();
     }
 
-    public async void OnDeleteFragment(String name) 
+    public async Task OnDeleteFragment(String name) 
     {
         var item = GetItemByName(name);
         item.Identifier = FragmentGeneratorIdentifier;
