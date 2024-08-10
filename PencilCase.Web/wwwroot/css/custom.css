@@ -1,6 +1,36 @@
-.glass {
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #e74c3c;
+}
+
+
+.feature-showcase {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
     -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.18);
+    transition: transform 0.3s ease;
+}
+
+.feature-showcase:hover {
+    box-shadow: 0 0 40px var(--primary-color);
+    transform: scale(1.1); 
+}
+
+.feature-showcase::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    z-index: -1;
+    filter: blur(20px);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.feature-showcase:hover::before {
+    opacity: 1;
 }

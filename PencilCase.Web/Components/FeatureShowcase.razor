@@ -1,8 +1,9 @@
-<MudPaper Elevation="3" Height="300px" class="glass pa-4 ma-2" href='/studyguide'>
+<MudPaper Elevation="10" Height="@Height" class="feature-showcase d-flex flex-column flex-grow-1 pa-4 my-2 mx-4" href='/studyguide'
+    style="@Style">
     <MudStack>
-        <MudText Typo="Typo.h2" Align="Align.Center">@Title</MudText>
-        <MudText Typo="Typo.h6" Align="Align.Center">@Description</MudText>
-        <MudText Typo="Typo.h6" Align="Align.Center">@Body</MudText>
+        <MudText Typo="Typo.h2" Align="Align.Center" Class="overflow-x-hidden ">@Title</MudText>
+        <MudText Typo="Typo.h6" Align="Align.Center" Class="overflow-x-hidden">@Description</MudText>
+        <MudText Typo="Typo.body1" Align="Align.Start" Class="overflow-hidden" >@Body</MudText>
     </MudStack>
     
 </MudPaper>
@@ -11,5 +12,6 @@
     [Parameter] public String Title { get; set; } = String.Empty;
     [Parameter] public String Description { get; set; } = String.Empty;
     [Parameter] public String Body { get; set; } = String.Empty;
-    
+    [Parameter] public String Style { get; set; } = String.Empty;
+    [Parameter] public String Height { get; set; } = "400pt";
 }
