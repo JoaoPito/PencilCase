@@ -4,78 +4,32 @@
 
 <PageTitle>PencilCase</PageTitle>
 
-<MudDropContainer T="FragmentDropItem" Items="_items"
-                ItemsSelector="@((item,dropzone) => item.Identifier == dropzone)" 
-                ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1">
-    <ChildContent>
-        <MudCard Class="d-flex flex-grow-1" Style="min-height:66vh">
-            <MudCardHeader>
-                <CardHeaderContent>
-                    <MudText Typo="Typo.h5" Align="Align.Center">Blueprint</MudText>
-                </CardHeaderContent>
-                <CardHeaderActions>
-                    <StudyGuideToolBar />
-                </CardHeaderActions>
-            </MudCardHeader>
-            <MudCardContent Class="d-flex flex-grow-1 flex-column">
-                <MudDropZone T="FragmentDropItem" Identifier="@StudyGuideIdentifier" 
-                Class="rounded mud-background-gray pa-4 flex-grow-1"
-                AllowReorder="true">
-                <div></div>
-            </MudDropZone>
-            </MudCardContent>
-            
-        </MudCard>
+<MudGrid Justify="Justify.Center" Spacing="0">
+    <MudItem xs="10">
+        <SearchBar OnSubmit="@GenerateStudyGuide"/>
+    </MudItem>
+    <MudFlexBreak />
+    <MudItem xs="12">
+        <StudyGuideBlueprint Items="@_items" OnItemUpdated="@ItemUpdated" Topic="@_topic" ApiService="@FragmentApi"
+        StudyGuideIdentifier="@StudyGuideIdentifier" FragmentGeneratorIdentifier="@FragmentGeneratorIdentifier"/>
+    </MudItem>
+</MudGrid>
 
-    <div style="position: fixed;bottom: 0pt;right: 0pt;">
-        <MudStack Wrap="Wrap.WrapReverse" Spacing="0" Class="mx-4">
-            @if(_showTools){
-                <MudPaper Elevation="6" Width="250pt" Height="66vh" Class="d-flex flex-grow-1 flex-column mt-2">
-                    <MudText Typo="Typo.h6" Align="Align.Center">Sections</MudText>
-                        <MudDropZone  T="FragmentDropItem" Identifier="@FragmentGeneratorIdentifier"
-                                Class="rounded mud-background-gray pa-2 ma-2 flex-grow-1 overflow-x-scroll">
-                            <div></div>
-                        </MudDropZone>
-                </MudPaper>
-            }
-            <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Edit" 
-                OnClick="ToggleTools" Size="Size.Large" Class="ma-4"/>
-        </MudStack>
-    </div>
-    </ChildContent>
-    <ItemRenderer>
-        @if (@context.Identifier == FragmentGeneratorIdentifier)
-        {
-            <div class="ma-4">
-                <FragmentGeneratorCard FragmentGenerator=@context.Generator/>
-            </div>
-        }
-        else
-        {
-            <div class="ma-4">
-                <FragmentCard Fragment=@context.Fragment />
-            </div>
-        }
-    </ItemRenderer>
-</MudDropContainer>
+
 
 @code{
     private const String StudyGuideIdentifier = "StudyGuide";
     private const String FragmentGeneratorIdentifier = "Generators";
-
     private List<FragmentDropItem> _items { get; set; } = new();
-
     public List<FragmentGenerator>? Generators;
-
     private bool _showTools = true;
-    private bool _apiError = false;
+    private String _topic = String.Empty;
 
     protected override async Task OnInitializedAsync(){
         try{
             Generators = await FragmentApi.GetAllGenerators();
         }
         catch(HttpRequestException err) {
-            _apiError = true;
             Console.WriteLine(err.Message);
         }
         if (Generators != null)
@@ -84,13 +38,7 @@
 
     private async void ItemUpdated(MudItemDropInfo<FragmentDropItem> dropItem)
     {
-        dropItem.Item.Identifier = dropItem.DropzoneIdentifier;
-        // Add to study guide
-        if (dropItem.Item.Identifier == StudyGuideIdentifier && dropItem.Item.Fragment == null)
-        {
-            dropItem.Item.Fragment = await GenerateFragmentWithGenerator(dropItem.Item.Generator);
-        }
-        this.StateHasChanged();
+        
     }
 
     private void PopulateFragmentGenerators()
@@ -107,11 +55,20 @@
 
     private async Task<Fragment> GenerateFragmentWithGenerator(FragmentGenerator generator)
     {
-        return await FragmentApi.GenerateFragment(generator, "rockets");
+        if(_topic == String.Empty || _topic == null){
+            return new Fragment{
+                Name = generator.Name,
+                Content = String.Empty
+            };
+        }
+        return await FragmentApi.GenerateFragment(generator, _topic);
     }
 
-    private void ToggleTools(){
-        _showTools = !_showTools;
+    private async void GenerateStudyGuide(String topic){
+        _topic = topic;
+        foreach(var item in _items.Where(i => i.Identifier == StudyGuideIdentifier)){
+            item.Fragment = await GenerateFragmentWithGenerator(item.Generator);
+        }
         this.StateHasChanged();
     }
 }
