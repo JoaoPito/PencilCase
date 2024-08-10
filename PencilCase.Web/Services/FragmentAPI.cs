@@ -2,8 +2,8 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using PencilCase.Shared.Models;
-using PencilCase.Web.StudyGuide.Models;
-using PencilCase.Web.StudyGuide.Models.Responses;
+using PencilCase.Web.StudyGuideGenerator.Models;
+using PencilCase.Web.StudyGuideGenerator.Models.Responses;
 
 namespace PencilCase.Web.Services;
 
