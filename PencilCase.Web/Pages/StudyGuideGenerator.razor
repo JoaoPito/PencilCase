@@ -79,7 +79,7 @@
         this.StateHasChanged();
     }
 
-    private GetItemByName(String name){
+    private FragmentDropItem GetItemByName(String name){
         var item = _items.FirstOrDefault(i => {Console.WriteLine(i.Fragment?.Name); return i.Fragment?.Name == name;});
         if(item == null){
             throw new ArgumentException($"Could not find fragment with name '{name}'!");
@@ -90,9 +90,6 @@
     public async Task RegenerateFragment(String name)
     {
         var item = GetItemByName(name);
-        if(item == null){
-            throw new ArgumentException($"Could not find fragment with name '{name}'!");
-        }
         item.Fragment = null;
         this.StateHasChanged();
         var generator = item.Generator;
@@ -102,6 +99,8 @@
 
     public async void OnDeleteFragment(String name) 
     {
-
+        var item = GetItemByName(name);
+        item.Identifier = FragmentGeneratorIdentifier;
+        this.StateHasChanged();
     }
 }
