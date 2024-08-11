@@ -1,13 +1,11 @@
 <div>
-    <MudPaper Outlined="true">
-        <MudStack Row="true" AlignItems="AlignItems.Center">
-            <MudTextField @bind-Value="TextValue" Label="@Label" 
-                Immediate="true" OnKeyDown="@OnKeyDown" 
-                Variant="Variant.Outlined"></MudTextField>
-            <MudIconButton OnClick="@InvokeOnSubmitMethod" Icon="@Icons.Material.Filled.Search" 
-                Variant="Variant.Filled" Color="Color.Inherit" />
-        </MudStack>
-    </MudPaper>    
+    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+        <MudTextField @bind-Value="TextValue" Label="@Label" 
+            Immediate="true" OnKeyDown="@OnKeyDown" 
+            Variant="Variant.Outlined"></MudTextField>
+        <MudIconButton OnClick="@InvokeOnSubmitMethod" Icon="@Icons.Material.Filled.Search" 
+            Color="Color.Inherit" />
+    </MudStack>
 </div>
 
 @code{
