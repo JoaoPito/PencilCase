@@ -27,6 +27,7 @@
 
     protected override async Task OnInitializedAsync(){
         List<FragmentGenerator>? generators = new();
+            
         try{
             generators = await FragmentApi.GetAllGenerators();
         }
