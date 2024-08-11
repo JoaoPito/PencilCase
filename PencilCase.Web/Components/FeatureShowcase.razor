@@ -1,12 +1,17 @@
 <MudCard Elevation="5" class="feature-showcase d-flex flex-column flex-grow-1 my-2 mx-4" href='/studyguide'
     style="@Style">
     <MudCardHeader Class="feature-showcase-header ma-0 pa-4">
-        <MudText Typo="Typo.h2" Align="Align.Center" Class="overflow-x-hidden ">@Title</MudText>
+            <MudText Typo="Typo.h2" Align="Align.Center" Class="overflow-x-hidden ">@Title</MudText>
     </MudCardHeader>
-    <MudCardContent Class="pa-4">
+    <MudCardContent Class="pa-0 ma-0" sty>
         <MudStack>
-            <MudText Typo="Typo.h6" Align="Align.Center" Class="overflow-x-hidden">@Description</MudText>
-            <MudText Typo="Typo.body1" Align="Align.Start" Class="overflow-hidden" >@Body</MudText>
+            <div class="marquee-container ma-0 mt-n1">
+                <MudText Typo="Typo.body2" class="marquee-content" ><b>write introductions. get references. prepare a roadmap. put them in your notes.</b></MudText>
+            </div>
+            <div class="pa-4">
+                <MudText Typo="Typo.h6" Align="Align.Center" Class="overflow-x-hidden">@Description</MudText>
+                <MudText Typo="Typo.body1" Align="Align.Start" Class="overflow-hidden" >@Body</MudText>
+            </div>
         </MudStack>
     </MudCardContent>
         
