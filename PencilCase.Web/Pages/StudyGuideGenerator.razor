@@ -5,10 +5,6 @@
 <PageTitle>PencilCase</PageTitle>
 
 <MudGrid Justify="Justify.Center" Spacing="0">
-    <MudItem xs="10">
-        <SearchBar OnSubmit="@GenerateNewStudyGuide"/>
-    </MudItem>
-    <MudFlexBreak />
     <MudItem xs="12">
         <StudyGuideBlueprint Items="@_items" OnItemUpdated="@ItemUpdated"
         StudyGuideIdentifier="@StudyGuideIdentifier" 
