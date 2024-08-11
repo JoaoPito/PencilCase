@@ -4,15 +4,70 @@
 
 <PageTitle>PencilCase</PageTitle>
 
-<MudGrid Justify="Justify.Center" Spacing="0">
-    <MudItem xs="12">
-        <StudyGuideBlueprint Items="@_items" OnItemUpdated="@ItemUpdated"
-        StudyGuideIdentifier="@StudyGuideIdentifier" 
-        FragmentGeneratorIdentifier="@FragmentGeneratorIdentifier"
-        OnFragmentRegenerate="@RegenerateFragment"
-        OnFragmentDelete="@OnDeleteFragment" />
-    </MudItem>
-</MudGrid>
+<MudDropContainer T="FragmentDropItem" Items="@_items"
+    ItemsSelector="@((item,dropzone) => item.Identifier == dropzone)" 
+    ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1">
+    <ChildContent>
+        <MudGrid Spacing="4" Class="d-flex flex-grow-1">
+            <MudItem xs="4">
+                <MudStack Wrap="Wrap.WrapReverse" Spacing="4">
+                    <SearchBar Label="Choose a topic" OnSubmit="@GenerateNewStudyGuide" />
+                    <MudCard Elevation="3" Class="d-flex flex-grow-1 flex-column" Style="min-height:75vh">
+                        <MudCardHeader>
+                            <MudText Typo="Typo.h6" Align="Align.Start">Sections</MudText>
+                        </MudCardHeader>
+                        <MudCardContent Class="d-flex flex-grow-1 flex-column pa-0">
+                            <MudDropZone  T="FragmentDropItem" Identifier="@FragmentGeneratorIdentifier"
+                                    Class="rounded-b mud-background-gray pa-2 flex-grow-1 overflow-x-scroll">
+                                <div></div>
+                            </MudDropZone>
+                        </MudCardContent>
+                    </MudCard>
+                </MudStack>
+            </MudItem>
+            <MudItem xs="8">
+                <MudCard Class="d-flex flex-grow-1" Style="min-height:100%" Elevation="3">
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h5" Align="Align.Start">Blueprint</MudText>
+                        </CardHeaderContent>
+                        <CardHeaderActions>
+                            <StudyGuideToolBar />
+                        </CardHeaderActions>
+                    </MudCardHeader>
+                    <MudCardContent Class="d-flex flex-grow-1 flex-column pa-0">
+                        <MudDropZone T="FragmentDropItem" Identifier="@StudyGuideIdentifier" 
+                            Class="rounded-b mud-background-gray pa-4 flex-grow-1 overflow-x-scroll"
+                            AllowReorder="true">
+                        <div></div>
+                    </MudDropZone>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        </MudGrid>
+    </ChildContent>
+    <ItemRenderer>
+        @if (@context.Identifier == FragmentGeneratorIdentifier)
+        {
+            <div class="ma-4">
+                <FragmentGeneratorCard FragmentGenerator=@context.Generator/>
+            </div>
+        }
+        else
+        {
+            <div class="ma-4">
+                <FragmentCard Fragment=@context.Fragment 
+                    OnRegenerateClicked="@RegenerateFragment"
+                    OnDeleteClicked="@OnDeleteFragment" />
+            </div>
+        }
+    </ItemRenderer>
+</MudDropContainer>
+
+<div style="position: fixed;bottom: 0pt;right: 0pt;">
+    <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Rounded.Save" 
+                    OnClick="ExportStudyGuide" Size="Size.Large" Class="ma-4"/>
+</div>
 
 @code{
     private const String StudyGuideIdentifier = "StudyGuide";
@@ -98,5 +153,9 @@
         var item = GetItemByName(name);
         item.Identifier = FragmentGeneratorIdentifier;
         this.StateHasChanged();
+    }
+
+    private void ExportStudyGuide(){
+        Console.WriteLine("Exporting Study Guide to Markdown...");
     }
 }
