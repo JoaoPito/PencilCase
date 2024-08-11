@@ -11,12 +11,12 @@
 @code{
     [Parameter] public String TextValue { get; set; } = String.Empty;
     [Parameter] public String Label { get; set; } = String.Empty;
-    [Parameter] public Action<String>? OnSubmit { get; set; }
+    [Parameter] public Func<String, Task>? OnSubmit { get; set; }
     [Parameter] public bool SubmitOnEnter { get; set; } = true;
 
-    private void InvokeOnSubmitMethod(){
+    private async Task InvokeOnSubmitMethod(){
         if(OnSubmit != null)
-            OnSubmit.Invoke(TextValue);
+            await OnSubmit.Invoke(TextValue);
     }
 
     private void OnKeyDown(KeyboardEventArgs args){
