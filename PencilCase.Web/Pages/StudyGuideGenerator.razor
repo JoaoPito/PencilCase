@@ -1,6 +1,7 @@
 @page "/studyguide"
 
 @inject FragmentApi FragmentApi;
+@inject IDialogService DialogService;
 
 <PageTitle>PencilCase</PageTitle>
 
@@ -159,8 +160,14 @@
         this.StateHasChanged();
     }
 
-    private void ExportStudyGuide()
+    private async Task ExportStudyGuide()
     {
+        var options = new DialogOptions { 
+            CloseOnEscapeKey = true,
+            CloseButton = true 
+        };
+
+        await DialogService.ShowAsync<SGExportDialog>("Save your Study Guide", options);
     }
 
     public async Task OnRegenerateStudyGuide(){

@@ -4,6 +4,7 @@ using MudBlazor;
 using PencilCase.Web;
 using MudBlazor.Services;
 using PencilCase.Web.Services;
+using PencilCase.Shared.Files.FileExporters;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -17,6 +18,7 @@ builder.Services.AddHttpClient("API", client =>
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
 builder.Services.AddTransient<FragmentApi>();
+builder.Services.AddTransient<MarkdownExporter>();
 
 builder.Services.AddMudServices();
 builder.Services.AddMudMarkdownServices();

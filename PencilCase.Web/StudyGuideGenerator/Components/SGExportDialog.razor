@@ -1,0 +1,47 @@
+@using PencilCase.Shared.Files.FileExporters;
+@using PencilCase.Shared.Files.Types
+
+@inject MarkdownExporter markdownExporter
+@inject IJSRuntime JS
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h3">
+            Save
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudStack>
+            <MudLink OnClick="DownloadToMarkdown" Style="text-decoration:none;">
+                <MudPaper Elevation="3" Class="pa-4 d-flex flex-grow-1">
+                    <MudText Typo="Typo.h5">Save as Markdown</MudText>
+                    <MudText Typo="Typo.body1">Use it with Notion, Obsidian or most notes apps.</MudText>
+                </MudPaper>
+            </MudLink>
+        </MudStack>
+    </DialogContent>
+</MudDialog>
+
+<script src="js/fileDownload.js"></script>
+
+@code {
+    [CascadingParameter]
+    private MudDialogInstance MudDialog { get; set; } = new();
+    [Parameter] 
+    public StudyGuide studyGuide { get; set; } = new();
+    private bool _loading = false;
+
+    private async Task DownloadTextFile(TextFile file){
+        var fileStream = new MemoryStream(file.GetContents());
+        var fileName = file.GetFileName();
+        using var streamRef = new DotNetStreamReference(stream: fileStream);
+        await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+    }
+
+    private async Task DownloadToMarkdown(){
+        var mdFile = markdownExporter.ExportStudyGuide(studyGuide);
+        _loading = true;
+        await DownloadTextFile(mdFile);
+        _loading = false;
+    }
+}
