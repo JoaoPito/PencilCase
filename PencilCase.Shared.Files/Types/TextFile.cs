@@ -12,4 +12,8 @@ public abstract class TextFile
         this.Contents = contents;
         this.Extension = extension;
     }
+
+    public String GetFileName(){
+        return Name + Extension;
+    }
 }
