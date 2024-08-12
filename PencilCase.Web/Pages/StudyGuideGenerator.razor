@@ -70,7 +70,7 @@
 
 <div style="position: fixed;bottom: 0pt;right: 0pt;">
     <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Rounded.Save" 
-                    OnClick="ExportStudyGuide" Size="Size.Large" Class="ma-4"/>
+            OnClick="ExportStudyGuide" Size="Size.Large" Class="ma-4"/>
 </div>
 
 @code{
@@ -135,7 +135,7 @@
     }
 
     private FragmentDropItem GetItemByName(String name){
-        var item = _items.FirstOrDefault(i => {Console.WriteLine(i.Fragment?.Name); return i.Fragment?.Name == name;});
+        var item = _items.FirstOrDefault(i => i.Fragment?.Name == name);
         if(item == null){
             throw new ArgumentException($"Could not find fragment with name '{name}'!");
         }
@@ -161,7 +161,6 @@
 
     private void ExportStudyGuide()
     {
-        Console.WriteLine("Exporting Study Guide to Markdown...");
     }
 
     public async Task OnRegenerateStudyGuide(){
