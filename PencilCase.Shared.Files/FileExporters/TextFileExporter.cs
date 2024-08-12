@@ -1,5 +1,5 @@
+using PencilCase.Shared.Files.Types;
 using PencilCase.Shared.Models;
-using PencilCase.Shared.Models.DownloadFile;
 
 namespace PencilCase.Shared.Files;
 
