@@ -39,7 +39,11 @@
                         <MudDropZone T="FragmentDropItem" Identifier="@StudyGuideIdentifier" 
                             Class="rounded-b mud-background-gray blueprint-dots pa-4 flex-grow-1 overflow-x-scroll"
                             AllowReorder="true">
-                        <div></div>
+                        <div>
+                            @if(_items.Where(i => i.Identifier == StudyGuideIdentifier).Count() == 0){
+                                <EmptyBlueprintContent />
+                            }
+                        </div>
                     </MudDropZone>
                     </MudCardContent>
                 </MudCard>
