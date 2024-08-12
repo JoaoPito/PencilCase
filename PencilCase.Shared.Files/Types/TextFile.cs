@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace PencilCase.Shared.Files.Types;
 
 public abstract class TextFile
@@ -15,5 +17,9 @@ public abstract class TextFile
 
     public String GetFileName(){
         return Name + Extension;
+    }
+
+    public byte[] GetContents(){
+        return Encoding.UTF8.GetBytes(Contents);
     }
 }
