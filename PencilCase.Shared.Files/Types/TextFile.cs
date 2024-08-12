@@ -1,4 +1,4 @@
-namespace PencilCase.Shared.Models.DownloadFile;
+namespace PencilCase.Shared.Files.Types;
 
 public abstract class TextFile
 {
