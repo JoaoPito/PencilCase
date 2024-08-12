@@ -32,7 +32,7 @@
                             <MudText Typo="Typo.h5" Align="Align.Start">Blueprint</MudText>
                         </CardHeaderContent>
                         <CardHeaderActions>
-                            <StudyGuideToolBar />
+                            <StudyGuideToolBar OnRenew="OnRegenerateStudyGuide" OnDelete="OnClearStudyGuide" />
                         </CardHeaderActions>
                     </MudCardHeader>
                     <MudCardContent Class="d-flex flex-grow-1 flex-column pa-0">
@@ -121,7 +121,7 @@
         return await FragmentApi.GenerateFragment(generator, _topic);
     }
 
-    private async void GenerateNewStudyGuide(String topic){
+    private async Task GenerateNewStudyGuide(String topic){
         _topic = topic;
         foreach(var item in _items.Where(i => i.Identifier == StudyGuideIdentifier)){
             var fragment = await GenerateFragmentWithGenerator(item.Generator);
@@ -155,7 +155,21 @@
         this.StateHasChanged();
     }
 
-    private void ExportStudyGuide(){
+    private void ExportStudyGuide()
+    {
         Console.WriteLine("Exporting Study Guide to Markdown...");
+    }
+
+    public async Task OnRegenerateStudyGuide(){
+        foreach (var item in _items){
+            item.Fragment = null;
+        }
+        this.StateHasChanged();
+        await GenerateNewStudyGuide(_topic);
+    }
+
+    public async Task OnClearStudyGuide() 
+    {
+
     }
 }

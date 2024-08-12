@@ -1,6 +1,29 @@
-<MudIconButton Icon="@Icons.Material.Rounded.Clear" aria-label="delete" />
-<MudIconButton Icon="@Icons.Material.Rounded.IosShare" aria-label="share" />
+<MudIconButton Icon="@Icons.Material.Rounded.Clear" aria-label="delete" 
+    OnClick="OnDeleteClick"/>
+<MudIconButton Icon="@Icons.Material.Rounded.Autorenew" aria-label="share"
+    OnClick="OnRenewClick" />
 
 @code{
-    
+    [Parameter] public String Name { get; set; } = String.Empty;
+    [Parameter] public Func<Task>? OnRenew { get; set; } 
+    [Parameter] public Func<Task>? OnDelete { get; set; } 
+
+    private bool _disabled = false;
+
+    private async Task OnRenewClick(){
+        if(OnRenew != null){
+            _disabled = true;
+            await OnRenew();
+            _disabled = false;
+        }
+        this.StateHasChanged();
+    }
+
+    private async Task OnDeleteClick(){
+        if(OnDelete != null){
+            _disabled = true;
+            await OnDelete();
+            _disabled = false;
+        }
+    }
 }
