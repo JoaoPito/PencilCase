@@ -1,4 +1,4 @@
-namespace PencilCase.Shared.Models.FileFormat;
+namespace PencilCase.Shared.Models.Download;
 
 public abstract class FileDownload
 {
