@@ -74,6 +74,12 @@
             OnClick="ExportStudyGuide" Size="Size.Large" Class="ma-4"/>
 </div>
 
+<style>
+    .dialog-background {
+        backdrop-filter: blur(20px);
+    }
+</style>
+
 @code{
     private const String StudyGuideIdentifier = "StudyGuide";
     private const String FragmentGeneratorIdentifier = "Generators";
@@ -183,7 +189,8 @@
 
         var options = new DialogOptions { 
             CloseOnEscapeKey = true,
-            CloseButton = true 
+            CloseButton = true,
+            BackgroundClass="dialog-background"
         };
 
         var parameters = new DialogParameters<SGExportDialog> { { x => x.StudyGuide, studyGuide } };
