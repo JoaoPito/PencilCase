@@ -24,10 +24,10 @@
         
     }
 
-    private void OnKeyDown(KeyboardEventArgs args){
+    private async Task OnKeyDown(KeyboardEventArgs args){
         if (SubmitOnEnter && args.Key=="Enter") 
         {
-            InvokeOnSubmitMethod();
+            await InvokeOnSubmitMethod();
             TextValue = String.Empty;
             StateHasChanged();
         }
