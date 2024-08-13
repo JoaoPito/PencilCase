@@ -33,6 +33,8 @@
     public StudyGuide StudyGuide { get; set; } = new();
     private bool _loading = false;
 
+    private void CloseDialog() => MudDialog.Close(DialogResult.Ok(true));
+
     private async Task DownloadTextFile(TextFile file){
         var fileStream = new MemoryStream(file.GetContents());
         var fileName = file.GetFileName();
@@ -45,5 +47,6 @@
         _loading = true;
         await DownloadTextFile(mdFile);
         _loading = false;
+        CloseDialog();
     }
 }
