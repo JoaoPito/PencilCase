@@ -6,13 +6,11 @@ namespace PencilCase.Shared.Files.FileExporters;
 public class MarkdownExporter : TextFileExporter
 {
     public override TextFile ExportStudyGuide(StudyGuide studyGuide){
-        var filename = studyGuide.Topic + studyGuide.LastOpened
-                                            .ToLocalTime()
-                                            .ToString("dd_MM_yyyy");
-        var file_contents = FormatTitle(studyGuide.Topic);
+        var filename = FormatAsFilename($"pencilcase_{studyGuide.Topic}");
+        var file_contents = FormatAsTitle(studyGuide.Topic);
 
         foreach(var fragment in studyGuide.Fragments){
-            var sectionTitle = FormatSubtitle(fragment.Name);
+            var sectionTitle = FormatAsSubtitle(fragment.Name);
             var sectionContent = $"{fragment.Content}\n";
             file_contents += sectionTitle + sectionContent;
         }
@@ -33,11 +31,15 @@ public class MarkdownExporter : TextFileExporter
         return string.Join(" ", words);
     }
 
-    protected String FormatTitle(String title){
+    protected String FormatAsTitle(String title){
         return $"# {CapitalizeText(title)}\n";
     }
 
-    protected String FormatSubtitle(String subtitle) {
+    protected String FormatAsSubtitle(String subtitle) {
         return $"## {CapitalizeText(subtitle)}\n";
+    }
+
+    protected String FormatAsFilename(String text) {
+        return text.Replace(" ", "_");
     }
 }
