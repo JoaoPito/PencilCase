@@ -123,6 +123,7 @@
         if (dropItem.Item.Identifier == StudyGuideIdentifier && dropItem.Item.Fragment == null)
         {
             dropItem.Item.Fragment = await GenerateFragmentWithGenerator(dropItem.Item.Generator);
+            this.StateHasChanged();
         }
     }
 
