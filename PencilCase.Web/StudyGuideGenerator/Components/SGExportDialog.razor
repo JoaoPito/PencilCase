@@ -6,21 +6,33 @@
 
 <MudDialog>
     <TitleContent>
-        <MudText Typo="Typo.h3">
+        <MudText Typo="Typo.h4">
             Save
+        </MudText>
+        <MudText Typo="Typo.body2">
+            Choose a format
         </MudText>
     </TitleContent>
     <DialogContent>
-        <MudStack>
-            <MudLink OnClick="DownloadToMarkdown" Style="text-decoration:none;">
-                <MudPaper Elevation="3" Class="pa-4 ma-2 d-flex flex-grow-1">
-                    <MudStack>
-                        <MudText Typo="Typo.h5">Save as Markdown</MudText>
-                        <MudText Typo="Typo.body1">Use it with Notion, Obsidian or most notes apps.</MudText>
-                    </MudStack>
-                </MudPaper>
-            </MudLink>
-        </MudStack>
+        @if(!_loading){
+            <MudStack>
+                <MudLink OnClick="DownloadToMarkdown" Style="text-decoration:none;">
+                    <MudPaper Elevation="5" Class="pa-4 ma-2 d-flex flex-grow-1">
+                        <MudStack>
+                            <div Class="d-inline-flex align-center">
+                                <MudIcon Icon="@Icons.Custom.FileFormats.FileDocument" Class="my-0 py-0" />
+                                <MudText Typo="Typo.h5" Class="d-inline-flex pa-4">Markdown</MudText>
+                            </div>
+                            <MudText Typo="Typo.body1">Use it with Notion, Obsidian or most notes apps.</MudText>
+                        </MudStack>
+                    </MudPaper>
+                </MudLink>
+            </MudStack>
+        }
+        else{
+            <MudProgressCircular Color="Color.Secondary" Indeterminate="true" Style="height:100px;width:100px;" 
+                Class="ma-2"/>
+        }
     </DialogContent>
 </MudDialog>
 
@@ -43,8 +55,11 @@
     }
 
     private async Task DownloadToMarkdown(){
-        var mdFile = markdownExporter.ExportStudyGuide(StudyGuide);
         _loading = true;
+        this.StateHasChanged();
+        Thread.Sleep(5000);
+        var mdFile = markdownExporter.ExportStudyGuide(StudyGuide);
+        
         await DownloadTextFile(mdFile);
         _loading = false;
         CloseDialog();
