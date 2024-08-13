@@ -13,8 +13,11 @@
         <MudButton Color="Color.Inherit" Variant="Variant.Text" Href="/flashcard" class="px-4">Flashcards</MudButton>
         <MudButton Color="Color.Inherit" Variant="Variant.Text" Href="/dashboard" class="px-4">Dashboard</MudButton>
         <MudSpacer/>    
-        <MudIconButton Icon="@Icons.Material.Filled.WbSunny" Color="Color.Inherit" 
-            @onclick="ToggleDarkMode"></MudIconButton>
+        <MudToggleIconButton 
+            Icon="@Icons.Material.Rounded.DarkMode"
+            ToggledIcon="@Icons.Material.Filled.WbSunny"
+            Color="Color.Inherit" 
+            @bind-Toggled="@_isDarkMode"></MudToggleIconButton>
     </MudAppBar>
     <MudMainContent class="mt-16 pa-4">
             @Body
@@ -38,10 +41,6 @@
     {
         _drawerOpen = !_drawerOpen;
     } 
-
-    private void ToggleDarkMode(){
-        _isDarkMode = !_isDarkMode;
-    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
