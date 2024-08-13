@@ -57,7 +57,6 @@
     private async Task DownloadToMarkdown(){
         _loading = true;
         this.StateHasChanged();
-        Thread.Sleep(5000);
         var mdFile = markdownExporter.ExportStudyGuide(StudyGuide);
         
         await DownloadTextFile(mdFile);
