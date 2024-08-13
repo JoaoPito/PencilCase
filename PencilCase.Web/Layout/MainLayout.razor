@@ -7,18 +7,15 @@
 
 <MudLayout>
     <MudAppBar Color="Color.Surface" Elevation="2">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
         <MudLink Href="/" Color="Color.Inherit" Typo="Typo.h5">pencilcase</MudLink>
+        <MudSpacer/>
+        <MudButton Color="Color.Inherit" Variant="Variant.Text" Href="/studyguide" class="px-4">Study Guide</MudButton>
+        <MudButton Color="Color.Inherit" Variant="Variant.Text" Href="/flashcard" class="px-4">Flashcards</MudButton>
+        <MudButton Color="Color.Inherit" Variant="Variant.Text" Href="/dashboard" class="px-4">Dashboard</MudButton>
         <MudSpacer/>    
-        <MudIconButton Icon="@Icons.Material.Filled.WbSunny" Color="Color.Inherit" @onclick="ToggleDarkMode"></MudIconButton>
+        <MudIconButton Icon="@Icons.Material.Filled.WbSunny" Color="Color.Inherit" 
+            @onclick="ToggleDarkMode"></MudIconButton>
     </MudAppBar>
-    <MudDrawer @bind-Open="@_drawerOpen"
-                ClipMode="DrawerClipMode.Always"
-                Elevation="3" 
-                Variant="@DrawerVariant.Mini" 
-                OpenMiniOnHover="true">
-        <NavMenu/>
-    </MudDrawer>
     <MudMainContent class="mt-16 pa-4">
             @Body
     </MudMainContent>
