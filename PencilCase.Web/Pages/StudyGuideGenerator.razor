@@ -186,7 +186,8 @@
             CloseButton = true 
         };
 
-        await DialogService.ShowAsync<SGExportDialog>("Save your Study Guide", options);
+        var parameters = new DialogParameters<SGExportDialog> { { x => x.StudyGuide, studyGuide } };
+        await DialogService.ShowAsync<SGExportDialog>("Save your Study Guide", parameters, options);
     }
 
     public async Task OnRegenerateStudyGuide(){

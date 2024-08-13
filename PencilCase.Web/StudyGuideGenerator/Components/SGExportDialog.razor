@@ -28,7 +28,7 @@
     [CascadingParameter]
     private MudDialogInstance MudDialog { get; set; } = new();
     [Parameter] 
-    public StudyGuide studyGuide { get; set; } = new();
+    public StudyGuide StudyGuide { get; set; } = new();
     private bool _loading = false;
 
     private async Task DownloadTextFile(TextFile file){
@@ -39,7 +39,7 @@
     }
 
     private async Task DownloadToMarkdown(){
-        var mdFile = markdownExporter.ExportStudyGuide(studyGuide);
+        var mdFile = markdownExporter.ExportStudyGuide(StudyGuide);
         _loading = true;
         await DownloadTextFile(mdFile);
         _loading = false;
