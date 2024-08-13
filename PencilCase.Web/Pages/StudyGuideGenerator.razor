@@ -93,6 +93,23 @@
         if (generators != null) PopulateItemsWithGenerators(generators);
     }
 
+    private StudyGuide FragmentsToStudyGuide(String topic, List<Fragment?>? fragments)
+    {
+        return new StudyGuide{
+            Topic = topic,
+            Fragments = (fragments != null) ? fragments : []
+        };
+    }
+
+    private StudyGuide GetStudyGuideFromBlueprint()
+    {
+        var fragments = _items
+            .Where(i => (i.Identifier == StudyGuideIdentifier && i.Fragment != null))
+            .Select(i => i.Fragment).ToList();
+
+        return FragmentsToStudyGuide(_topic, fragments);
+    }
+
     private async void ItemUpdated(MudItemDropInfo<FragmentDropItem> dropItem)
     {
         dropItem.Item!.Identifier = dropItem.DropzoneIdentifier!;
@@ -162,6 +179,8 @@
 
     private async Task ExportStudyGuide()
     {
+        var studyGuide = GetStudyGuideFromBlueprint();
+
         var options = new DialogOptions { 
             CloseOnEscapeKey = true,
             CloseButton = true 
