@@ -4,7 +4,7 @@
             Immediate="true" OnKeyDown="@OnKeyDown" 
             Variant="Variant.Outlined" Class="mt-0"></MudTextField>
         <MudIconButton OnClick="@InvokeOnSubmitMethod" Icon="@Icons.Material.Filled.Search" 
-            Color="Color.Inherit" Class="ml-n14 mt-50%" />
+            Color="Color.Inherit" Class="ml-n14 mt-50%" Disabled="@(!_submitEnabled)"/>
     </MudStack>
 </div>
 
@@ -13,10 +13,15 @@
     [Parameter] public String Label { get; set; } = String.Empty;
     [Parameter] public Func<String, Task>? OnSubmit { get; set; }
     [Parameter] public bool SubmitOnEnter { get; set; } = true;
+    bool _submitEnabled { get; set; } = true;
 
     private async Task InvokeOnSubmitMethod(){
-        if(OnSubmit != null)
+        if(OnSubmit != null && _submitEnabled){
+            _submitEnabled = false;
             await OnSubmit.Invoke(TextValue);
+            _submitEnabled = true;
+        }
+        
     }
 
     private void OnKeyDown(KeyboardEventArgs args){
