@@ -9,9 +9,9 @@
 }
 
 .scroller__inner {
-    padding-block: 1rem;
     display: flex;
     flex-wrap: wrap;
+    white-space: nowrap;
 }
 
 .scroller[data-animated=true] {
