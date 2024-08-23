@@ -1,4 +1,4 @@
-<div class="scroller" style="bkg-color: @Color">
+<div class="scroller" style="--bkg-color: @Color;">
     <div class="scrolling-tag-list scroller__inner">
         @foreach (var item in Items){
             <MudText Typo="Typo.body1" Class="mx-6 my-1"><b>@item.ToUpper()</b></MudText>
@@ -10,6 +10,6 @@
 
 @code {
     [Parameter] public List<String> Items { get; set; } = new();
-    [Parameter] public String Color { get; set; } = String.Empty;
+    [Parameter] public String Color { get; set; } = "#e74c3c";
 
 }
