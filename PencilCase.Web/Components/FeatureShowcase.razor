@@ -2,9 +2,13 @@
     style="@Style">
     <MudCardHeader Class="feature-showcase-header ma-0 pa-4">
             <MudText Typo="Typo.h2" Align="Align.Center" Class="overflow-x-hidden ">@Title</MudText>
+            
     </MudCardHeader>
     <MudCardContent Class="pa-0 ma-0" sty>
         <MudStack>
+            <div>
+                <ScrollingTagList Items="@ScrollerContent" Color="#8CCBCF"/>
+            </div>
             <div class="pa-4">
                 <MudText Typo="Typo.h6" Align="Align.Center" Class="overflow-x-hidden">@Description</MudText>
                 <MudText Typo="Typo.body1" Align="Align.Start" Class="overflow-hidden" >@Body</MudText>
@@ -19,4 +23,5 @@
     [Parameter] public String Description { get; set; } = String.Empty;
     [Parameter] public String Body { get; set; } = String.Empty;
     [Parameter] public String Style { get; set; } = String.Empty;
+    [Parameter] public List<String> ScrollerContent { get; set; } = new();
 }
