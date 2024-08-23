@@ -5,7 +5,7 @@
 
 .scroller {
     max-width: 100%;
-    background: rgb(128, 0, 128);
+    background: var(--bkg-color, #e74c3c);
 }
 
 .scroller__inner {
@@ -23,7 +23,7 @@
     flex-wrap: nowrap;
     animation: 
         scroll
-        var(--_animation-duration, 10s)
+        var(--_animation-duration, 30s)
         var(--_animation-direction, forwards)
         linear
         infinite;
