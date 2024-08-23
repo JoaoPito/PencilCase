@@ -6,18 +6,21 @@
 
 <MudGrid Justify="Justify.Center" Spacing="2">
     <MudItem xs="12">
-        <MudImage Src="home-cover.jpg" ObjectFit="ObjectFit.Cover" Elevation="2" Fluid="true" />
+        <div style="position: relative; display: inline-block;">
+            <MudImage Src="home-cover.jpg" ObjectFit="ObjectFit.Cover" Elevation="2" Fluid="true" />
+            <div style="position: absolute; top: 10%; left: 15%; 
+                        color: white; width: 400pt">
+                <MudStack>
+                    <MudText Align="Align.Left" Typo="Typo.h1">
+                        <b>Level up your habits.</b>
+                    </MudText>
+                    <MudText Align="Align.Left" Typo="Typo.h4">
+                        Get everything you need to do your best work.
+                    </MudText>
+                </MudStack>
+            </div>
+        </div>
     </MudItem>
-    <MudItem xs="12">
-        
-    </MudItem>
-    <MudItem xs="12">
-        <MudText Typo="Typo.h1" Align="Align.Center">Level up your habits.</MudText>
-    </MudItem>
-    <MudItem xs="8">
-        <MudText Typo="Typo.h4" Align="Align.Center">Get everything you need to do your best work.</MudText>
-    </MudItem>
-    <MudFlexBreak />
     <MudItem sm="12" md="12" Class="my-8">
         <MudLink Href="/studyguide" Style="text-decoration:none;">
             <FeatureShowcase Title="Study Guides" Style="--primary-color: #B0DBDE; --secondary-color: #8CCBCF;"
@@ -36,7 +39,7 @@
         "get introductions.", 
         "quickly find references.", 
         "follow bite-sized steps.", 
-        "save your study guide in your favorite note-taking app."];
+        "use it in your favorite note-taking app."];
 
     void SearchBarSubmit(String searchText){
         Console.WriteLine($"Search submit: {searchText}");
