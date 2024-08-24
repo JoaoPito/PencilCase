@@ -1,0 +1,9 @@
+.cover {
+    background-image: url("home-page/home-cover.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    min-block-size: 100vh;
+    place-content: center;
+    text-align: center;
+}
