@@ -7,8 +7,8 @@
 <MudGrid Justify="Justify.Center" Spacing="2">
     <MudItem xs="12">
         <div style="position: relative; display: inline-block;">
-            <MudImage Src="home-cover.jpg" ObjectFit="ObjectFit.Cover" Elevation="2" Fluid="true" />
-            <div style="position: absolute; top: 10%; left: 15%; 
+            <MudImage Src="home-cover.jpg" ObjectFit="ObjectFit.Cover" Elevation="2" Fluid="true" Class="mt-n3"/>
+            <div style="position: absolute; top: 10%; left: 10%; 
                         color: white; width: 400pt">
                 <MudStack>
                     <MudText Align="Align.Left" Typo="Typo.h1">
@@ -34,12 +34,16 @@
     private String searchBarText = String.Empty;
     
     String _studyGuideBody = "Our cutting-edge tool creates high-quality study guides on any topic you choose, tailored precisely to your preferences. Whether you need a comprehensive overview or a focused review, customize your study guide effortlessly to fit your needs and boost your learning efficiency. Revolutionize the way you study with a guide that's built just for you!";
-    List<String> _scrollerContent = ["start learning any subject.", 
+    List<String> _scrollerContent = [
+        "start learning any subject.", 
         "get ready for your next study session.", 
         "get introductions.", 
         "quickly find references.", 
         "follow bite-sized steps.", 
-        "use it in your favorite note-taking app."];
+        "use it in your favorite note-taking app.",
+        "simplify your routine.",
+        "eliminate friction.",
+        "focus on what matters."];
 
     void SearchBarSubmit(String searchText){
         Console.WriteLine($"Search submit: {searchText}");
