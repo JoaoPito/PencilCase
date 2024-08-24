@@ -6,7 +6,7 @@
 <MudSnackbarProvider/>
 
 <MudLayout>
-    <MudAppBar Elevation="2" Class="glass-app-bar" Dense="true">
+    <MudAppBar Elevation="1" Class="glass-app-bar" Dense="true">
         <MudLink Href="/" Color="Color.Inherit" Typo="Typo.h5" class="d-flex flex-row align-center">
         <img src="icon_256.png" style="height: 48px;" class="mr-2">
         <MudText 
@@ -36,11 +36,13 @@
     {
         PaletteLight = new PaletteLight() 
         {
-            AppbarBackground = "#E0E0E000"
+            AppbarBackground = "#E0E0E000",
+            AppbarText = Colors.Gray.Darken4
         },
         PaletteDark = new PaletteDark()
         {
-            AppbarBackground = "#E0E0E000"
+            AppbarBackground = "#E0E0E000",
+            AppbarText = Colors.Gray.Lighten5
         },
         LayoutProperties = new LayoutProperties()
         {
