@@ -1,0 +1,4 @@
+.mud-appbar {
+    backdrop-filter: blur(5px) blur(10px) brightness(1.5) blur(20px);
+    -webkit-backdrop-filter: blur(5px) blur(10px) brightness(1.5) blur(20px);z
+}
