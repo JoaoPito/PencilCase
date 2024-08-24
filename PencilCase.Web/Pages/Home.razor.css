@@ -6,4 +6,9 @@
     min-block-size: 100vh;
     place-content: center;
     text-align: center;
+    color: rgb(90%, 90%, 90%)
+}
+
+.cover h1 {
+    color: rgb(255, 255, 255)
 }
