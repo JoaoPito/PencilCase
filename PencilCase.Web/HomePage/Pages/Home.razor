@@ -12,51 +12,7 @@
 </div>
 
 <section class="my-6 mx-16 d-flex">
-    <MudGrid Justify="Justify.Center">
-        <MudItem xs="10" Class="ma-0">
-            <div class="my-8">
-                <MudText Typo="Typo.h2" Align="Align.Center"><b>Transform hours of preparation into seconds.</b></MudText>
-                <MudText Typo="Typo.h6" Align="Align.Center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                    Praesent nisi nisi, laoreet eget accumsan eu, egestas vitae sapien. 
-                    In efficitur congue ante.</MudText>
-            </div>
-        </MudItem>
-        <MudItem xs="10">
-            <MudChip T="string" Icon="@Icons.Material.Rounded.Article" Size="Size.Large"
-                Variant="Variant.Text" Href="/studyguide" style=@($"color: {_studyGuideColor};")><b>Study Guide</b></MudChip>
-        </MudItem>
-        <MudFlexBreak />
-        <MudItem xs="10" md="4">
-            <MudText Typo="Typo.h4" Align="Align.Left" style=@($"color: {_studyGuideColor};")>Use it in your favorite note-taking app.</MudText>
-            <MudText Typo="Typo.h6" Align="Align.Left">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nisi nisi, laoreet eget accumsan eu, egestas vitae sapien. In efficitur congue ante.
-            </MudText>
-        </MudItem>
-        <MudItem xs="10" md="6">
-            <MudImage Src="home-page/example.jpg" ObjectFit="ObjectFit.Cover"
-                Width="400" Class="align-self-left d-flex flex-shrink" ObjectPosition="ObjectPosition.Left"/>
-        </MudItem>
-        <MudFlexBreak />
-        <MudFlexBreak class="my-10" />
-        <MudItem xs="10" md="6" >
-            <div class="d-flex justify-space-around">
-                <MudImage Src="home-page/example.jpg" ObjectFit="ObjectFit.Cover" Class="flex-shrink overflow-hidden"
-                    Width="400" ObjectPosition="ObjectPosition.Right"/>
-            </div>
-        </MudItem>
-        <MudItem xs="10" md="4">
-            <MudText Typo="Typo.h4" Align="Align.Left" style=@($"color: {_studyGuideColor};")>Follow bite-sized steps. In your way</MudText>
-            <MudText Typo="Typo.h6" Align="Align.Left">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nisi nisi, laoreet eget accumsan eu, egestas vitae sapien. In efficitur congue ante.
-            </MudText>
-            <div style=@($"color: {_studyGuideColor};")>
-                <MudText Typo="Typo.h5" Align="Align.Left">Sections</MudText>
-                <MudText Typo="Typo.h5" Align="Align.Left">References</MudText>
-                <MudText Typo="Typo.h5" Align="Align.Left">Quick-start</MudText>
-            </div>
-        </MudItem>
-        <MudFlexBreak />
-    </MudGrid>
+    <StudyGuideShowcase Color="@_studyGuideColor" TextColor="@_studyGuideTextColor"/>
 </section>
 
 @code{
