@@ -1,44 +1,70 @@
 ﻿@page "/"
+@using PencilCase.Web.HomePage.Components
 
 @inject NavigationManager Navigation
 
 <PageTitle>pencilcase</PageTitle>
 
-<MudGrid Justify="Justify.Center" Spacing="2">
-    <MudItem xs="12">
-        <section class="cover overlay">
-            <MudStack>
-                <MudText Typo="Typo.h1"><b>Level up your habits.</b></MudText>
-                <MudText Typo="Typo.h4">Get everything you need to do your best work.</MudText>
-            </MudStack>
-        </section>
-    </MudItem>
-    <MudItem sm="12" md="12" Class="my-8">
-        <MudLink Href="/studyguide" Style="text-decoration:none;">
-            Start creating for free!
-        </MudLink>
-    </MudItem>
-    <MudItem sm="12">
-        <MudText Align="Align.Center" Typo="Typo.h4">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        </MudText>
-        <MudText Align="Align.Center" Typo="Typo.body1">
-            Pellentesque volutpat orci sapien, nec volutpat lacus convallis vitae. Sed blandit posuere quam, et elementum orci malesuada at. Nam at elit ex. Duis in magna eu mauris molestie feugiat. Vivamus iaculis, turpis ac sollicitudin aliquam, ante purus auctor leo, sit amet posuere nunc urna at dolor. Sed rutrum est et venenatis luctus. In posuere velit non velit hendrerit fringilla. Curabitur blandit, nulla euismod aliquet molestie, risus orci tempus nisl, in aliquam urna mauris vitae felis. Sed lacinia ipsum lectus, iaculis interdum libero congue nec. Proin iaculis eleifend turpis ac aliquet.
-            Nulla mollis, nisl id porttitor hendrerit, felis nisi tincidunt leo, ut placerat neque elit ut lorem. Pellentesque varius condimentum ante, non interdum magna. Sed vulputate urna nisl, ut ultricies quam feugiat nec. Nulla tempus dignissim feugiat. Duis sit amet lacus malesuada, pellentesque justo ut, vestibulum nulla. Fusce purus risus, gravida sit amet viverra quis, accumsan eu felis. Vestibulum suscipit nec arcu sed efficitur. Morbi eleifend vehicula nisi, pellentesque euismod elit. Proin ullamcorper ultrices lacinia. Morbi pretium dolor ac hendrerit consectetur. Proin eu rutrum purus.
-            
-            Phasellus facilisis gravida ultricies. Donec sed vestibulum tellus. Sed in blandit orci, lobortis luctus nisi. Phasellus ornare tellus velit, ut interdum ipsum hendrerit vel. Morbi vitae metus erat. Donec orci velit, aliquet a congue quis, suscipit vel elit. Duis imperdiet justo mauris, vel viverra sem gravida ut. Sed id tempus nisi. Praesent hendrerit porttitor leo in consequat. Phasellus vitae hendrerit leo. Suspendisse quis aliquet arcu. Maecenas pellentesque hendrerit magna et sollicitudin. Aenean enim diam, varius nec dolor quis, tempus lacinia augue. Morbi faucibus luctus orci, ac hendrerit nunc sodales eget. Ut ultricies laoreet imperdiet.
-            
-            Vivamus nibh felis, vehicula ut ullamcorper ac, pretium in mi. Quisque nisi mauris, varius at tortor quis, tincidunt ultrices risus. Maecenas eu lacus elementum, bibendum est sodales, semper metus. Nunc dignissim lacus eu eleifend tristique. Donec eu nisl eu leo condimentum tempor eget quis risus. Cras rutrum dolor scelerisque, venenatis dui in, aliquam enim. Quisque venenatis pharetra dui at iaculis. Maecenas pharetra libero mauris, eget varius ante accumsan in. Vestibulum mauris sapien, blandit ac quam at, fringilla facilisis dolor. Vestibulum non nisl id ligula iaculis venenatis non fringilla quam. Nam volutpat purus sed convallis placerat.
-            
-            Curabitur viverra in libero et mattis. Morbi egestas, sem vitae semper mollis, elit urna tristique erat, at pharetra arcu diam eget ligula. In ornare, est nec dapibus eleifend, sapien sem posuere leo, sit amet imperdiet quam arcu eu lacus. Aliquam auctor, magna porttitor tempus dignissim, est elit pharetra urna, hendrerit ullamcorper diam mi ut ligula. Nulla pretium est vitae fringilla accumsan. Integer dapibus massa at dolor condimentum vehicula. Praesent ac bibendum velit. Sed cursus lorem vel scelerisque ullamcorper. Cras ac neque orci. Vestibulum rutrum nisl non sapien mollis viverra. Mauris accumsan ultricies augue, ut sollicitudin augue ultrices ut. Etiam ut efficitur turpis, id condimentum ligula. Mauris faucibus, erat a efficitur commodo, ex nisl ullamcorper massa, et feugiat elit ligula aliquam neque. 
-        </MudText>
-    </MudItem>
-</MudGrid>
+<section class="cover overlay">
+    <MudStack class="mx-10">
+        <MudText Typo="Typo.h1"><b>All you need for your study sessions.</b></MudText>
+        <MudText Typo="Typo.h4">Get everything you need to do your best work.</MudText>
+    </MudStack>
+</section>
+
+<div style=@($"color: {_studyGuideTextColor};")>
+    <ScrollingTagList Items="@_scrollerContent" Color="@_studyGuideColor" />
+</div>
+
+<section class="my-6 mx-16 d-flex">
+    <MudGrid Justify="Justify.Center">
+        <MudItem xs="10" Class="ma-0">
+            <div class="my-8">
+                <MudText Typo="Typo.h2" Align="Align.Center"><b>Transform hours of preparation into seconds.</b></MudText>
+                <MudText Typo="Typo.h6" Align="Align.Center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                    Praesent nisi nisi, laoreet eget accumsan eu, egestas vitae sapien. 
+                    In efficitur congue ante.</MudText>
+            </div>
+        </MudItem>
+        <MudItem xs="10">
+            <MudChip T="string" Icon="@Icons.Material.Rounded.Article" Size="Size.Large"
+                Variant="Variant.Text" Href="/studyguide" style=@($"color: {_studyGuideColor};")><b>Study Guide</b></MudChip>
+        </MudItem>
+        <MudFlexBreak />
+        <MudItem xs="10" md="4">
+            <MudText Typo="Typo.h4" Align="Align.Left" style=@($"color: {_studyGuideColor};")>Use it in your favorite note-taking app.</MudText>
+            <MudText Typo="Typo.h6" Align="Align.Left">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nisi nisi, laoreet eget accumsan eu, egestas vitae sapien. In efficitur congue ante.
+            </MudText>
+        </MudItem>
+        <MudItem xs="10" md="6">
+            <MudImage Src="home-page/example.jpg" ObjectFit="ObjectFit.Cover"
+                Width="400" Class="align-self-left d-flex flex-shrink" ObjectPosition="ObjectPosition.Left"/>
+        </MudItem>
+        <MudFlexBreak />
+        <MudFlexBreak class="my-10" />
+        <MudItem xs="10" md="6" >
+            <div class="d-flex justify-space-around">
+                <MudImage Src="home-page/example.jpg" ObjectFit="ObjectFit.Cover" Class="flex-shrink overflow-hidden"
+                    Width="400" ObjectPosition="ObjectPosition.Right"/>
+            </div>
+        </MudItem>
+        <MudItem xs="10" md="4">
+            <MudText Typo="Typo.h4" Align="Align.Left" style=@($"color: {_studyGuideColor};")>Follow bite-sized steps. In your way</MudText>
+            <MudText Typo="Typo.h6" Align="Align.Left">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nisi nisi, laoreet eget accumsan eu, egestas vitae sapien. In efficitur congue ante.
+            </MudText>
+            <div style=@($"color: {_studyGuideColor};")>
+                <MudText Typo="Typo.h5" Align="Align.Left">Sections</MudText>
+                <MudText Typo="Typo.h5" Align="Align.Left">References</MudText>
+                <MudText Typo="Typo.h5" Align="Align.Left">Quick-start</MudText>
+            </div>
+        </MudItem>
+        <MudFlexBreak />
+    </MudGrid>
+</section>
 
 @code{
-    private String searchBarText = String.Empty;
-    
-    String _studyGuideBody = "Our cutting-edge tool creates high-quality study guides on any topic you choose, tailored precisely to your preferences. Whether you need a comprehensive overview or a focused review, customize your study guide effortlessly to fit your needs and boost your learning efficiency. Revolutionize the way you study with a guide that's built just for you!";
     List<String> _scrollerContent = [
         "start learning any subject.", 
         "get ready for your next study session.", 
@@ -50,8 +76,6 @@
         "eliminate friction.",
         "focus on what matters."];
 
-    void SearchBarSubmit(String searchText){
-        Console.WriteLine($"Search submit: {searchText}");
-    }
-
+    String _studyGuideColor = Colors.Pink.Accent2;
+    String _studyGuideTextColor = Colors.Shades.Black;
 }
