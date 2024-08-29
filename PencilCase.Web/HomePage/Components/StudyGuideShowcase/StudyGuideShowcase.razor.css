@@ -1,0 +1,36 @@
+@media (prefers-reduced-motion: no-preference) {
+    .header {
+        transform: translate(0, 75px); 
+        opacity: 0;
+    
+        animation: fade-in ease-in-out forwards;
+        animation-timeline: view();
+        animation-range: exit;
+    }
+
+    .feature-title {
+        transform: translate(0, 75px); 
+        opacity: 0;
+    
+        animation: fade-in ease-in-out forwards;
+        animation-timeline: view();
+        animation-range-start: contain;
+        animation-range-end: contain 30vh;
+    }
+    
+    .feature-paragraph {
+        transform: translate(0, 75px); 
+        opacity: 0;
+    
+        animation: fade-in ease-in-out forwards;
+        animation-timeline: view();
+        animation-range-start: entry 10vh;
+        animation-range-end: entry 30vh;
+    }
+    
+    @keyframes fade-in {
+        to { 
+            transform: translate(0, 0); 
+            opacity: 1; }
+    }
+}
