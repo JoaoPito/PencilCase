@@ -1,0 +1,32 @@
+<MudGrid Justify="Justify.Center">
+    <MudItem xs="10" md="6">
+        <div class="d-flex justify-space-around">
+            <MudImage Src="@ImgSrc" ObjectFit="ObjectFit.Cover" 
+                Class="flex-shrink overflow-hidden"
+                Width="600" ObjectPosition="ObjectPosition.Right"/>
+        </div>
+    </MudItem>
+    <MudItem xs="10" md="4" class="mb-10">
+        <MudText Typo="Typo.h4" Align="Align.Right" style=@($"color: {Color};")>
+            <b>@Title</b>
+        </MudText>
+        <MudText Typo="Typo.h6" Align="Align.Right">
+            <MudMarkdown Value="@Content" />
+        </MudText>
+        <div style=@($"color: {Color};")>
+            @foreach(var point in BulletPoints){
+                <MudText Typo="Typo.h5" Align="Align.Right">@point</MudText>
+            }
+        </div>
+    </MudItem>
+    <MudFlexBreak />
+</MudGrid>
+
+@code {
+    [Parameter] public String Color { get; set; } = Colors.Pink.Accent2;
+    [Parameter] public String ImgSrc { get; set; } = String.Empty;
+    [Parameter] public String Title { get; set; } = String.Empty;
+    [Parameter] public String Content { get; set; } = String.Empty;
+    [Parameter] public List<String> BulletPoints { get; set; } = new();
+
+}
