@@ -18,4 +18,17 @@
     border-image: fill 1 linear-gradient(
         rgba(0%, 0%, 0%, 15%), 
         rgba(0%, 0%, 0%, 100%) 95%);
+
+    animation: fade-out linear forwards;
+    animation-timeline: view();
+    animation-range-start: exit;
+    animation-range-end: exit 90vh;
+}
+
+@keyframes fade-out {
+    to {
+        border-image: fill 1 linear-gradient(
+        rgba(0%, 0%, 0%, 15%), 
+        rgba(0%, 0%, 0%, 100%) 0%);
+    }
 }
