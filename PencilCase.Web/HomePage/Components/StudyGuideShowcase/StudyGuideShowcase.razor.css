@@ -25,7 +25,7 @@
         animation: fade-in ease-in-out forwards;
         animation-timeline: view();
         animation-range-start: entry 10vh;
-        animation-range-end: entry 30vh;
+        animation-range-end: entry 50vh;
     }
     
     @keyframes fade-in {
