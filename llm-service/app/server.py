@@ -6,8 +6,8 @@ from app.generators.introduction import IntroductionGenerator
 
 builder = ApiBuilder()
 
-builder.add_generator(RoadmapGenerator())
 builder.add_generator(IntroductionGenerator())
+builder.add_generator(RoadmapGenerator())
 
 app = builder.build()
 
