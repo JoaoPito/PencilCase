@@ -30,35 +30,45 @@
     {
         @if(Alignment == ParagraphAlign.Left)
         {
-            <MudItem xs="@_elemsSizeFull" md="@_imgGridSizeMd">
-                <div class="d-flex justify-space-around">
-                    <MudImage Src="@ImgSrc" ObjectFit="ObjectFit.Cover" 
-                        Class="flex-shrink overflow-hidden rounded-lg"
-                        Width="@_imgHeight" ObjectPosition="ObjectPosition.Right"/>
-                </div>
+            <MudItem xs="@_elemsSizeFull" md="@_textGridSizeMd">
+                <MudText Typo="Typo.h4" Align="Align.Left" style=@($"color: {Color};")>
+                    <b>@Title</b>
+                </MudText>
+                <MudText Typo="Typo.h6" Align="Align.Left">
+                    <MudMarkdown Value="@Content" />
+                </MudText>
+                 <MudStack>
+                    <div style=@($"color: {Color};")>
+                        @foreach(var point in BulletPoints){
+                            <MudText Typo="Typo.h5" Align="Align.Left">@point</MudText>
+                        }
+                    </div>
+                </MudStack>
             </MudItem>
         }
-        <MudItem xs="@_elemsSizeFull" md="@_textGridSizeMd">
-            <MudText Typo="Typo.h4" Align="Align.Right" style=@($"color: {Color};")>
-                <b>@Title</b>
-            </MudText>
-            <MudText Typo="Typo.h6" Align="Align.Right">
-                <MudMarkdown Value="@Content" />
-            </MudText>
-            <div style=@($"color: {Color};")>
-                @foreach(var point in BulletPoints){
-                    <MudText Typo="Typo.h5" Align="Align.Right">@point</MudText>
-                }
+        <MudItem xs="@_elemsSizeFull" md="@_imgGridSizeMd">
+            <div class="d-flex justify-space-around">
+                <MudImage Src="@ImgSrc" ObjectFit="ObjectFit.Cover" 
+                    Class="flex-shrink overflow-hidden rounded-lg"
+                    Width="@_imgHeight" ObjectPosition="ObjectPosition.Right"/>
             </div>
         </MudItem>
         @if(Alignment == ParagraphAlign.Right)
         {
-            <MudItem xs="@_elemsSizeFull" md="@_imgGridSizeMd">
-                <div class="d-flex justify-space-around">
-                    <MudImage Src="@ImgSrc" ObjectFit="ObjectFit.Cover" 
-                        Class="flex-shrink overflow-hidden rounded-lg"
-                        Width="@_imgHeight" ObjectPosition="ObjectPosition.Right"/>
-                </div>
+            <MudItem xs="@_elemsSizeFull" md="@_textGridSizeMd">
+                <MudText Typo="Typo.h4" Align="Align.Right" style=@($"color: {Color};")>
+                    <b>@Title</b>
+                </MudText>
+                <MudText Typo="Typo.h6" Align="Align.Right">
+                    <MudMarkdown Value="@Content" />
+                </MudText>
+                 <MudStack>
+                    <div style=@($"color: {Color};")>
+                        @foreach(var point in BulletPoints){
+                            <MudText Typo="Typo.h5" Align="Align.Right">@point</MudText>
+                        }
+                    </div>
+                </MudStack>
             </MudItem>
         }
     }
