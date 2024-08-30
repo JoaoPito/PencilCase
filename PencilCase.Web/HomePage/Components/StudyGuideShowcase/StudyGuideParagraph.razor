@@ -1,7 +1,7 @@
 <MudGrid Justify="Justify.Center">
     @if(Alignment == ParagraphAlign.Left)
     {
-        <MudItem xs="10" md="6">
+        <MudItem xs="@_elemsSizeFull" md="@_imgGridSizeMd">
             <div class="d-flex justify-space-around">
                 <MudImage Src="@ImgSrc" ObjectFit="ObjectFit.Cover" 
                     Class="flex-shrink overflow-hidden rounded-lg"
@@ -9,7 +9,7 @@
             </div>
         </MudItem>
     }
-    <MudItem xs="10" md="4" class="mb-10">
+    <MudItem xs="@_elemsSizeFull" md="@_textGridSizeMd" class="mb-10">
         <MudText Typo="Typo.h4" Align="Align.Right" style=@($"color: {Color};")>
             <b>@Title</b>
         </MudText>
@@ -24,7 +24,7 @@
     </MudItem>
     @if(Alignment == ParagraphAlign.Right)
     {
-        <MudItem xs="10" md="6">
+        <MudItem xs="@_elemsSizeFull" md="@_imgGridSizeMd">
             <div class="d-flex justify-space-around">
                 <MudImage Src="@ImgSrc" ObjectFit="ObjectFit.Cover" 
                     Class="flex-shrink overflow-hidden rounded-lg"
@@ -49,4 +49,7 @@
     [Parameter] public List<String> BulletPoints { get; set; } = new();
 
     private int _imgHeight = 500;
+    private int _elemsSizeFull = 10;
+    private int _textGridSizeMd = 4;
+    private int _imgGridSizeMd = 6;
 }
