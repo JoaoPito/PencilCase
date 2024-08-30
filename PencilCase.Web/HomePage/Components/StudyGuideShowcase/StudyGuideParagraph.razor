@@ -25,6 +25,20 @@
                     Width="@_imgHeight" ObjectPosition="ObjectPosition.Right"/>
             </div>
         </MudItem>
+        @if(ButtonText != String.Empty){
+            <MudFlexBreak />
+            <MudItem xs="@_elemsSizeFull">
+                <div class="d-flex justify-center my-12">
+                    <MudButton Href="@ButtonHref"
+                        Size="Size.Large"
+                        EndIcon="@ButtonIcon"
+                        Variant="Variant.Filled"
+                        style=@($"background-color: {Color}; color: {TextColor}")>
+                            @ButtonText
+                    </MudButton>
+                </div>
+            </MudItem>
+        }
     }
     else
     {
@@ -44,12 +58,25 @@
                         }
                     </div>
                 </MudStack>
+
+                @if(ButtonText != String.Empty){
+                    <div class="d-flex justify-start my-12">
+                        <MudButton Href="@ButtonHref"
+                            Size="Size.Large"
+                            EndIcon="@ButtonIcon"
+                            Variant="Variant.Filled"
+                            style=@($"background-color: {Color}; color: {TextColor}")>
+                                @ButtonText
+                        </MudButton>
+                    </div>
+                }
+
             </MudItem>
         }
         <MudItem xs="@_elemsSizeFull" md="@_imgGridSizeMd">
             <div class="d-flex justify-space-around">
                 <MudImage Src="@ImgSrc" ObjectFit="ObjectFit.Cover" 
-                    Class="flex-shrink overflow-hidden rounded-lg"
+                    Class="flex-shrink overflow-hidden rounded-xl"
                     Width="@_imgHeight" ObjectPosition="ObjectPosition.Right"/>
             </div>
         </MudItem>
@@ -69,6 +96,19 @@
                         }
                     </div>
                 </MudStack>
+
+                @if(ButtonText != String.Empty){
+                    <div class="d-flex justify-end my-12">
+                        <MudButton Href="@ButtonHref"
+                            Size="Size.Large"
+                            EndIcon="@ButtonIcon"
+                            Variant="Variant.Filled"
+                            style=@($"background-color: {Color}; color: {TextColor}")>
+                                @ButtonText
+                        </MudButton>
+                    </div>
+                }
+
             </MudItem>
         }
     }
@@ -84,10 +124,16 @@
 
     [Parameter] public ParagraphAlign Alignment { get; set; } = ParagraphAlign.Left;
     [Parameter] public String Color { get; set; } = Colors.Pink.Accent2;
+    [Parameter] public String TextColor { get; set; } = Colors.Shades.Black;
     [Parameter] public String ImgSrc { get; set; } = String.Empty;
     [Parameter] public String Title { get; set; } = String.Empty;
     [Parameter] public String Content { get; set; } = String.Empty;
     [Parameter] public List<String> BulletPoints { get; set; } = new();
+    [Parameter] public String ButtonText { get; set; } = String.Empty;
+    [Parameter] public String ButtonHref { get; set; } = String.Empty;
+    [Parameter] public String ButtonIcon { get; set; } = Icons.Material.Rounded.ArrowForward;
+    
+    
 
     private int _imgHeight = 500;
     private int _elemsSizeFull = 10;
