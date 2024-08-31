@@ -34,7 +34,9 @@
                                 <MudText Typo="Typo.h5" Align="Align.Start">Draft</MudText>
                             </CardHeaderContent>
                             <CardHeaderActions>
-                                <StudyGuideToolBar OnRenew="OnRegenerateStudyGuide" OnDelete="OnClearStudyGuide" />
+                                <StudyGuideToolBar Disabled="@_isProcessing"
+                                    OnRenew="OnRegenerateStudyGuide"
+                                    OnDelete="OnClearStudyGuide" />
                             </CardHeaderActions>
                         </MudCardHeader>
                         <MudCardContent Class="d-flex flex-grow-1 flex-column pa-0">
@@ -89,6 +91,8 @@
 
     private List<FragmentDropItem> _items { get; set; } = new();
     private String _topic = String.Empty;
+
+    private bool _isProcessing { get; set; } = false;
 
     protected override async Task OnInitializedAsync(){
         List<FragmentGenerator>? generators = new();
@@ -155,10 +159,12 @@
 
     private async Task GenerateNewStudyGuide(String topic){
         _topic = topic;
+        _isProcessing = true;
         foreach(var item in _items.Where(i => i.Identifier == StudyGuideIdentifier)){
             var fragment = await GenerateFragmentWithGenerator(item.Generator);
             item.Fragment = fragment;
         }
+        _isProcessing = false;
         this.StateHasChanged();
     }
 
@@ -216,7 +222,9 @@
 
     public async Task OnRegenerateStudyGuide(){
         EraseAllFragments();
+        _isProcessing = true;
         await GenerateNewStudyGuide(_topic);
+        _isProcessing = false;
     }
 
     public async Task OnClearStudyGuide() 
