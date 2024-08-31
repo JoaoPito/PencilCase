@@ -1,28 +1,28 @@
 <MudIconButton Icon="@Icons.Material.Rounded.Delete" aria-label="delete" 
-    OnClick="OnDeleteClick"/>
+    OnClick="OnDeleteClick" Disabled="@Disabled" />
 <MudIconButton Icon="@Icons.Material.Rounded.Autorenew" aria-label="share"
-    OnClick="OnRenewClick" />
+    OnClick="OnRenewClick" Disabled="@Disabled" />
 
 @code{
     [Parameter] public Func<Task>? OnRenew { get; set; } 
     [Parameter] public Func<Task>? OnDelete { get; set; } 
 
-    private bool _disabled = false;
+    [Parameter] public bool Disabled { get; set; } = false;
 
     private async Task OnRenewClick(){
         if(OnRenew != null){
-            _disabled = true;
+            Disabled = true;
             await OnRenew();
-            _disabled = false;
+            Disabled = false;
         }
         this.StateHasChanged();
     }
 
     private async Task OnDeleteClick(){
         if(OnDelete != null){
-            _disabled = true;
+            Disabled = true;
             await OnDelete();
-            _disabled = false;
+            Disabled = false;
         }
     }
 }
