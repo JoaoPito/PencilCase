@@ -4,7 +4,7 @@
             Immediate="true" OnKeyDown="@OnKeyDown" 
             Variant="Variant.Outlined" Class="mt-0"></MudTextField>
         <MudIconButton OnClick="@InvokeOnSubmitMethod" Icon="@Icons.Material.Filled.Search" 
-            Color="Color.Inherit" Class="ml-n14 mt-50%" Disabled="@(!_submitEnabled)"/>
+            Color="Color.Inherit" Class="ml-n14 mt-50%" Disabled="@(!Disabled)"/>
     </MudStack>
 </div>
 
@@ -13,23 +13,29 @@
     [Parameter] public String Label { get; set; } = String.Empty;
     [Parameter] public Func<String, Task>? OnSubmit { get; set; }
     [Parameter] public bool SubmitOnEnter { get; set; } = true;
-    bool _submitEnabled { get; set; } = true;
+    [Parameter] public bool ClearOnSubmit { get; set; } = true;
+    [Parameter] bool Disabled { get; set; } = false;
 
-    private async Task InvokeOnSubmitMethod(){
-        if(OnSubmit != null && _submitEnabled){
-            _submitEnabled = false;
+    private async Task InvokeOnSubmitMethod()
+    {
+        if(ClearOnSubmit) ClearText();
+        if(OnSubmit != null && !Disabled){
             await OnSubmit.Invoke(TextValue);
-            _submitEnabled = true;
         }
         
     }
 
-    private async Task OnKeyDown(KeyboardEventArgs args){
+    private void ClearText() 
+    {
+        TextValue = String.Empty;
+        StateHasChanged();
+    }
+
+    private async Task OnKeyDown(KeyboardEventArgs args)
+    {
         if (SubmitOnEnter && args.Key=="Enter") 
         {
             await InvokeOnSubmitMethod();
-            TextValue = String.Empty;
-            StateHasChanged();
         }
     }
 }
