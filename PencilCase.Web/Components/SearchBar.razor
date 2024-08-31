@@ -14,7 +14,7 @@
     [Parameter] public Func<String, Task>? OnSubmit { get; set; }
     [Parameter] public bool SubmitOnEnter { get; set; } = true;
     [Parameter] public bool ClearOnSubmit { get; set; } = true;
-    [Parameter] bool Disabled { get; set; } = false;
+    [Parameter] public bool Disabled { get; set; } = false;
 
     private async Task InvokeOnSubmitMethod()
     {
