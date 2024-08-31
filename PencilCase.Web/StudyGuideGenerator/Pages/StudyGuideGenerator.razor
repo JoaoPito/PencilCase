@@ -13,7 +13,8 @@
             <MudGrid Spacing="4" Class="d-flex flex-grow-1">
                 <MudItem sm="12" md="4" >
                     <MudStack Wrap="Wrap.WrapReverse" Spacing="4">
-                        <SearchBar Label="Choose a topic" OnSubmit="@OnSearchbarSubmit" />
+                        <SearchBar Label="Choose a topic" OnSubmit="@OnSearchbarSubmit"
+                            ClearOnSubmit="false" Disabled="@_isProcessing" />
                         <MudCard Elevation="3" Class="d-flex flex-grow-1 flex-column" Style="min-height:75vh">
                             <MudCardHeader>
                                 <MudText Typo="Typo.h6" Align="Align.Start">Sections</MudText>
