@@ -21,7 +21,8 @@
     {
         if(ClearOnSubmit) ClearText();
         if(OnSubmit != null && !Disabled){
-            await OnSubmit.Invoke(ValidateInput(TextValue));
+            TextValue = ValidateInput(TextValue);
+            await OnSubmit.Invoke(TextValue);
         }
     }
 
@@ -34,7 +35,7 @@
 
     private String TruncateToMaxLength(String text)
     {
-        return (text.Count() > MaxLength) ? text.SubString(0, MaxLength) : text;
+        return (text.Count() > MaxLength) ? text.Substring(0, MaxLength) : text;
     }
 
     private void ClearText() 
