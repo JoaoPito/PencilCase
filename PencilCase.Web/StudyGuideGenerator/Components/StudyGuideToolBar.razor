@@ -11,18 +11,14 @@
 
     private async Task OnRenewClick(){
         if(OnRenew != null){
-            Disabled = true;
             await OnRenew();
-            Disabled = false;
         }
         this.StateHasChanged();
     }
 
     private async Task OnDeleteClick(){
         if(OnDelete != null){
-            Disabled = true;
             await OnDelete();
-            Disabled = false;
         }
     }
 }
