@@ -1,6 +1,6 @@
 <div>
     <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
-        <MudTextField @bind-Value="TextValue" Label="@Label" 
+        <MudTextField @bind-Value="TextValue" Label="@Label" MaxLength="@MaxLength"
             Immediate="true" OnKeyDown="@OnKeyDown" Disabled="@Disabled"
             Variant="Variant.Outlined" Class="mt-0"></MudTextField>
         <MudIconButton OnClick="@InvokeOnSubmitMethod" Icon="@Icons.Material.Filled.Search" 
@@ -15,14 +15,26 @@
     [Parameter] public bool SubmitOnEnter { get; set; } = true;
     [Parameter] public bool ClearOnSubmit { get; set; } = true;
     [Parameter] public bool Disabled { get; set; } = false;
+    [Parameter] public int MaxLength { get; set; } = 150;
 
     private async Task InvokeOnSubmitMethod()
     {
         if(ClearOnSubmit) ClearText();
         if(OnSubmit != null && !Disabled){
-            await OnSubmit.Invoke(TextValue);
+            await OnSubmit.Invoke(ValidateInput(TextValue));
         }
-        
+    }
+
+    private String ValidateInput(String text)
+    {
+        text = text.Trim();
+        text = TruncateToMaxLength(text);
+        return text;
+    }
+
+    private String TruncateToMaxLength(String text)
+    {
+        return (text.Count() > MaxLength) ? text.SubString(0, MaxLength) : text;
     }
 
     private void ClearText() 
