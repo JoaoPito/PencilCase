@@ -22,14 +22,11 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Change to llm directory
-        run: cd llm-service
-
       - name: Install poetry
         run: pip install poetry==1.6.1
       
       - name: Install dependencies
-        run: poetry install --no-interaction --no-ansi --no-root
+        run: cd llm-service && poetry install --no-interaction --no-ansi --no-root
         
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
