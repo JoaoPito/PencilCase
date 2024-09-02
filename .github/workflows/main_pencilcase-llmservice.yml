@@ -22,13 +22,14 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Create and start virtual environment
-        run: |
-          python -m venv venv
-          source venv/bin/activate
+      - name: Change to llm directory
+        run: cd llm-service
+
+      - name: Install poetry
+        run: pip install poetry==1.6.1
       
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: poetry install --no-interaction --no-ansi --no-root
         
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
@@ -60,7 +61,6 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
-
       
       - name: Login to Azure
         uses: azure/login@v2
