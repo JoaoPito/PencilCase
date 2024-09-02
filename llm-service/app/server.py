@@ -3,12 +3,14 @@ from app.api_builder import ApiBuilder
 from app.generators.roadmap import RoadmapGenerator
 from app.generators.introduction import IntroductionGenerator
 from app.generators.applications import ApplicationsGenerator
+from app.generators.nextsteps import NextStepsGenerator
 
 builder = ApiBuilder()
 
 builder.add_generator(IntroductionGenerator())
 builder.add_generator(RoadmapGenerator())
 builder.add_generator(ApplicationsGenerator())
+builder.add_generator(NextStepsGenerator())
 
 app = builder.build()
 
