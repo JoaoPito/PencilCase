@@ -6,6 +6,8 @@ Run this service with `poetry run langchain serve`.
 
 **More information about this API in the endpoint `/docs`.**
 
+You can download a ready to run Docker container on **Docker Hub** with the tag `joaopdpito/pencilcase-llmservice:latest`.
+
 ## Generators
 This service is based on **Generators**, that binds endpoints to LLM chains to generate content.
 For example, to generate an introduction to a study guide, a generator is used when the API is built to simplify binding an endpoint (like '/intro') to the LangChain chain responsible for generating it. 
