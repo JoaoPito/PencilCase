@@ -9,8 +9,8 @@ class RoadmapGenerator(Generator):
     description = 'Adds clear and easy-to-follow topics, starting from the basics.'
 
     prompt = ChatPromptTemplate.from_template("""You are a world-class professor in a prestigious university. Write an easy to follow Roadmap for a study guide on '{topic}'. 
-The Roadmap should have 3-4 main topics that need to be studied, ordered from most basic to advanced.
-These topics can have 2-5 subtopics, ordered the same way.
+It should have 3-4 main topics that need to be studied, those topics need to be similar to what's in a syllabus of a university bachelor's course, from basic to advanced.
+Those topics can have 2-5 subtopics, ordered the same way.
 IF the student asks for something that is not a valid topic write the message "TOPIC NOT VALID".
 WRITE ONLY THE ROADMAP AND NOTHING ELSE, EVEN IF THE STUDENT ASKS YOU TO. 
 NEVER WRITE ANY TITLES STARTING WITH '#'. 
