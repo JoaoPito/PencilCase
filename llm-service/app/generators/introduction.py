@@ -6,7 +6,7 @@ from decouple import config
 class IntroductionGenerator(Generator):
     name = 'Introduction'
     endpoint = '/intro'
-    description = 'Gives a starting point briefly explaining the basic aspects of the topic.'
+    description = 'Gives a starting point to the topic, briefly explaining the basic aspects of it.'
 
     prompt = ChatPromptTemplate.from_template("""You are a world-class professor in a prestigious university. 
 Write a basic and easy to understand introduction to the topic '{topic}'. 
