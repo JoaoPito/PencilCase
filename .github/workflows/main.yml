@@ -23,33 +23,33 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-                uses: actions/checkout@v4
+              uses: actions/checkout@v4
             
             - name: Setup .NET
-                uses: actions/setup-dotnet@v3
-                with:
-                    dotnet-version: 8.0.x
+              uses: actions/setup-dotnet@v3
+              with:
+                  dotnet-version: 8.0.x
             
             - name: Install .NET WASM tools
-                run: dotnet workload install wasm-tools
+              run: dotnet workload install wasm-tools
 
             - name: Restore Dependencies 
-                run: dotnet restore
+              run: dotnet restore
 
             - name: Build
-                run: dotnet build PencilCase.Web -c Production --no-restore
+              run: dotnet build PencilCase.Web -c Production --no-restore
             
             - name: Publish app
-                run: dotnet publish PencilCase.Web -c:Production -o docs
+              run: dotnet publish PencilCase.Web -c:Production -o docs
             
             - name: Setup Pages
-                uses: actions/configure-pages@v4
+              uses: actions/configure-pages@v4
 
             - name: Upload
-                uses: actions/upload-pages-artifact@v3
-                with:
-                    path: 'docs/wwwroot'
+              uses: actions/upload-pages-artifact@v3
+              with:
+                  path: 'docs/wwwroot'
 
             - name: Deploy
-                id: deployment
-                uses: actions/deploy-pages@v4
+              id: deployment
+              uses: actions/deploy-pages@v4
