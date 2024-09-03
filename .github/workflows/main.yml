@@ -34,7 +34,7 @@ jobs:
               run: dotnet workload install wasm-tools
 
             - name: Restore Dependencies 
-              run: dotnet restore
+              run: dotnet restore PencilCase.Web
 
             - name: Build
               run: dotnet build PencilCase.Web -c Production --no-restore
