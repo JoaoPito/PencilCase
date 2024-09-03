@@ -7,8 +7,8 @@ on:
     workflow_dispatch:
 
 permissions:
-    content: read
-    page: write
+    contents: read
+    pages: write
     id-token: write
 
 concurrency:
@@ -40,13 +40,15 @@ jobs:
                 run: dotnet build PencilCase.Web -c Production --no-restore
             
             - name: Publish app
-                run: dotnet publish PencilCase.Web -c Production -o docs --no-logo
+                run: dotnet publish PencilCase.Web -c:Production -o docs
             
             - name: Setup Pages
                 uses: actions/configure-pages@v4
 
             - name: Upload
                 uses: actions/upload-pages-artifact@v3
+                with:
+                    path: 'docs/wwwroot'
 
             - name: Deploy
                 id: deployment
