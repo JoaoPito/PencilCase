@@ -10,27 +10,31 @@
     </MudItem>
     <!-- Images -->
     <MudFlexBreak />
-    <MudItem xs="@_elemsSizeFull">
-        <MudStack Row="true" Justify="Justify.Center" Spacing="0">
+    <MudItem xs="@(_elemsSizeFull/3)">
             <!-- Image 1 -->
             <div class="d-flex justify-space-around page left">
-                <MudImage Src="@ImgLeftSrc" ObjectFit="ObjectFit.Cover" 
+                <MudImage Src="@ImgLeftSrc" ObjectFit="ObjectFit.Cover"
                     Class="flex-shrink overflow-hidden rounded"
-                    Height="@_imgHeight" ObjectPosition="ObjectPosition.Center"/>
+                    ObjectPosition="ObjectPosition.Center"/>
             </div>
-            <!-- Image 2 -->
-            <div class="d-flex justify-space-around page center">
-                <MudImage Src="@ImgCenterSrc" ObjectFit="ObjectFit.Cover" 
-                    Class="flex-shrink overflow-hidden rounded"
-                    Height="@_imgHeight" ObjectPosition="ObjectPosition.Center"/>
-            </div>
-            <!-- Image 3 -->
-            <div class="d-flex justify-space-around page right">
-                <MudImage Src="@ImgRightSrc" ObjectFit="ObjectFit.Cover" 
-                    Class="flex-shrink overflow-hidden rounded"
-                    Height="@_imgHeight" ObjectPosition="ObjectPosition.Center"/>
-            </div>
-        </MudStack>
+            
+            
+    </MudItem>
+    <MudItem xs="@(_elemsSizeFull/3)">
+        <!-- Image 2 -->
+        <div class="d-flex justify-space-around page center">
+            <MudImage Src="@ImgCenterSrc" ObjectFit="ObjectFit.Cover" 
+                Class="flex-shrink overflow-hidden rounded"
+                ObjectPosition="ObjectPosition.Center"/>
+        </div>
+    </MudItem>
+    <MudItem xs="@(_elemsSizeFull/3)">
+        <!-- Image 3 -->
+        <div class="d-flex justify-space-around page right">
+            <MudImage Src="@ImgRightSrc" ObjectFit="ObjectFit.Cover"
+                Class="flex-shrink overflow-hidden rounded"
+                ObjectPosition="ObjectPosition.Center"/>
+        </div>
     </MudItem>
     <!-- Button -->
     @if(ButtonText != String.Empty){
@@ -61,6 +65,6 @@
     [Parameter] public String ButtonText { get; set; } = String.Empty;
     [Parameter] public String ButtonHref { get; set; } = String.Empty;
     [Parameter] public String ButtonIcon { get; set; } = Icons.Material.Rounded.ArrowForward;
-    private int _imgHeight = 900;
+    private int _imgHeight = 750;
     private int _elemsSizeFull = 10;
 }
