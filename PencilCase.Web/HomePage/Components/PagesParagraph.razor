@@ -1,0 +1,66 @@
+<MudGrid Justify="Justify.Center">
+    <!-- Title & subtitle -->
+    <MudItem xs="@_elemsSizeFull">
+        <MudText Typo="Typo.h4" Align="Align.Center" style=@($"color: {Color};")>
+            <b>@Title</b>
+        </MudText>
+        <MudText Typo="Typo.h6" Align="Align.Center">
+            <MudMarkdown Value="@Content" />
+        </MudText>
+    </MudItem>
+    <!-- Images -->
+    <MudFlexBreak />
+    <MudItem xs="@_elemsSizeFull">
+        <MudStack Row="true">
+            <!-- Image 1 -->
+            <div class="d-flex justify-space-around img-left">
+                <MudImage Src="@ImgLeftSrc" ObjectFit="ObjectFit.Cover" 
+                    Class="flex-shrink overflow-hidden rounded-xl"
+                    Width="@_imgWidth" ObjectPosition="ObjectPosition.Center"/>
+            </div>
+            <!-- Image 2 -->
+            <div class="d-flex justify-space-around img-center">
+                <MudImage Src="@ImgCenterSrc" ObjectFit="ObjectFit.Cover" 
+                    Class="flex-shrink overflow-hidden rounded-xl"
+                    Width="@_imgWidth" ObjectPosition="ObjectPosition.Center"/>
+            </div>
+            <!-- Image 3 -->
+            <div class="d-flex justify-space-around img-right">
+                <MudImage Src="@ImgRightSrc" ObjectFit="ObjectFit.Cover" 
+                    Class="flex-shrink overflow-hidden rounded-xl"
+                    Width="@_imgWidth" ObjectPosition="ObjectPosition.Center"/>
+            </div>
+        </MudStack>
+    </MudItem>
+    <!-- Button -->
+    @if(ButtonText != String.Empty){
+        <MudFlexBreak />
+        <MudItem xs="@_elemsSizeFull">
+            <div class="d-flex justify-center my-12">
+                <MudButton Href="@ButtonHref"
+                    Size="Size.Large"
+                    EndIcon="@ButtonIcon"
+                    Variant="Variant.Filled"
+                    style=@($"background-color: {Color}; color: {TextColor}")>
+                        @ButtonText
+                </MudButton>
+            </div>
+        </MudItem>
+    }
+</MudGrid>
+
+
+@code{
+    [Parameter] public String Color { get; set; } = Colors.Pink.Accent2;
+    [Parameter] public String TextColor { get; set; } = Colors.Shades.Black;
+    [Parameter] public String ImgCenterSrc { get; set; } = String.Empty;
+    [Parameter] public String ImgLeftSrc { get; set; } = String.Empty;
+    [Parameter] public String ImgRightSrc { get; set; } = String.Empty;
+    [Parameter] public String Title { get; set; } = String.Empty;
+    [Parameter] public String Content { get; set; } = String.Empty;
+    [Parameter] public String ButtonText { get; set; } = String.Empty;
+    [Parameter] public String ButtonHref { get; set; } = String.Empty;
+    [Parameter] public String ButtonIcon { get; set; } = Icons.Material.Rounded.ArrowForward;
+    private int _imgWidth = 400;
+    private int _elemsSizeFull = 10;
+}

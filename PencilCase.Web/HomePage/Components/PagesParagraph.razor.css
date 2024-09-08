@@ -1,0 +1,35 @@
+.page {
+    scale: 0.9;
+
+}
+
+.page.left {
+    scale: 0.5;
+}
+
+.page.right {
+    scale: 0.5;
+
+}
+
+@media (prefers-reduced-motion: no-preference) {
+
+    .page {
+        z-index: 2;
+    }
+
+    .page.left {
+        z-index: 1;
+    }
+
+    .page.right {
+        z-index: 1;
+    }
+
+    @keyframes go-to-origin {
+        to { 
+            transform: translate(0, 0); 
+            scale: 0.75; }
+        }
+    }
+}
