@@ -3,25 +3,23 @@
 }
 
 .page.left {
-    scale: 0.5;
+    scale: 0.75;
 }
 
 .page.right {
-    scale: 0.5;
+    scale: 0.75;
 
 }
 
 @media (prefers-reduced-motion: no-preference) {
 
     .page.center {
-        border: 2px yellow solid;
         z-index: 2;
     }
 
     .page.left {
-        border: 2px red solid;
         z-index: 1;
-        transform: translate(900px, 0); 
+        transform: translate(150%, 0); 
         animation: go-to-left ease-out forwards;
         animation-timeline: view();
         animation-range-start: cover;
@@ -29,9 +27,8 @@
     }
 
     .page.right {
-        border: 2px greenyellow solid;
         z-index: 1;
-        transform: translate(-900px, 0); 
+        transform: translate(-150%, 0); 
         animation: go-to-right ease-out forwards;
         animation-timeline: view();
         animation-range-start: cover;
