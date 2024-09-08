@@ -8,37 +8,46 @@
             <MudMarkdown Value="@Content" />
         </MudText>
     </MudItem>
-    <!-- Images -->
     <MudFlexBreak />
-    <MudItem xs="@(_elemsSizeFull/3)">
-            <!-- Image 1 -->
-            <div class="d-flex justify-space-around page left">
-                <MudImage Src="@ImgLeftSrc" ObjectFit="ObjectFit.Cover"
+    <!-- Images -->
+    <!-- Image 1 -->
+    <MudItem xs="@_imgSidesGridSize" 
+        Class="pa-0"
+        style="border: 2px green solid;">
+            <div class="d-flex page left" style="border: 2px red solid;">
+                <MudImage Src="@ImgLeftSrc"
+                    ObjectFit="ObjectFit.ScaleDown"
+                    Height="@_imgHeight"
                     Class="flex-shrink overflow-hidden rounded"
                     ObjectPosition="ObjectPosition.Center"/>
             </div>
-            
-            
     </MudItem>
-    <MudItem xs="@(_elemsSizeFull/3)">
-        <!-- Image 2 -->
-        <div class="d-flex justify-space-around page center">
-            <MudImage Src="@ImgCenterSrc" ObjectFit="ObjectFit.Cover" 
+    <!-- Image 2 -->
+    <MudItem xs="@_imgCenterGridSize"
+        Class="pa-0"
+        style="border: 2px green solid;">
+        <div class="d-flex page center" style="border: 2px red solid;">
+            <MudImage Src="@ImgCenterSrc"
+                ObjectFit="ObjectFit.ScaleDown"
+                Height="@_imgHeight"
                 Class="flex-shrink overflow-hidden rounded"
                 ObjectPosition="ObjectPosition.Center"/>
         </div>
     </MudItem>
-    <MudItem xs="@(_elemsSizeFull/3)">
-        <!-- Image 3 -->
-        <div class="d-flex justify-space-around page right">
-            <MudImage Src="@ImgRightSrc" ObjectFit="ObjectFit.Cover"
+    <!-- Image 3 -->
+    <MudItem xs="@_imgSidesGridSize" 
+        Class="pa-0"
+        style="border: 2px green solid;">
+        <div class="d-flex page right" style="border: 2px red solid;">
+            <MudImage Src="@ImgRightSrc"
+                ObjectFit="ObjectFit.ScaleDown"
+                Height="@_imgHeight"
                 Class="flex-shrink overflow-hidden rounded"
                 ObjectPosition="ObjectPosition.Center"/>
         </div>
     </MudItem>
     <!-- Button -->
     @if(ButtonText != String.Empty){
-        <MudFlexBreak />
         <MudItem xs="@_elemsSizeFull">
             <div class="d-flex justify-center my-12">
                 <MudButton Href="@ButtonHref"
@@ -65,6 +74,8 @@
     [Parameter] public String ButtonText { get; set; } = String.Empty;
     [Parameter] public String ButtonHref { get; set; } = String.Empty;
     [Parameter] public String ButtonIcon { get; set; } = Icons.Material.Rounded.ArrowForward;
-    private int _imgHeight = 750;
+    private int _imgHeight = 650;
     private int _elemsSizeFull = 10;
+    private int _imgCenterGridSize = 4;
+    private int _imgSidesGridSize = 3;
 }

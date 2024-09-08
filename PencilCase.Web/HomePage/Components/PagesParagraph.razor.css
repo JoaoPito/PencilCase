@@ -1,24 +1,25 @@
-.page {
-    scale: 1;
+.page.center {
+    justify-content: center;
+    position: relative;
+    z-index: 2;
 }
 
 .page.left {
+    justify-content: center;
     scale: 0.75;
+    z-index: 1;
+    transform: translate(50%, 0); 
 }
 
 .page.right {
+    justify-content: center;
     scale: 0.75;
-
+    z-index: 1;
+    transform: translate(-50%, 0); 
 }
 
 @media (prefers-reduced-motion: no-preference) {
-
-    .page.center {
-        z-index: 2;
-    }
-
     .page.left {
-        z-index: 1;
         transform: translate(150%, 0); 
         animation: go-to-left ease-out forwards;
         animation-timeline: view();
@@ -27,7 +28,6 @@
     }
 
     .page.right {
-        z-index: 1;
         transform: translate(-150%, 0); 
         animation: go-to-right ease-out forwards;
         animation-timeline: view();
@@ -37,14 +37,14 @@
  
     @keyframes go-to-left {
         to { 
-            transform: translate(200px, 0); 
+            transform: translate(50%, 0); 
             scale: 0.75; }
         }
     }
 
     @keyframes go-to-right {
         to { 
-            transform: translate(-200px, 0); 
+            transform: translate(-50%, 0); 
             scale: 0.75; }
         }
     }
