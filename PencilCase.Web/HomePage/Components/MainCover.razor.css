@@ -13,7 +13,6 @@
 
 .cover h1 {
     color: rgb(255, 255, 255);
-    flex-shrink: 1;
 }
 
 @supports (animation-timeline: view()){
@@ -31,10 +30,29 @@
         rgba(0%, 0%, 0%, 100%) 95%);
 }
 
+.main-text {
+    opacity: 0;
+    animation: fade-in 2s ease-in forwards;
+}
+
+
+.main-text.subtitle {
+    animation-delay: 0.5s;
+}
+
 @keyframes fade-out {
     to {
         border-image: fill 1 linear-gradient(
         rgba(0%, 0%, 0%, 15%), 
         rgba(0%, 0%, 0%, 100%) 0%);
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
     }
 }
