@@ -26,7 +26,7 @@
         animation: go-to-left ease-out forwards;
         animation-timeline: view();
         animation-range-start: cover;
-        animation-range-end: contain;
+        animation-range-end: contain -15%;
     }
 
     .page.right {
@@ -34,7 +34,7 @@
         animation: go-to-right ease-out forwards;
         animation-timeline: view();
         animation-range-start: cover;
-        animation-range-end: contain;
+        animation-range-end: contain -15%;
     }
 
     @keyframes go-to-left {
