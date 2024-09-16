@@ -8,11 +8,7 @@
 <MudLayout>
     <MudAppBar Elevation="1" Dense="true">
         <MudLink Href="/" Color="Color.Inherit" Typo="Typo.h5" class="d-flex flex-row align-center">
-        <img src="icon_256.png" style="height: 48px;" class="mr-2">
-        <MudText 
-            Typo="Typo.h5">
-            pencilcase
-        </MudText>
+            <Logo />
         </MudLink>
         <MudSpacer/>    
         <MudToggleIconButton
@@ -51,7 +47,7 @@
         {
             Default = new Default()
             {
-                FontFamily = new[] { "Noto Sans" },
+                FontFamily = new[] { "Noto Sans",  "Playwrite CU" },
                 FontWeight = 300
             },
             H1 = new H1()
