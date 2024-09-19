@@ -35,7 +35,7 @@ class YouTubeSearchTool(BaseTool):
     def _format_to_md(self, results):
         markdown_str = ""
         for title, url, channel, _, _ in results:
-            markdown_str = markdown_str + f"""[{title}]({url}) - {channel}\n"""
+            markdown_str = markdown_str + f"""- [{title}]({url}) - {channel}\n"""
         return markdown_str
 
     def _search(self, person: str, num_results: int) -> str:
