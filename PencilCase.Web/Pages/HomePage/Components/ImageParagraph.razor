@@ -2,8 +2,8 @@
     @if(Alignment == ParagraphAlign.Center)
     {
         <MudItem xs="@_elemsSizeFull">
-            <MudText Typo="Typo.h4" Align="Align.Center" style=@($"color: {Color};")>
-                <b>@Title</b>
+            <MudText Typo="Typo.h3" Align="Align.Center" style=@($"color: {Color};")>
+                @Title
             </MudText>
             <MudText Typo="Typo.h6" Align="Align.Center">
                 <MudMarkdown Value="@Content" />
@@ -45,8 +45,8 @@
         @if(Alignment == ParagraphAlign.Left)
         {
             <MudItem xs="@_elemsSizeFull" md="@_textGridSizeMd">
-                <MudText Typo="Typo.h4" Align="Align.Left" style=@($"color: {Color};")>
-                    <b>@Title</b>
+                <MudText Typo="Typo.h3" Align="Align.Left" style=@($"color: {Color};")>
+                    @Title
                 </MudText>
                 <MudText Typo="Typo.h6" Align="Align.Left">
                     <MudMarkdown Value="@Content" />
@@ -83,8 +83,8 @@
         @if(Alignment == ParagraphAlign.Right)
         {
             <MudItem xs="@_elemsSizeFull" md="@_textGridSizeMd">
-                <MudText Typo="Typo.h4" Align="Align.Right" style=@($"color: {Color};")>
-                    <b>@Title</b>
+                <MudText Typo="Typo.h3" Align="Align.Right" style=@($"color: {Color};")>
+                    @Title
                 </MudText>
                 <MudText Typo="Typo.h6" Align="Align.Right">
                     <MudMarkdown Value="@Content" />
