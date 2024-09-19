@@ -1,14 +1,14 @@
 <MudGrid Justify="Justify.Center">
     <!-- Title & subtitle -->
     <MudItem xs="@_elemsSizeFull">
-        <MudText Typo="Typo.h4" Align="Align.Center" style=@($"color: {Color};")>
-            <b>@Title</b>
+        <MudText Typo="Typo.h3" Align="Align.Center" style=@($"color: {Color};")>
+            @Title
         </MudText>
         <MudText Typo="Typo.h6" Align="Align.Center">
             <MudMarkdown Value="@Content" />
         </MudText>
     </MudItem>
-    <MudFlexBreak />
+    <MudFlexBreak class="mb-6" />
     <!-- Images -->
     <!-- Image 1 -->
     <MudItem xs="@_imgSidesGridSize" Class="pa-0">
