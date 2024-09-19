@@ -69,14 +69,18 @@ class YouTubeSearchTool(BaseTool):
             
         results = self._search(person, num_results)
         return self._format_to_md(results)
-    
 
 
 class VideoGenerator(Generator):
     name = "Videos"
     endpoint = "/videos"
-    description = "Finds a list of useful videos related to the topic."
+    description = "Adds a list of useful videos related to the topic."
+    
+    def format_topic(data):
+        template = "{topic} beginner's course"
+        topic = data.get("topic")
+        return {"query": template.format(topic=topic)}
     
     youtube_tool = YouTubeSearchTool()
     
-    chain = {"query": itemgetter("topic")} | youtube_tool
+    chain = format_topic | youtube_tool
