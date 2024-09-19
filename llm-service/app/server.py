@@ -4,7 +4,7 @@ from app.generators.roadmap import RoadmapGenerator
 from app.generators.introduction import IntroductionGenerator
 from app.generators.applications import ApplicationsGenerator
 from app.generators.nextsteps import NextStepsGenerator
-from app.generators.videos import VideoGenerator, YouTubeSearchTool
+from app.generators.videos import VideoGenerator
 
 builder = ApiBuilder()
 
