@@ -27,15 +27,22 @@ class WikipediaSearch(BaseTool):
     )
     
     def __get_page_info_from_query__(self, query, max_sentences):
-        page = wikipedia.page(query)
+        page = wikipedia.page(title=query)
         title = page.title
         url = page.url
-        summary = wikipedia.summary(query, sentences=max_sentences)
+        summary = page.summary
         return (title, url, summary)
+    
+    def __get_unvisited_options__(self, suggestions, options):
+        return [item for item in options if item not in suggestions]
+    
+    def __handle_desambiguation__(self, exception, max_sentences, suggestions):
+        next_search = self.__get_unvisited_options__(suggestions, exception.options)[0]
+        return self.__get_page_info_from_query__(next_search, max_sentences=max_sentences)
     
     def _run(self,
              query: str,
-             num_results: int = 3,
+             num_results: int = 5,
              max_sentences: int = 5,
              run_manager: Optional[CallbackManagerForToolRun] = None,
              ) -> dict:
@@ -45,10 +52,17 @@ class WikipediaSearch(BaseTool):
         print(suggestions)
         
         results = []
+        
         for suggestion in suggestions:
             try:
+                print(f"Trying {suggestion}")
                 title, url, summary = self.__get_page_info_from_query__(suggestion, max_sentences=max_sentences)
-            except (wikipedia.exceptions.DisambiguationError,wikipedia.exceptions.PageError,) as e:
+            except (wikipedia.exceptions.DisambiguationError,) as e:
+                try:
+                    self.__handle_desambiguation__(e, max_sentences, suggestions)
+                except:
+                    continue
+            except (wikipedia.exceptions.PageError,) as e:
                 print(e)
                 continue
             
