@@ -42,7 +42,6 @@ class YouTubeSearchTool(BaseTool):
         from youtube_search import YoutubeSearch
 
         results = YoutubeSearch(person, num_results).to_dict()
-        print(results)
         results_list = [
             (video["title"], 
                 "https://www.youtube.com" + video["url_suffix"],
