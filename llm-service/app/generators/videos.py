@@ -41,7 +41,11 @@ class YouTubeSearchTool(BaseTool):
     def _search(self, person: str, num_results: int) -> str:
         from youtube_search import YoutubeSearch
 
-        results = YoutubeSearch(person, num_results).to_dict()
+        try:
+            results = YoutubeSearch(person, num_results).to_dict()
+        except (KeyError,):
+            return []
+        
         results_list = [
             (video["title"], 
                 "https://www.youtube.com" + video["url_suffix"],
