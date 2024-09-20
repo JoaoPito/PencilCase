@@ -17,7 +17,7 @@ from operator import itemgetter
 class WikipediaSearch(BaseTool):
     """Tool that searches for articles on Wikipedia."""
 
-    name: str = "youtube_search"
+    name: str = "wikipedia_search"
     description: str = (
         "search for articles in a topic on wikipedia. Gets the title, content and url of the article."
     )
