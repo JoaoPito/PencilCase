@@ -148,6 +148,15 @@
         _items.UpdateOrder(dropItem, item => item.Order, indexOffset);
     }
 
+    private async void GenerateFragmentIfDropItemInStudyGuide(FragmentDropItem dropItem)
+    {
+        if (dropItem.Identifier == StudyGuideIdentifier && dropItem.Fragment == null)
+        {
+            dropItem.Fragment = await GenerateFragmentWithGenerator(dropItem.Generator);
+            this.StateHasChanged();
+        }
+    }
+
     private async void ItemUpdated(MudItemDropInfo<FragmentDropItem> dropItem)
     {
         dropItem.Item!.Identifier = dropItem.DropzoneIdentifier!;
@@ -155,11 +164,7 @@
 
         UpdateDropItemOrder(dropItem);
 
-        if (dropItem.Item.Identifier == StudyGuideIdentifier && dropItem.Item.Fragment == null)
-        {
-            dropItem.Item.Fragment = await GenerateFragmentWithGenerator(dropItem.Item.Generator);
-            this.StateHasChanged();
-        }
+        GenerateFragmentIfDropItemInStudyGuide(dropItem.Item);
     }
 
     private void PopulateItemsWithGenerators(List<FragmentGenerator> generators)
