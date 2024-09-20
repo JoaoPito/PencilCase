@@ -15,18 +15,12 @@ from langchain_community.tools import BaseTool
 from operator import itemgetter
 
 class WikipediaSearch(BaseTool):
-    """Tool that queries YouTube."""
+    """Tool that searches for articles on Wikipedia."""
 
     name: str = "youtube_search"
     description: str = (
-        "search for youtube videos associated with a person. "
-        "the input to this tool should be a comma separated list, "
-        "the first part contains a person name and the second a "
-        "number that is the maximum number of video results "
-        "to return aka num_results. the second part is optional. "
-        "Never use commas in the first part"
+        "search for articles in a topic on wikipedia. Gets the title, content and url of the article."
     )
-    
 
     num_results = 3
     
@@ -83,7 +77,7 @@ class WikipediaSearch(BaseTool):
 class WikipediaGenerator(Generator):
     name = "Wikipedia"
     endpoint = '/wikipedia' 
-    description = 'Adds a summary for the wikipedia page on the topic.'
+    description = 'Finds relevant articles on the topic. Summarizes and classifies them.'
     
     prompt = ChatPromptTemplate.from_template(
         """You are a world-class professor in a prestigious university. 
