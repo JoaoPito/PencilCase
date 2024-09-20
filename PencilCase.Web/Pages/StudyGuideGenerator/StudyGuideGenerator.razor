@@ -84,11 +84,7 @@
     </MudDropContainer>
 </div>
 
-
-<div style="position: fixed;bottom: 0pt;right: 0pt;">
-    <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Rounded.Save" 
-            OnClick="ExportStudyGuide" Size="Size.Large" Class="ma-6" Label="Save"/>
-</div>
+<DownloadButton OnDownload="ExportStudyGuide" />
 
 <style>
     .dialog-background {

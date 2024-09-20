@@ -1,0 +1,18 @@
+<div style="position: fixed;bottom: 0pt;right: 0pt;">
+    <MudFab Color="@BkgColor" StartIcon="@Icon" 
+            OnClick="OnButtonClick" Size="Size.Large" Class="ma-6" Label="@Text"/>
+</div>
+
+@code 
+{
+    [Parameter] public MudBlazor.Color BkgColor { get; set; } = Color.Secondary;
+    [Parameter] public String Text { get; set; } = "Save";
+    [Parameter] public String Icon { get; set; } = Icons.Material.Rounded.Save;
+    [Parameter] public Func<Task>? OnDownload { get; set; }
+
+    private async void OnButtonClick()
+    {
+        if(OnDownload != null)
+            await OnDownload();
+    }
+}
