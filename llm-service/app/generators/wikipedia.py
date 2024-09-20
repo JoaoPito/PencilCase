@@ -4,6 +4,7 @@ import string
 from app.generators.generator import Generator
 from langchain_google_genai import GoogleGenerativeAI
 from langchain.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
 from decouple import config
 
 import wikipedia
@@ -67,7 +68,7 @@ class WikipediaSearch(BaseTool):
              run_manager: Optional[CallbackManagerForToolRun] = None,
              ) -> dict:
         
-        return str(self._search(query))
+        return self._search(query)
 
 class WikipediaGenerator(Generator):
     name = "Wikipedia"
@@ -98,6 +99,6 @@ Summary
     wikipedia = WikipediaSearch()
     model = GoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=config("GOOGLE_API_KEY"))
     
-    wiki_chain = {"query": itemgetter("topic")} | wikipedia
+    wiki_chain = {"query": itemgetter("topic")} | wikipedia | StrOutputParser()
     
     chain = {"articles": wiki_chain, "topic": itemgetter("topic")} | prompt | model
