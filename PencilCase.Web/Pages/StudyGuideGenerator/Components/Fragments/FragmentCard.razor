@@ -2,6 +2,12 @@
 
 <MudCard Elevation="10" Class="d-flex flex-grow-1">
     <MudCardHeader>
+        <CardHeaderAvatar>
+            <MudStack>
+                <MudIconButton Icon="@Icons.Material.Rounded.KeyboardArrowUp"  Size="Size.Small" />
+                <MudIconButton Icon="@Icons.Material.Rounded.KeyboardArrowDown"  Size="Size.Small" />
+            </MudStack>
+        </CardHeaderAvatar>
         <CardHeaderContent>
             @if (Fragment != null)
             {
