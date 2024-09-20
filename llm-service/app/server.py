@@ -5,6 +5,7 @@ from app.generators.introduction import IntroductionGenerator
 from app.generators.applications import ApplicationsGenerator
 from app.generators.nextsteps import NextStepsGenerator
 from app.generators.videos import VideoGenerator
+from app.generators.wikipedia import WikipediaGenerator
 
 builder = ApiBuilder()
 
@@ -13,6 +14,7 @@ builder.add_generator(RoadmapGenerator())
 builder.add_generator(ApplicationsGenerator())
 builder.add_generator(NextStepsGenerator())
 builder.add_generator(VideoGenerator())
+builder.add_generator(WikipediaGenerator())
 
 app = builder.build()
 
