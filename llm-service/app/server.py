@@ -11,10 +11,10 @@ builder = ApiBuilder()
 
 builder.add_generator(IntroductionGenerator())
 builder.add_generator(RoadmapGenerator())
-builder.add_generator(ApplicationsGenerator())
-builder.add_generator(NextStepsGenerator())
 builder.add_generator(VideoGenerator())
 builder.add_generator(WikipediaGenerator())
+builder.add_generator(ApplicationsGenerator())
+builder.add_generator(NextStepsGenerator())
 
 app = builder.build()
 
