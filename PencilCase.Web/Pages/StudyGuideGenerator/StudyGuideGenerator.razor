@@ -1,5 +1,7 @@
 @page "/studyguide"
 
+@using MudBlazor.Utilities
+
 @inject FragmentApi FragmentApi;
 @inject IDialogService DialogService;
 
@@ -127,16 +129,32 @@
     private StudyGuide GetStudyGuideFromBlueprint()
     {
         var fragments = _items
+            .OrderBy(i => i.Order)
             .Where(i => (i.Identifier == StudyGuideIdentifier && i.Fragment != null))
-            .Select(i => i.Fragment).ToList();
+            .Select(i => i.Fragment)
+            .ToList();
 
         return FragmentsToStudyGuide(_topic, fragments);
+    }
+
+    private void UpdateDropItemOrder(MudItemDropInfo<FragmentDropItem> dropItem)
+    {
+        var indexOffset = dropItem.DropzoneIdentifier switch
+        {
+            FragmentGeneratorIdentifier  => _items.Count(x => x.Identifier == StudyGuideIdentifier),
+            _ => 0
+        };
+
+        _items.UpdateOrder(dropItem, item => item.Order, indexOffset);
     }
 
     private async void ItemUpdated(MudItemDropInfo<FragmentDropItem> dropItem)
     {
         dropItem.Item!.Identifier = dropItem.DropzoneIdentifier!;
         // Add to study guide
+
+        UpdateDropItemOrder(dropItem);
+
         if (dropItem.Item.Identifier == StudyGuideIdentifier && dropItem.Item.Fragment == null)
         {
             dropItem.Item.Fragment = await GenerateFragmentWithGenerator(dropItem.Item.Generator);
@@ -148,8 +166,10 @@
     {
         foreach (var generator in generators)
         {
+            int order = 0;
             _items.Add(new FragmentDropItem()
             {
+                Order = order++,
                 Identifier = FragmentGeneratorIdentifier,
                 Generator = generator
             });
