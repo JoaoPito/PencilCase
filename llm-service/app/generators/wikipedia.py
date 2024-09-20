@@ -87,9 +87,10 @@ class WikipediaGenerator(Generator):
     
     prompt = ChatPromptTemplate.from_template(
         """You are a world-class professor in a prestigious university. 
-Your job is to summarize and classify a list of articles on the undergraduate course '{topic}' for your students.
+Your job is to summarize and classify a list of articles on the undergraduate course on '{topic}' for your students.
 Your summary should have at most 2 LINES, describing the main points of the article.
-You should CLASSIFY the article's content based on its importance for the course, classify as "Not important", "Reference material", "Important" or "Additional material".
+You should CLASSIFY the article's content based on its importance for the course, classify as "Not important", "Additional material", "Reference material" or "Important".
+Take into account the difficulty to understand the article when classifying.
 You should always maintain a link to the article and use MARKDOWN.
 Put the most IMPORTANT articles on the TOP.
 IF the topic is not valid write the message "TOPIC NOT VALID".
