@@ -45,14 +45,10 @@ class WikipediaSearch(BaseTool):
     
     def _search(self, query: str, summary_chars: int = 1500,):
         suggestions = wikipedia.search(query, results=self.num_results)
-        
-        print(suggestions)
-        
         results = []
         
         for suggestion in suggestions:
             try:
-                print(f"Trying {suggestion}")
                 title, url, summary = self.__get_page_info_from_query__(suggestion, summary_chars)
                 results.append(f"url: '{url}'\ntitle: '{title}'\ncontent: '{summary}'")
             except (wikipedia.exceptions.DisambiguationError,) as e:
@@ -62,7 +58,6 @@ class WikipediaSearch(BaseTool):
                 except:
                     continue
             except (wikipedia.exceptions.PageError,) as e:
-                print(e)
                 continue
         
         return results
