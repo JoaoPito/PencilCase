@@ -46,7 +46,7 @@ class WikipediaSearch(BaseTool):
         return self.__get_page_info_from_query__(next_search,  summary_chars)
     
     def __cleanup_query__(self, query):
-        punctuation_table = str.maketrans('', '', string.punctuation)
+        punctuation_table = str.maketrans('', '', ".!?")
         return query.translate(punctuation_table)
     
     def _search(self, query: str, summary_chars: int = 1500,):
