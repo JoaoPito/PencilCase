@@ -6,8 +6,8 @@
 @code 
 {
     [Parameter] public MudBlazor.Color BkgColor { get; set; } = Color.Secondary;
-    [Parameter] public String Text { get; set; } = "Save";
-    [Parameter] public String Icon { get; set; } = Icons.Material.Rounded.Save;
+    [Parameter] public String Text { get; set; } = "Download";
+    [Parameter] public String Icon { get; set; } = Icons.Material.Rounded.Download;
     [Parameter] public Func<Task>? OnDownload { get; set; }
 
     private async void OnButtonClick()
