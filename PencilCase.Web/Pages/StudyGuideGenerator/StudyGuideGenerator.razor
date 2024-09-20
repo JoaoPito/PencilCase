@@ -69,7 +69,9 @@
             @if (@context.Identifier == FragmentGeneratorIdentifier)
             {
                 <div class="ma-4">
-                    <FragmentGeneratorCard FragmentGenerator=@context.Generator/>
+                    <FragmentGeneratorCard 
+                        FragmentGenerator=@context.Generator 
+                        OnAddClicked="OnAddGeneratorClicked"/>
                 </div>
             }
             else
@@ -220,10 +222,16 @@
         await GenerateNewStudyGuide(topic);
     }
 
+    private void MoveItemToSections(FragmentDropItem item)
+    {
+        item.Identifier = FragmentGeneratorIdentifier;
+        item.Order = 0;
+    }
+
     public async Task OnDeleteFragment(String name) 
     {
         var item = GetItemByName(name);
-        item.Identifier = FragmentGeneratorIdentifier;
+        MoveItemToSections(item);
         this.StateHasChanged();
     }
 
@@ -258,8 +266,21 @@
     public async Task OnClearStudyGuide() 
     {
         foreach (var item in _items){
-            item.Identifier = FragmentGeneratorIdentifier;
+            MoveItemToSections(item);
         }
         this.StateHasChanged();
+    }
+
+    public async Task OnAddGeneratorClicked(FragmentGenerator generator)
+    {
+        var dropItem = _items.FirstOrDefault(i => i.Generator == generator);
+
+        if(dropItem is not null){
+            dropItem.Identifier = StudyGuideIdentifier;
+            dropItem.Order = _items.Count(x => x.Identifier == StudyGuideIdentifier);
+            GenerateFragmentIfDropItemInDraft(dropItem);
+            this.StateHasChanged();
+        }
+        
     }
 }
