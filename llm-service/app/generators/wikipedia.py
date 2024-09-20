@@ -1,5 +1,6 @@
 # pip install wikipedia is needed for this tool
 
+import string
 from app.generators.generator import Generator
 from langchain_google_genai import GoogleGenerativeAI
 from langchain.prompts import ChatPromptTemplate
@@ -27,7 +28,8 @@ class WikipediaSearch(BaseTool):
     )
     
     def __get_page_info_from_query__(self, query, max_sentences):
-        page = wikipedia.page(title=query)
+        query = self.__cleanup_query__(query)
+        page = wikipedia.page(title=query, auto_suggest=False)
         title = page.title
         url = page.url
         summary = page.summary
@@ -36,9 +38,13 @@ class WikipediaSearch(BaseTool):
     def __get_unvisited_options__(self, suggestions, options):
         return [item for item in options if item not in suggestions]
     
-    def __handle_desambiguation__(self, exception, max_sentences, suggestions):
+    def __handle_disambiguation__(self, exception, max_sentences, suggestions):
         next_search = self.__get_unvisited_options__(suggestions, exception.options)[0]
         return self.__get_page_info_from_query__(next_search, max_sentences=max_sentences)
+    
+    def __cleanup_query__(self, query):
+        punctuation_table = str.maketrans('', '', string.punctuation)
+        return query.translate(punctuation_table)
     
     def _run(self,
              query: str,
@@ -57,16 +63,16 @@ class WikipediaSearch(BaseTool):
             try:
                 print(f"Trying {suggestion}")
                 title, url, summary = self.__get_page_info_from_query__(suggestion, max_sentences=max_sentences)
+                results.append(f"url: '{url}'\ntitle: '{title}'\ncontent: '{summary}'")
             except (wikipedia.exceptions.DisambiguationError,) as e:
                 try:
-                    self.__handle_desambiguation__(e, max_sentences, suggestions)
+                    title, url, summary = self.__handle_disambiguation__(e, max_sentences, suggestions)
+                    results.append(f"url: '{url}'\ntitle: '{title}'\ncontent: '{summary}'")
                 except:
                     continue
             except (wikipedia.exceptions.PageError,) as e:
                 print(e)
                 continue
-            
-            results.append(f"url: '{url}'\ntitle: '{title}'\ncontent: '{summary}'")
         
         return results
 
