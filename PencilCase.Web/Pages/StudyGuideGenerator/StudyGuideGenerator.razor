@@ -10,7 +10,7 @@
 <div class="pa-4 d-flex flex-column">
     <MudDropContainer T="FragmentDropItem" Items="@_items"
         ItemsSelector="@((item,dropzone) => item.Identifier == dropzone)" 
-        ItemDropped="ItemUpdated" 
+        ItemDropped="OnItemDrop" 
         Class="flex-grow-1"
         >
         <ChildContent>
@@ -144,7 +144,7 @@
         _items.UpdateOrder(dropItem, item => item.Order, indexOffset);
     }
 
-    private async void GenerateFragmentIfDropItemInStudyGuide(FragmentDropItem dropItem)
+    private async Task GenerateFragmentIfDropItemInDraft(FragmentDropItem dropItem)
     {
         if (dropItem.Identifier == StudyGuideIdentifier && dropItem.Fragment == null)
         {
@@ -153,14 +153,11 @@
         }
     }
 
-    private async void ItemUpdated(MudItemDropInfo<FragmentDropItem> dropItem)
+    private async Task OnItemDrop(MudItemDropInfo<FragmentDropItem> dropItem)
     {
         dropItem.Item!.Identifier = dropItem.DropzoneIdentifier!;
-        // Add to study guide
-
         UpdateDropItemOrder(dropItem);
-
-        GenerateFragmentIfDropItemInStudyGuide(dropItem.Item);
+        GenerateFragmentIfDropItemInDraft(dropItem.Item);
     }
 
     private void PopulateItemsWithGenerators(List<FragmentGenerator> generators)
