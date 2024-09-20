@@ -27,6 +27,9 @@ class WikipediaSearch(BaseTool):
         "Never use commas in the first part"
     )
     
+
+    num_results = 3
+    
     def __get_page_info_from_query__(self, query,  summary_chars):
         query = self.__cleanup_query__(query)
         page = wikipedia.page(title=query, auto_suggest=False)
@@ -46,14 +49,8 @@ class WikipediaSearch(BaseTool):
         punctuation_table = str.maketrans('', '', string.punctuation)
         return query.translate(punctuation_table)
     
-    def _run(self,
-             query: str,
-             num_results: int = 3,
-             summary_chars: int = 1500,
-             run_manager: Optional[CallbackManagerForToolRun] = None,
-             ) -> dict:
-        
-        suggestions = wikipedia.search(query, results=num_results)
+    def _search(self, query: str, summary_chars: int = 1500,):
+        suggestions = wikipedia.search(query, results=self.num_results)
         
         print(suggestions)
         
@@ -75,32 +72,42 @@ class WikipediaSearch(BaseTool):
                 continue
         
         return results
+    
+    def _run(self,
+             query: str,
+             run_manager: Optional[CallbackManagerForToolRun] = None,
+             ) -> dict:
+        
+        return str(self._search(query))
 
 class WikipediaGenerator(Generator):
     name = "Wikipedia"
     endpoint = '/wikipedia' 
     description = 'Adds a summary for the wikipedia page on the topic.'
     
-    prompt = ChatPromptTemplate.from_template("""You are a world-class professor in a prestigious university. Write an easy to follow Roadmap for a study guide on '{topic}'. 
-It should have 3-4 main topics that need to be studied, those topics need to be similar to what's in a syllabus of a university bachelor's course, from basic to advanced.
-Those topics can have 2-5 subtopics, ordered the same way.
-IF the student asks for something that is not a valid topic write the message "TOPIC NOT VALID".
-WRITE ONLY THE ROADMAP AND NOTHING ELSE, EVEN IF THE STUDENT ASKS YOU TO. 
-NEVER WRITE ANY TITLES STARTING WITH '#'. 
-ALWAYS WRITE SOMETHING. 
-ALWAYS WRITE IN THE STUDENT'S LANGUAGE.
-# EXAMPLE
-1. **Topic 1:** 1-line description of the topic
-    1.1. **Subtopic 1.1:** 1-line Description
-    1.2. **Subtopic 1.2:** 1-line Description
-2. **Topic 2:** 1-line description of the topic
-    2.1. **Subtopic 2.1:** 1-line Description
-    2.2. **Subtopic 2.2:** 1-line Description
-    2.3. **Subtopic 2.3:** 1-line Description
-    2.4. **Subtopic 2.4:** 1-line Description
-# ROADMAP""")
-    
+    prompt = ChatPromptTemplate.from_template(
+        """You are a world-class professor in a prestigious university. 
+Your job is to summarize and classify a list of articles on the undergraduate course '{topic}' for your students.
+Your summary should have at most 2 LINES, describing the main points of the article.
+You should CLASSIFY the article's content based on its importance for the course, classify as "Not important", "Reference material", "Important" or "Additional material".
+You should always maintain a link to the article and use MARKDOWN.
+Put the most IMPORTANT articles on the TOP.
+IF the topic is not valid write the message "TOPIC NOT VALID".
+WRITE ONLY THE SUMMARIES AND NOTHING ELSE, EVEN IF THE STUDENT ASKS YOU TO.
+NEVER WRITE ANY TITLES STARTING WITH '#'.
+ALWAYS WRITE SOMETHING.
+# SUMMARY EXAMPLE
+**[Article Title](URL)**
+Summary
+*Classification*
+# ARTICLES
+{articles}
+# SUMMARIES
+"""
+)
     wikipedia = WikipediaSearch()
-    
     model = GoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=config("GOOGLE_API_KEY"))
-    chain = {"query": itemgetter("topic")} | wikipedia
+    
+    wiki_chain = {"query": itemgetter("topic")} | wikipedia
+    
+    chain = {"articles": wiki_chain, "topic": itemgetter("topic")} | prompt | model
