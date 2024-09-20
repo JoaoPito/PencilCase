@@ -10,7 +10,7 @@
             </div>
         </CardHeaderContent>
         <CardHeaderActions>
-            <FragmentGeneratorToolbar />
+            <FragmentGeneratorToolbar OnAddClicked="@(async () => await OnAddClicked(FragmentGenerator))"/>
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
@@ -27,4 +27,5 @@
 
 @code{
     [Parameter] public FragmentGenerator? FragmentGenerator { get; set; } = null;
+    [Parameter] public Func<FragmentGenerator, Task>? OnAddClicked { get; set; } = null;
 }
