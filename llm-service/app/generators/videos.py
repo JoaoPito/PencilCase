@@ -32,6 +32,8 @@ class YouTubeSearchTool(BaseTool):
         "Never use commas in the first part"
     )
     
+    num_results = 10
+    
     def _format_to_md(self, results):
         markdown_str = ""
         for title, url, channel, _, _ in results:
@@ -63,14 +65,7 @@ class YouTubeSearchTool(BaseTool):
     ) -> str:
         
         """Use the tool."""
-        values = query.split(",")
-        person = values[0]
-        if len(values) > 1:
-            num_results = int(values[1])
-        else:
-            num_results = 10
-            
-        results = self._search(person, num_results)
+        results = self._search(query, self.num_results)
         return self._format_to_md(results)
 
 
