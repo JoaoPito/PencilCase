@@ -4,8 +4,12 @@
     <MudCardHeader>
         <CardHeaderAvatar>
             <MudStack>
-                <MudIconButton Icon="@Icons.Material.Rounded.KeyboardArrowUp"  Size="Size.Small" />
-                <MudIconButton Icon="@Icons.Material.Rounded.KeyboardArrowDown"  Size="Size.Small" />
+                <MudIconButton Icon="@Icons.Material.Rounded.KeyboardArrowUp" 
+                    Size="Size.Small"
+                    OnClick="OnUpClick" />
+                <MudIconButton Icon="@Icons.Material.Rounded.KeyboardArrowDown"
+                    Size="Size.Small"
+                    OnClick="OnDownClick" />
             </MudStack>
         </CardHeaderAvatar>
         <CardHeaderContent>
@@ -51,4 +55,19 @@
     [Parameter] public Fragment? Fragment { get; set; } = new();
     [Parameter] public Func<String, Task>? OnRegenerateClicked { get; set; } = null;
     [Parameter] public Func<String, Task>? OnDeleteClicked { get; set; } = null;
+
+    [Parameter] public Func<Fragment, Task>? OnMoveUpClicked { get; set; } = null;
+    [Parameter] public Func<Fragment, Task>? OnMoveDownClicked { get; set; } = null;
+
+    private async Task OnUpClick()
+    {
+        if(OnMoveUpClicked is not null)
+            await OnMoveUpClicked(Fragment);
+    }
+
+    private async Task OnDownClick()
+    {
+        if(OnMoveDownClicked is not null)
+            await OnMoveDownClicked(Fragment);
+    }
 }
