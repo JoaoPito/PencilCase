@@ -83,7 +83,9 @@
                 <div class="ma-4">
                     <FragmentCard Fragment=@context.Fragment 
                         OnRegenerateClicked="@RegenerateFragment"
-                        OnDeleteClicked="@OnDeleteFragment" />
+                        OnDeleteClicked="@OnDeleteFragment"
+                        OnMoveUpClicked="@OnFragmentMoveUp"
+                        OnMoveDownClicked="@OnFragmentMoveDown" />
                 </div>
             }
         </ItemRenderer>
@@ -296,5 +298,35 @@
 
         TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
         return textInfo.ToTitleCase(input.ToLower());
+    }
+
+    public async Task OnFragmentMoveUp(Fragment fragment)
+    {
+        var item = _items.FirstOrDefault(i => i.Fragment.Name == fragment.Name);
+        if(item is null)
+            return;
+
+        var itemOnTop = _items
+            .Where(i => (i.Identifier == StudyGuideIdentifier && i.Fragment != null))
+            .OrderByDescending(i => i.Order)
+            .FirstOrDefault(i => i.Order < item.Order);
+        if(itemOnTop is null)
+            return;
+
+        Console.WriteLine($"swapping {item.Fragment.Name} with {itemOnTop.Fragment.Name}");
+        SwapPositions(item, itemOnTop);
+        this.StateHasChanged();
+    }
+
+    public async Task OnFragmentMoveDown(Fragment fragment)
+    {
+        
+    }
+
+    private void SwapPositions(FragmentDropItem dropItem1, FragmentDropItem dropItem2)
+    {
+        var oldItem1Order = dropItem1.Order;
+        dropItem1.Order = dropItem2.Order;
+        dropItem2.Order = oldItem1Order;
     }
 }
