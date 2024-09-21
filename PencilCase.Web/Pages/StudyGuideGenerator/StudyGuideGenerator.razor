@@ -22,25 +22,26 @@
                     <MudText Typo="Typo.h5" Align="Align.Start">Sections</MudText>
                 </MudCardHeader>
                 <MudCardContent Class="pa-0">
-                    <div class="rounded-b mud-background-gray pa-2 overflow-y-scroll overflow-x-hidden"
-                        style="height: 75vh; background-color: red">
-                            @if(_items.Where(i => i.Identifier == FragmentGeneratorIdentifier).Count() == 0){
-                                <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
-                            }
-                            else
-                            {
-                                foreach(var generator in _items
-                                    .Where(i => i.Identifier == FragmentGeneratorIdentifier)
-                                    .OrderBy(f => f.Order)
-                                    .Select(i => i.Generator))
+                    <div class="rounded-b mud-background-gray pa-2 
+                        overflow-y-scroll overflow-x-hidden pa-6"
+                        style="height: 75vh;">
+                            <MudStack Spacing="4">
+                                @if(_items.Where(i => i.Identifier == FragmentGeneratorIdentifier).Count() == 0){
+                                    <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+                                }
+                                else
                                 {
-                                    <div class="ma-4">
+                                    foreach(var generator in _items
+                                        .Where(i => i.Identifier == FragmentGeneratorIdentifier)
+                                        .OrderBy(f => f.Order)
+                                        .Select(i => i.Generator))
+                                    {
                                         <FragmentGeneratorCard 
                                             FragmentGenerator=@generator 
                                             OnAddClicked="OnAddGeneratorClicked"/>
-                                    </div>
+                                    }
                                 }
-                            }
+                            </MudStack>
                     </div>
                 </MudCardContent>
             </MudCard>
@@ -65,27 +66,27 @@
             </MudCardHeader>
             <MudCardContent Class="pa-0">
                 <div Class="rounded-b mud-background-gray blueprint-dots pa-4
-                        overflow-y-scroll overflow-x-hidden"
+                        overflow-y-scroll overflow-x-hidden pa-8"
                     style="height: 82vh">
-                    @if(_items.Where(i => i.Identifier == StudyGuideIdentifier).Count() == 0){
-                        <EmptyBlueprintContent />
-                    }
-                    else
-                    {
-                        foreach(var fragment in _items
-                            .Where(i => i.Identifier == StudyGuideIdentifier)
-                            .OrderBy(f => f.Order)
-                            .Select(i => i.Fragment))
+                    <MudStack Spacing="5">
+                        @if(_items.Where(i => i.Identifier == StudyGuideIdentifier).Count() == 0){
+                            <EmptyBlueprintContent />
+                        }
+                        else
                         {
-                            <div class="ma-4">
+                            foreach(var fragment in _items
+                                .Where(i => i.Identifier == StudyGuideIdentifier)
+                                .OrderBy(f => f.Order)
+                                .Select(i => i.Fragment))
+                            {
                                 <FragmentCard Fragment=@fragment
                                     OnRegenerateClicked="@RegenerateFragment"
                                     OnDeleteClicked="@OnDeleteFragment"
                                     OnMoveUpClicked="@OnFragmentMoveUp"
                                     OnMoveDownClicked="@OnFragmentMoveDown"/>
-                            </div>
+                            }
                         }
-                    }
+                    </MudStack>
             </div>
             </MudCardContent>
         </MudCard>
