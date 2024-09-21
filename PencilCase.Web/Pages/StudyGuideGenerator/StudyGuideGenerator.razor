@@ -170,10 +170,9 @@
     {
         foreach (var generator in generators)
         {
-            int order = 0;
             _items.Add(new FragmentDropItem()
             {
-                Order = order++,
+                Order = 0,
                 Identifier = FragmentGeneratorIdentifier,
                 Generator = generator
             });
@@ -280,8 +279,9 @@
         var dropItem = _items.FirstOrDefault(i => i.Generator == generator);
 
         if(dropItem is not null){
-            dropItem.Identifier = StudyGuideIdentifier;
             dropItem.Order = _items.Count(x => x.Identifier == StudyGuideIdentifier);
+            dropItem.Identifier = StudyGuideIdentifier;
+            Console.WriteLine($"Added Item - Order: {dropItem.Order}, Id: {dropItem.Identifier}");
             GenerateFragmentIfDropItemInDraft(dropItem);
             this.StateHasChanged();
         }
