@@ -1,6 +1,8 @@
 @page "/studyguide"
 
-@using MudBlazor.Utilities
+@using MudBlazor.Utilities;
+@using System;
+@using System.Globalization;
 
 @inject FragmentApi FragmentApi;
 @inject IDialogService DialogService;
@@ -40,7 +42,9 @@
                     <MudCard Elevation="3">
                         <MudCardHeader>
                             <CardHeaderContent>
-                                <MudText Typo="Typo.h5" Align="Align.Start">Draft</MudText>
+                                <MudText Typo="Typo.h5" Align="Align.Start">
+                                    @((_topic == "") ? "Draft" : $"Draft - {FormatTitle(_topic)}")
+                                    </MudText>
                             </CardHeaderContent>
                             <CardHeaderActions>
                                 <StudyGuideToolBar Disabled="@_isProcessing"
@@ -132,7 +136,7 @@
             .Select(i => i.Fragment)
             .ToList();
 
-        return FragmentsToStudyGuide(_topic, fragments);
+        return FragmentsToStudyGuide(FormatTitle(_topic), fragments);
     }
 
     private void UpdateDropItemOrder(MudItemDropInfo<FragmentDropItem> dropItem)
@@ -281,6 +285,16 @@
             GenerateFragmentIfDropItemInDraft(dropItem);
             this.StateHasChanged();
         }
-        
+    }
+
+    private string FormatTitle(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return input;
+        }
+
+        TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
+        return textInfo.ToTitleCase(input.ToLower());
     }
 }
