@@ -53,17 +53,27 @@
                             </CardHeaderActions>
                         </MudCardHeader>
                         <MudCardContent Class="pa-0">
-                            <MudDropZone T="FragmentDropItem" Identifier="@StudyGuideIdentifier" 
-                                Class="rounded-b mud-background-gray blueprint-dots pa-4
+                            <div Class="rounded-b mud-background-gray blueprint-dots pa-4
                                     overflow-y-scroll overflow-x-hidden"
-                                style="height: 82vh"
-                                AllowReorder="true">
-                            <div>
+                                style="height: 82vh">
                                 @if(_items.Where(i => i.Identifier == StudyGuideIdentifier).Count() == 0){
-                                    <EmptyBlueprintContent />
+                                   <EmptyBlueprintContent />
                                 }
-                            </div>
-                        </MudDropZone>
+                                else
+                                {
+                                    foreach(var fragment in _items
+                                        .Where(i => i.Identifier == StudyGuideIdentifier)
+                                        .OrderBy(f => f.Order)
+                                        .Select(i => i.Fragment))
+                                    {
+                                        <FragmentCard Fragment=@fragment
+                                            OnRegenerateClicked="@RegenerateFragment"
+                                            OnDeleteClicked="@OnDeleteFragment"
+                                            OnMoveUpClicked="@OnFragmentMoveUp"
+                                            OnMoveDownClicked="@OnFragmentMoveDown" />
+                                    }
+                                }
+                        </div>
                         </MudCardContent>
                     </MudCard>
                 </MudItem>
