@@ -267,7 +267,6 @@
         if(dropItem is not null){
             dropItem.Order = _items.Count(x => x.Identifier == StudyGuideIdentifier);
             dropItem.Identifier = StudyGuideIdentifier;
-            Console.WriteLine($"Added Item - Order: {dropItem.Order}, Id: {dropItem.Identifier}");
             GenerateFragmentIfDropItemInDraft(dropItem);
             this.StateHasChanged();
         }
@@ -304,7 +303,19 @@
 
     public async Task OnFragmentMoveDown(Fragment fragment)
     {
-        
+        var item = _items.FirstOrDefault(i => i.Fragment.Name == fragment.Name);
+        if(item is null)
+            return;
+
+        var itemOnTop = _items
+            .Where(i => (i.Identifier == StudyGuideIdentifier && i.Fragment != null))
+            .OrderBy(i => i.Order)
+            .FirstOrDefault(i => i.Order > item.Order);
+        if(itemOnTop is null)
+            return;
+
+        SwapPositions(item, itemOnTop);
+        this.StateHasChanged();
     }
 
     private void SwapPositions(FragmentDropItem dropItem1, FragmentDropItem dropItem2)
