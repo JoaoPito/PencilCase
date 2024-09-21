@@ -128,7 +128,7 @@
         };
     }
 
-    private StudyGuide GetStudyGuideFromBlueprint()
+    private StudyGuide GetStudyGuideFromDraft()
     {
         var fragments = _items
             .OrderBy(i => i.Order)
@@ -241,7 +241,7 @@
 
     private async Task ExportStudyGuide()
     {
-        var studyGuide = GetStudyGuideFromBlueprint();
+        var studyGuide = GetStudyGuideFromDraft();
 
         var options = new DialogOptions { 
             CloseOnEscapeKey = true,
