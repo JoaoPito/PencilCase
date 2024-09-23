@@ -215,6 +215,7 @@
     {
         item.Identifier = FragmentGeneratorIdentifier;
         item.Order = 0;
+        ReorderFragments();
     }
 
     public async Task OnDeleteFragment(String name) 
@@ -265,7 +266,7 @@
         var dropItem = _items.FirstOrDefault(i => i.Generator == generator);
 
         if(dropItem is not null){
-            dropItem.Order = _items.Count(x => x.Identifier == StudyGuideIdentifier);
+            dropItem.Order = _items.Count(x => x.Identifier == StudyGuideIdentifier) + 1;
             dropItem.Identifier = StudyGuideIdentifier;
             GenerateFragmentIfDropItemInDraft(dropItem);
             this.StateHasChanged();
@@ -323,5 +324,16 @@
         var oldItem1Order = dropItem1.Order;
         dropItem1.Order = dropItem2.Order;
         dropItem2.Order = oldItem1Order;
+    }
+
+    private void ReorderFragments()
+    {
+        int i = 1;
+        foreach(var fragment in _items
+            .Where(i => (i.Identifier == StudyGuideIdentifier && i.Fragment != null))
+            .OrderBy(i => i.Order))
+        {
+            fragment.Order = i++;
+        }
     }
 }
