@@ -6,10 +6,12 @@
             <MudStack>
                 <MudIconButton Icon="@Icons.Material.Rounded.KeyboardArrowUp" 
                     Size="Size.Small"
-                    OnClick="OnUpClick" />
+                    OnClick="OnUpClick"
+                    Disabled="@(Fragment is null)" />
                 <MudIconButton Icon="@Icons.Material.Rounded.KeyboardArrowDown"
                     Size="Size.Small"
-                    OnClick="OnDownClick" />
+                    OnClick="OnDownClick"
+                    Disabled="@(Fragment is null)" />
             </MudStack>
         </CardHeaderAvatar>
         <CardHeaderContent>
@@ -62,12 +64,16 @@
     private async Task OnUpClick()
     {
         if(OnMoveUpClicked is not null)
+        {
             await OnMoveUpClicked(Fragment);
+        }
     }
 
     private async Task OnDownClick()
     {
         if(OnMoveDownClicked is not null)
+        {
             await OnMoveDownClicked(Fragment);
+        }
     }
 }

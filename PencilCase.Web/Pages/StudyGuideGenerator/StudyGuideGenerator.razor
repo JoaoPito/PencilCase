@@ -297,7 +297,6 @@
         if(itemOnTop is null)
             return;
 
-        Console.WriteLine($"swapping {item.Fragment.Name} with {itemOnTop.Fragment.Name}");
         SwapPositions(item, itemOnTop);
         this.StateHasChanged();
     }
