@@ -17,34 +17,8 @@
                 ClearOnSubmit="false" Disabled="@_isProcessing" MaxLength="@_searchMaxLength" />
 
             <!-- Sections -->
-            <MudCard Elevation="3">
-                <MudCardHeader>
-                    <MudText Typo="Typo.h5" Align="Align.Start">Sections</MudText>
-                </MudCardHeader>
-                <MudCardContent Class="pa-0">
-                    <div class="rounded-b mud-background-gray pa-2 
-                        overflow-y-scroll overflow-x-hidden pa-6"
-                        style="height: 75vh;">
-                            <MudStack Spacing="4">
-                                @if(_items.Where(i => i.Identifier == FragmentGeneratorIdentifier).Count() == 0){
-                                    <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
-                                }
-                                else
-                                {
-                                    foreach(var generator in _items
-                                        .Where(i => i.Identifier == FragmentGeneratorIdentifier)
-                                        .OrderBy(f => f.Order)
-                                        .Select(i => i.Generator))
-                                    {
-                                        <FragmentGeneratorCard 
-                                            FragmentGenerator=@generator 
-                                            OnAddClicked="OnAddGeneratorClicked"/>
-                                    }
-                                }
-                            </MudStack>
-                    </div>
-                </MudCardContent>
-            </MudCard>
+            <Sections Items=@(_items.Where(i => i.Identifier == FragmentGeneratorIdentifier).ToList())
+                OnAddGeneratorClicked="OnAddGeneratorClicked" />
 
         </MudStack>
     </MudItem>
@@ -111,7 +85,8 @@
 
     private bool _isProcessing { get; set; } = false;
     private int _searchMaxLength { get; set; } = 60;
-    
+
+    // UI Handlers
     protected override async Task OnInitializedAsync(){
         List<FragmentGenerator>? generators = new();
             
@@ -123,6 +98,106 @@
         }
         if (generators != null) PopulateItemsWithGenerators(generators);
     }
+
+    private async Task ExportStudyGuide()
+    {
+        var studyGuide = GetStudyGuideFromDraft();
+
+        var options = new DialogOptions { 
+            CloseOnEscapeKey = true,
+            CloseButton = true,
+            BackgroundClass="dialog-background"
+        };
+
+        var parameters = new DialogParameters<SGExportDialog> { { x => x.StudyGuide, studyGuide } };
+        await DialogService.ShowAsync<SGExportDialog>("Save your Study Guide", parameters, options);
+    }
+
+    public async Task OnRegenerateStudyGuide(){
+        EraseAllFragments();
+        _isProcessing = true;
+        await GenerateNewStudyGuide(_topic);
+        _isProcessing = false;
+    }
+
+    public async Task OnClearStudyGuide() 
+    {
+        foreach (var item in _items){
+            MoveItemToSections(item);
+        }
+        this.StateHasChanged();
+    }
+
+    public async Task OnAddGeneratorClicked(FragmentGenerator generator)
+    {
+        var dropItem = _items.FirstOrDefault(i => i.Generator == generator);
+
+        if(dropItem is not null){
+            dropItem.Order = _items.Count(x => x.Identifier == StudyGuideIdentifier) + 1;
+            dropItem.Identifier = StudyGuideIdentifier;
+            GenerateFragmentIfDropItemInDraft(dropItem);
+            this.StateHasChanged();
+        }
+    }
+
+    public async Task OnFragmentMoveUp(Fragment fragment)
+    {
+        var item = _items.FirstOrDefault(i => i.Fragment.Name == fragment.Name);
+        if(item is null)
+            return;
+
+        var itemOnTop = _items
+            .Where(i => (i.Identifier == StudyGuideIdentifier && i.Fragment != null))
+            .OrderByDescending(i => i.Order)
+            .FirstOrDefault(i => i.Order < item.Order);
+        if(itemOnTop is null)
+            return;
+
+        SwapPositions(item, itemOnTop);
+        this.StateHasChanged();
+    }
+
+    public async Task OnFragmentMoveDown(Fragment fragment)
+    {
+        var item = _items.FirstOrDefault(i => i.Fragment.Name == fragment.Name);
+        if(item is null)
+            return;
+
+        var itemOnTop = _items
+            .Where(i => (i.Identifier == StudyGuideIdentifier && i.Fragment != null))
+            .OrderBy(i => i.Order)
+            .FirstOrDefault(i => i.Order > item.Order);
+        if(itemOnTop is null)
+            return;
+
+        SwapPositions(item, itemOnTop);
+        this.StateHasChanged();
+    }
+
+    public async Task OnSearchbarSubmit(String topic){
+        EraseAllFragments();
+        this.StateHasChanged();
+        await GenerateNewStudyGuide(topic);
+    }
+
+    public async Task OnDeleteFragment(String name) 
+    {
+        var item = GetItemByName(name);
+        MoveItemToSections(item);
+        this.StateHasChanged();
+    }
+
+    public async Task RegenerateFragment(String name)
+    {
+        var item = GetItemByName(name);
+        item.Fragment = null;
+        this.StateHasChanged();
+        var generator = item.Generator;
+        item.Fragment = await GenerateFragmentWithGenerator(generator);
+        this.StateHasChanged();
+    }
+
+    // Others
 
     private StudyGuide FragmentsToStudyGuide(String topic, List<Fragment?>? fragments)
     {
@@ -195,21 +270,7 @@
         return item;
     }
 
-    public async Task RegenerateFragment(String name)
-    {
-        var item = GetItemByName(name);
-        item.Fragment = null;
-        this.StateHasChanged();
-        var generator = item.Generator;
-        item.Fragment = await GenerateFragmentWithGenerator(generator);
-        this.StateHasChanged();
-    }
 
-    public async Task OnSearchbarSubmit(String topic){
-        EraseAllFragments();
-        this.StateHasChanged();
-        await GenerateNewStudyGuide(topic);
-    }
 
     private void MoveItemToSections(FragmentDropItem item)
     {
@@ -218,59 +279,11 @@
         ReorderFragments();
     }
 
-    public async Task OnDeleteFragment(String name) 
-    {
-        var item = GetItemByName(name);
-        MoveItemToSections(item);
-        this.StateHasChanged();
-    }
-
-    private async Task ExportStudyGuide()
-    {
-        var studyGuide = GetStudyGuideFromDraft();
-
-        var options = new DialogOptions { 
-            CloseOnEscapeKey = true,
-            CloseButton = true,
-            BackgroundClass="dialog-background"
-        };
-
-        var parameters = new DialogParameters<SGExportDialog> { { x => x.StudyGuide, studyGuide } };
-        await DialogService.ShowAsync<SGExportDialog>("Save your Study Guide", parameters, options);
-    }
-
     private void EraseAllFragments(){
         foreach (var item in _items){
             item.Fragment = null;
         }
         this.StateHasChanged();
-    }
-
-    public async Task OnRegenerateStudyGuide(){
-        EraseAllFragments();
-        _isProcessing = true;
-        await GenerateNewStudyGuide(_topic);
-        _isProcessing = false;
-    }
-
-    public async Task OnClearStudyGuide() 
-    {
-        foreach (var item in _items){
-            MoveItemToSections(item);
-        }
-        this.StateHasChanged();
-    }
-
-    public async Task OnAddGeneratorClicked(FragmentGenerator generator)
-    {
-        var dropItem = _items.FirstOrDefault(i => i.Generator == generator);
-
-        if(dropItem is not null){
-            dropItem.Order = _items.Count(x => x.Identifier == StudyGuideIdentifier) + 1;
-            dropItem.Identifier = StudyGuideIdentifier;
-            GenerateFragmentIfDropItemInDraft(dropItem);
-            this.StateHasChanged();
-        }
     }
 
     private string FormatTitle(string input)
@@ -282,40 +295,6 @@
 
         TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
         return textInfo.ToTitleCase(input.ToLower());
-    }
-
-    public async Task OnFragmentMoveUp(Fragment fragment)
-    {
-        var item = _items.FirstOrDefault(i => i.Fragment.Name == fragment.Name);
-        if(item is null)
-            return;
-
-        var itemOnTop = _items
-            .Where(i => (i.Identifier == StudyGuideIdentifier && i.Fragment != null))
-            .OrderByDescending(i => i.Order)
-            .FirstOrDefault(i => i.Order < item.Order);
-        if(itemOnTop is null)
-            return;
-
-        SwapPositions(item, itemOnTop);
-        this.StateHasChanged();
-    }
-
-    public async Task OnFragmentMoveDown(Fragment fragment)
-    {
-        var item = _items.FirstOrDefault(i => i.Fragment.Name == fragment.Name);
-        if(item is null)
-            return;
-
-        var itemOnTop = _items
-            .Where(i => (i.Identifier == StudyGuideIdentifier && i.Fragment != null))
-            .OrderBy(i => i.Order)
-            .FirstOrDefault(i => i.Order > item.Order);
-        if(itemOnTop is null)
-            return;
-
-        SwapPositions(item, itemOnTop);
-        this.StateHasChanged();
     }
 
     private void SwapPositions(FragmentDropItem dropItem1, FragmentDropItem dropItem2)
