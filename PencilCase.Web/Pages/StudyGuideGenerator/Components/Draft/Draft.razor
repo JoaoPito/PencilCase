@@ -1,0 +1,53 @@
+<MudCard Elevation="3">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h5" Align="Align.Start">
+                @((string.IsNullOrEmpty(Title)) ? "Draft" : $"Draft - {Title}")
+                </MudText>
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <DraftToolbar Disabled="@IsProcessing"
+                OnRenew="OnRegenerateStudyGuide"
+                OnDelete="OnClearStudyGuide" />
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent Class="pa-0">
+        <div Class="rounded-b mud-background-gray blueprint-dots pa-4
+                overflow-y-scroll overflow-x-hidden pa-8"
+            style="height: 82vh">
+            <MudStack Spacing="5">
+                @if(Items.Count() == 0){
+                    <EmptyBlueprintContent />
+                }
+                else
+                {
+                    foreach(var fragment in Items
+                        .OrderBy(f => f.Order)
+                        .Select(i => i.Fragment))
+                    {
+                        <FragmentCard Fragment=@fragment
+                            OnRegenerateClicked="@OnRegenerateFragment"
+                            OnDeleteClicked="@OnDeleteFragment"
+                            OnMoveUpClicked="@OnFragmentMoveUp"
+                            OnMoveDownClicked="@OnFragmentMoveDown"/>
+                    }
+                }
+            </MudStack>
+    </div>
+    </MudCardContent>
+</MudCard>
+
+@code
+{
+    [Parameter] public List<FragmentDropItem> Items { get; set; } = new();
+    [Parameter] public String Title { get; set; } = String.Empty;
+    [Parameter] public bool IsProcessing { get; set; } = false;
+
+    [Parameter] public Func<String, Task>? OnRegenerateFragment { get; set; } = null;
+    [Parameter] public Func<String, Task>? OnDeleteFragment { get; set; } = null;
+    [Parameter] public Func<Fragment, Task>? OnFragmentMoveUp { get; set; } = null;
+    [Parameter] public Func<Fragment, Task>? OnFragmentMoveDown { get; set; } = null;
+
+    [Parameter] public Func<Task>? OnRegenerateStudyGuide { get; set; } = null;
+    [Parameter] public Func<Task>? OnClearStudyGuide { get; set; } = null;
+}
