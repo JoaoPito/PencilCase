@@ -17,7 +17,7 @@
                 ClearOnSubmit="false" Disabled="@_isProcessing" MaxLength="@_searchMaxLength" />
 
             <Sections Items=@(_items.Where(i => i.Identifier == FragmentGeneratorIdentifier).ToList())
-                OnAddGeneratorClicked="OnAddGeneratorClicked" />
+                OnAddGeneratorClicked="OnAddGeneratorClicked" IsLoadingSections="@_isLoadingSections" />
 
         </MudStack>
     </MudItem>
@@ -57,12 +57,16 @@
     private bool _isProcessing { get; set; } = false;
     private int _searchMaxLength { get; set; } = 60;
 
+    private bool _isLoadingSections = false;
+
     // UI Handlers
     protected override async Task OnInitializedAsync(){
         List<FragmentGenerator>? generators = new();
             
         try{
+            _isLoadingSections = true;
             generators = await FragmentApi.GetAllGenerators();
+            _isLoadingSections = false;
         }
         catch(HttpRequestException err) {
             Console.WriteLine(err.Message);
