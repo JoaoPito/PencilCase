@@ -16,7 +16,7 @@
                             .OrderBy(f => f.Order)
                             .Select(i => i.Generator))
                         {
-                            <FragmentGeneratorCard 
+                            <SectionCard 
                                 FragmentGenerator=@generator 
                                 OnAddClicked="OnAddClicked"/>
                         }
