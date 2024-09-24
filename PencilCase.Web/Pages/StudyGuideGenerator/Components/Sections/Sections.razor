@@ -3,14 +3,17 @@
         <MudText Typo="Typo.h5" Align="Align.Start">Sections</MudText>
     </MudCardHeader>
     <MudCardContent Class="pa-0">
-        <div class="rounded-b mud-background-gray pa-2 
-            overflow-y-scroll overflow-x-hidden pa-6"
+        <div class="rounded-b mud-background-gray 
+            overflow-y-scroll overflow-x-hidden"
             style="height: 75vh;">
-            @if(Items.Count() == 0 && IsLoadingSections){
-                    <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
-                }
-                else
-                {
+            @if(Items.Count() == 0 && IsLoadingSections)
+            {
+                <MudProgressLinear Color="Color.Secondary" 
+                                Indeterminate="true" />
+            }
+            else
+            {
+                <div class="pa-6">
                     <MudStack Spacing="4">
                         @foreach(var generator in Items
                             .OrderBy(f => f.Order)
@@ -21,7 +24,8 @@
                                 OnAddClicked="OnAddClicked"/>
                         }
                     </MudStack>
-                }
+                </div>
+            }
         </div>
     </MudCardContent>
 </MudCard>
