@@ -1,84 +1,45 @@
 @page "/studyguide"
 
+@using MudBlazor.Utilities;
+@using System;
+@using System.Globalization;
+
 @inject FragmentApi FragmentApi;
 @inject IDialogService DialogService;
 
 <PageTitle>pencilcase</PageTitle>
 
-<div class="pa-4">
-    <MudDropContainer T="FragmentDropItem" Items="@_items"
-        ItemsSelector="@((item,dropzone) => item.Identifier == dropzone)" 
-        ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1">
-        <ChildContent>
-            <MudGrid Spacing="4" Class="d-flex flex-grow-1">
-                <MudItem sm="12" md="4" >
-                    <MudStack Wrap="Wrap.WrapReverse" Spacing="4">
-                        <SearchBar Label="Choose a topic" OnSubmit="@OnSearchbarSubmit" 
-                            ClearOnSubmit="false" Disabled="@_isProcessing" MaxLength="@_searchMaxLength" />
-                        <MudCard Elevation="3" Class="d-flex flex-grow-1 flex-column" Style="min-height:75vh">
-                            <MudCardHeader>
-                                <MudText Typo="Typo.h6" Align="Align.Start">Sections</MudText>
-                            </MudCardHeader>
-                            <MudCardContent Class="d-flex flex-grow-1 flex-column pa-0">
-                                <MudDropZone  T="FragmentDropItem" Identifier="@FragmentGeneratorIdentifier"
-                                        Class="rounded-b mud-background-gray pa-2 flex-grow-1 overflow-x-scroll">
-                                    <div></div>
-                                </MudDropZone>
-                            </MudCardContent>
-                        </MudCard>
-                    </MudStack>
-                </MudItem>
-                <MudItem sm="12" md="8">
-                    <MudCard Class="d-flex flex-grow-1" Style="min-height:100%" Elevation="3">
-                        <MudCardHeader>
-                            <CardHeaderContent>
-                                <MudText Typo="Typo.h5" Align="Align.Start">Draft</MudText>
-                            </CardHeaderContent>
-                            <CardHeaderActions>
-                                <StudyGuideToolBar Disabled="@_isProcessing"
-                                    OnRenew="OnRegenerateStudyGuide"
-                                    OnDelete="OnClearStudyGuide" />
-                            </CardHeaderActions>
-                        </MudCardHeader>
-                        <MudCardContent Class="d-flex flex-grow-1 flex-column pa-0">
-                            <MudDropZone T="FragmentDropItem" Identifier="@StudyGuideIdentifier" 
-                                Class="rounded-b mud-background-gray blueprint-dots pa-4 flex-grow-1 overflow-x-scroll"
-                                AllowReorder="true">
-                            <div>
-                                @if(_items.Where(i => i.Identifier == StudyGuideIdentifier).Count() == 0){
-                                    <EmptyBlueprintContent />
-                                }
-                            </div>
-                        </MudDropZone>
-                        </MudCardContent>
-                    </MudCard>
-                </MudItem>
-            </MudGrid>
-        </ChildContent>
-        <ItemRenderer>
-            @if (@context.Identifier == FragmentGeneratorIdentifier)
-            {
-                <div class="ma-4">
-                    <FragmentGeneratorCard FragmentGenerator=@context.Generator/>
-                </div>
-            }
-            else
-            {
-                <div class="ma-4">
-                    <FragmentCard Fragment=@context.Fragment 
-                        OnRegenerateClicked="@RegenerateFragment"
-                        OnDeleteClicked="@OnDeleteFragment" />
-                </div>
-            }
-        </ItemRenderer>
-    </MudDropContainer>
+<div class="pa-4 d-flex flex-column">
+<MudGrid Spacing="4">
+    <MudItem sm="12" md="4">
+        <MudStack Wrap="Wrap.WrapReverse" Spacing="4">
+            <SearchBar Label="Choose a topic" OnSubmit="@OnSearchbarSubmit" 
+                ClearOnSubmit="false" Disabled="@_isProcessing" MaxLength="@_searchMaxLength" />
+
+            <Sections Items=@(_items.Where(i => i.Identifier == FragmentGeneratorIdentifier).ToList())
+                OnAddGeneratorClicked="OnAddGeneratorClicked" IsLoadingSections="@_isLoadingSections" />
+
+        </MudStack>
+    </MudItem>
+
+    <!-- Draft -->
+    <MudItem sm="12" md="8">
+        <Draft Items=@(_items.Where(i => i.Identifier == StudyGuideIdentifier).ToList()) 
+            Title=@(FormatTitle(_topic)) 
+            IsProcessing="@_isProcessing"
+            OnRegenerateFragment=@RegenerateFragment
+            OnDeleteFragment=@OnDeleteFragment
+            OnFragmentMoveUp=@OnFragmentMoveUp
+            OnFragmentMoveDown=@OnFragmentMoveDown
+
+            OnRegenerateStudyGuide=@OnRegenerateStudyGuide
+            OnClearStudyGuide=@OnClearStudyGuide
+             />
+    </MudItem>
+</MudGrid>
 </div>
 
-
-<div style="position: fixed;bottom: 0pt;right: 0pt;">
-    <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Rounded.Save" 
-            OnClick="ExportStudyGuide" Size="Size.Large" Class="ma-6" Label="Save"/>
-</div>
+<DownloadButton OnDownload="ExportStudyGuide" />
 
 <style>
     .dialog-background {
@@ -95,12 +56,17 @@
 
     private bool _isProcessing { get; set; } = false;
     private int _searchMaxLength { get; set; } = 60;
-    
+
+    private bool _isLoadingSections = false;
+
+    // UI Handlers
     protected override async Task OnInitializedAsync(){
         List<FragmentGenerator>? generators = new();
             
         try{
+            _isLoadingSections = true;
             generators = await FragmentApi.GetAllGenerators();
+            _isLoadingSections = false;
         }
         catch(HttpRequestException err) {
             Console.WriteLine(err.Message);
@@ -108,55 +74,104 @@
         if (generators != null) PopulateItemsWithGenerators(generators);
     }
 
-    private StudyGuide FragmentsToStudyGuide(String topic, List<Fragment?>? fragments)
+    private async Task ExportStudyGuide()
     {
-        return new StudyGuide{
-            Topic = topic,
-            Fragments = (fragments != null) ? fragments : []
+        var studyGuide = GetStudyGuideFromDraft();
+
+        var options = new DialogOptions { 
+            CloseOnEscapeKey = true,
+            CloseButton = true,
+            BackgroundClass="dialog-background"
         };
+
+        var parameters = new DialogParameters<SGExportDialog> { { x => x.StudyGuide, studyGuide } };
+        await DialogService.ShowAsync<SGExportDialog>("Save your Study Guide", parameters, options);
     }
 
-    private StudyGuide GetStudyGuideFromBlueprint()
-    {
-        var fragments = _items
-            .Where(i => (i.Identifier == StudyGuideIdentifier && i.Fragment != null))
-            .Select(i => i.Fragment).ToList();
-
-        return FragmentsToStudyGuide(_topic, fragments);
+    public async Task OnRegenerateStudyGuide(){
+        EraseAllFragments();
+        _isProcessing = true;
+        await GenerateNewStudyGuide(_topic);
+        _isProcessing = false;
     }
 
-    private async void ItemUpdated(MudItemDropInfo<FragmentDropItem> dropItem)
+    public async Task OnClearStudyGuide() 
     {
-        dropItem.Item!.Identifier = dropItem.DropzoneIdentifier!;
-        // Add to study guide
-        if (dropItem.Item.Identifier == StudyGuideIdentifier && dropItem.Item.Fragment == null)
-        {
-            dropItem.Item.Fragment = await GenerateFragmentWithGenerator(dropItem.Item.Generator);
+        foreach (var item in _items){
+            MoveItemToSections(item);
+        }
+        this.StateHasChanged();
+    }
+
+    public async Task OnAddGeneratorClicked(FragmentGenerator generator)
+    {
+        var dropItem = _items.FirstOrDefault(i => i.Generator == generator);
+
+        if(dropItem is not null){
+            dropItem.Order = _items.Count(x => x.Identifier == StudyGuideIdentifier) + 1;
+            dropItem.Identifier = StudyGuideIdentifier;
+            GenerateFragmentIfDropItemInDraft(dropItem);
             this.StateHasChanged();
         }
     }
 
-    private void PopulateItemsWithGenerators(List<FragmentGenerator> generators)
+    public async Task OnFragmentMoveUp(Fragment fragment)
     {
-        foreach (var generator in generators)
-        {
-            _items.Add(new FragmentDropItem()
-            {
-                Identifier = FragmentGeneratorIdentifier,
-                Generator = generator
-            });
-        }
+        var item = _items.FirstOrDefault(i => i.Fragment.Name == fragment.Name);
+        if(item is null)
+            return;
+
+        var itemOnTop = _items
+            .Where(i => (i.Identifier == StudyGuideIdentifier && i.Fragment != null))
+            .OrderByDescending(i => i.Order)
+            .FirstOrDefault(i => i.Order < item.Order);
+        if(itemOnTop is null)
+            return;
+
+        SwapPositions(item, itemOnTop);
+        this.StateHasChanged();
     }
 
-    private async Task<Fragment> GenerateFragmentWithGenerator(FragmentGenerator generator)
+    public async Task OnFragmentMoveDown(Fragment fragment)
     {
-        if(_topic == String.Empty || _topic == null){
-            return new Fragment{
-                Name = generator.Name,
-                Content = String.Empty
-            };
-        }
-        return await FragmentApi.GenerateFragment(generator, _topic);
+        var item = _items.FirstOrDefault(i => i.Fragment.Name == fragment.Name);
+        if(item is null)
+            return;
+
+        var itemOnTop = _items
+            .Where(i => (i.Identifier == StudyGuideIdentifier && i.Fragment != null))
+            .OrderBy(i => i.Order)
+            .FirstOrDefault(i => i.Order > item.Order);
+        if(itemOnTop is null)
+            return;
+
+        SwapPositions(item, itemOnTop);
+        this.StateHasChanged();
+    }
+
+    public async Task OnSearchbarSubmit(String topic){
+        EraseAllFragments();
+        this.StateHasChanged();
+        await GenerateNewStudyGuide(topic);
+    }
+
+    public async Task OnDeleteFragment(String name) 
+    {
+        var item = GetItemByName(name);
+        MoveItemToSections(item);
+        this.StateHasChanged();
+    }
+
+    // Draft
+
+    public async Task RegenerateFragment(String name)
+    {
+        var item = GetItemByName(name);
+        item.Fragment = null;
+        this.StateHasChanged();
+        var generator = item.Generator;
+        item.Fragment = await GenerateFragmentWithGenerator(generator);
+        this.StateHasChanged();
     }
 
     private async Task GenerateNewStudyGuide(String topic){
@@ -170,6 +185,79 @@
         this.StateHasChanged();
     }
 
+    private async Task GenerateFragmentIfDropItemInDraft(FragmentDropItem dropItem)
+    {
+        if (dropItem.Identifier == StudyGuideIdentifier && dropItem.Fragment == null)
+        {
+            dropItem.Fragment = await GenerateFragmentWithGenerator(dropItem.Generator);
+            this.StateHasChanged();
+        }
+    }
+        
+    private async Task<Fragment> GenerateFragmentWithGenerator(FragmentGenerator generator)
+    {
+        if(_topic == String.Empty || _topic == null){
+            return new Fragment{
+                Name = generator.Name,
+                Content = String.Empty
+            };
+        }
+        return await FragmentApi.GenerateFragment(generator, _topic);
+    }
+
+    private void SwapPositions(FragmentDropItem dropItem1, FragmentDropItem dropItem2)
+    {
+        var oldItem1Order = dropItem1.Order;
+        dropItem1.Order = dropItem2.Order;
+        dropItem2.Order = oldItem1Order;
+    }
+
+    private void ReorderFragments()
+    {
+        int i = 1;
+        foreach(var fragment in _items
+            .Where(i => (i.Identifier == StudyGuideIdentifier && i.Fragment != null))
+            .OrderBy(i => i.Order))
+        {
+            fragment.Order = i++;
+        }
+    }
+
+    // Export
+    private StudyGuide FragmentsToStudyGuide(String topic, List<Fragment?>? fragments)
+    {
+        return new StudyGuide{
+            Topic = topic,
+            Fragments = (fragments != null) ? fragments : []
+        };
+    }
+
+    private StudyGuide GetStudyGuideFromDraft()
+    {
+        var fragments = _items
+            .OrderBy(i => i.Order)
+            .Where(i => (i.Identifier == StudyGuideIdentifier && i.Fragment != null))
+            .Select(i => i.Fragment)
+            .ToList();
+
+        return FragmentsToStudyGuide(FormatTitle(_topic), fragments);
+    }
+
+    // Sections
+    private void PopulateItemsWithGenerators(List<FragmentGenerator> generators)
+    {
+        foreach (var generator in generators)
+        {
+            _items.Add(new FragmentDropItem()
+            {
+                Order = 0,
+                Identifier = FragmentGeneratorIdentifier,
+                Generator = generator
+            });
+        }
+    }
+
+    // Others
     private FragmentDropItem GetItemByName(String name){
         var item = _items.FirstOrDefault(i => i.Fragment?.Name == name);
         if(item == null){
@@ -178,41 +266,11 @@
         return item;
     }
 
-    public async Task RegenerateFragment(String name)
+    private void MoveItemToSections(FragmentDropItem item)
     {
-        var item = GetItemByName(name);
-        item.Fragment = null;
-        this.StateHasChanged();
-        var generator = item.Generator;
-        item.Fragment = await GenerateFragmentWithGenerator(generator);
-        this.StateHasChanged();
-    }
-
-    public async Task OnSearchbarSubmit(String topic){
-        EraseAllFragments();
-        this.StateHasChanged();
-        await GenerateNewStudyGuide(topic);
-    }
-
-    public async Task OnDeleteFragment(String name) 
-    {
-        var item = GetItemByName(name);
         item.Identifier = FragmentGeneratorIdentifier;
-        this.StateHasChanged();
-    }
-
-    private async Task ExportStudyGuide()
-    {
-        var studyGuide = GetStudyGuideFromBlueprint();
-
-        var options = new DialogOptions { 
-            CloseOnEscapeKey = true,
-            CloseButton = true,
-            BackgroundClass="dialog-background"
-        };
-
-        var parameters = new DialogParameters<SGExportDialog> { { x => x.StudyGuide, studyGuide } };
-        await DialogService.ShowAsync<SGExportDialog>("Save your Study Guide", parameters, options);
+        item.Order = 0;
+        ReorderFragments();
     }
 
     private void EraseAllFragments(){
@@ -222,18 +280,14 @@
         this.StateHasChanged();
     }
 
-    public async Task OnRegenerateStudyGuide(){
-        EraseAllFragments();
-        _isProcessing = true;
-        await GenerateNewStudyGuide(_topic);
-        _isProcessing = false;
-    }
-
-    public async Task OnClearStudyGuide() 
+    private string FormatTitle(string input)
     {
-        foreach (var item in _items){
-            item.Identifier = FragmentGeneratorIdentifier;
+        if (string.IsNullOrEmpty(input))
+        {
+            return input;
         }
-        this.StateHasChanged();
+
+        TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
+        return textInfo.ToTitleCase(input.ToLower());
     }
 }

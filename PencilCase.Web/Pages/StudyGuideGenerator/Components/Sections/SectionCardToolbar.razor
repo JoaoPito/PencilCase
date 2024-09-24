@@ -1,0 +1,11 @@
+<MudIconButton Icon="@Icons.Material.Rounded.Add" aria-label="add new" 
+    OnClick="OnAddClick" />
+
+@code {
+    [Parameter] public Func<Task>? OnAddClicked { get; set; } = null;
+    private async Task OnAddClick()
+    {
+        if(OnAddClicked != null)
+            await OnAddClicked();
+    }
+}
