@@ -177,9 +177,13 @@
     private async Task GenerateNewStudyGuide(String topic){
         _topic = topic;
         _isProcessing = true;
-        foreach(var item in _items.Where(i => i.Identifier == StudyGuideIdentifier)){
+        foreach(var item in _items
+                                .Where(i => i.Identifier == StudyGuideIdentifier)
+                                .OrderBy(i => i.Order))
+        {
             var fragment = await GenerateFragmentWithGenerator(item.Generator);
             item.Fragment = fragment;
+            this.StateHasChanged();
         }
         _isProcessing = false;
         this.StateHasChanged();
