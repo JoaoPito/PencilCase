@@ -10,6 +10,14 @@
             {
                 <MudProgressLinear Color="Color.Secondary" 
                                 Indeterminate="true" />
+                <div class="pa-6">
+                    <MudStack Spacing="4">
+                        @for(int i = 0; i < 3; i++)
+                        {
+                            <SectionPlaceholder />
+                        }
+                    </MudStack>
+                </div>
             }
             else
             {
