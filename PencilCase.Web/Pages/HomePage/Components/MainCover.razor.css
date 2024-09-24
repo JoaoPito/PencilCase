@@ -56,3 +56,10 @@
         opacity: 1;
     }
 }
+
+.photo-credits {
+    place-content: end;
+    text-align: right;
+    margin-top: -64px;
+    padding: 8px;
+}
