@@ -117,7 +117,7 @@
 
     public async Task OnFragmentMoveUp(Fragment fragment)
     {
-        var item = _items.FirstOrDefault(i => i.Fragment.Name == fragment.Name);
+        var item = _items.FirstOrDefault(i => i.Fragment == fragment);
         if(item is null)
             return;
 
@@ -134,18 +134,18 @@
 
     public async Task OnFragmentMoveDown(Fragment fragment)
     {
-        var item = _items.FirstOrDefault(i => i.Fragment.Name == fragment.Name);
+        var item = _items.FirstOrDefault(i => i.Fragment == fragment);
         if(item is null)
             return;
 
-        var itemOnTop = _items
+        var itemOnBottom = _items
             .Where(i => (i.Identifier == StudyGuideIdentifier && i.Fragment != null))
             .OrderBy(i => i.Order)
             .FirstOrDefault(i => i.Order > item.Order);
-        if(itemOnTop is null)
+        if(itemOnBottom is null)
             return;
 
-        SwapPositions(item, itemOnTop);
+        SwapPositions(item, itemOnBottom);
         this.StateHasChanged();
     }
 
