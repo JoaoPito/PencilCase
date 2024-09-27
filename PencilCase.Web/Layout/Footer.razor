@@ -1,23 +1,28 @@
 <MudDivider />
 <MudGrid Justify="Justify.Center" Spacing=0 class="py-4">
-    <MudItem xs=10>
-        <MudStack Justify="Justify.SpaceBetween" Row="true">
-            <MudIconButton Icon="@Icons.Custom.Brands.GitHub" 
+    <MudItem xs=12 md=1></MudItem>
+    <MudItem xs=12 md=6>
+        <MudIconButton Icon="@Icons.Custom.Brands.GitHub" 
             aria-label="github" Size="Size.Small"
             href="https://github.com/JoaoPito/PencilCase" />
-            <MudText Typo="Typo.body1">
-            pencilcase is open-source and uses the GNU GPL-3.0 license.
-                </MudText>
-        </MudStack>
     </MudItem>
-    <MudItem xs=10>
-        <MudStack Justify="Justify.SpaceBetween" Row="true">
-            <MudText Typo="Typo.body1">
+    <MudItem xs=12 md=4>
+        <MudText Typo="Typo.body1" Align="Align.Right">
+            pencilcase is open-source and uses the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html#license-text" target="_blank">GNU GPL-3.0 license</a>.
+        </MudText>
+    </MudItem>
+    <MudItem xs=12 md=1></MudItem>
+    <MudFlexBreak />
+    <MudItem xs=12 md=1></MudItem>
+    <MudItem xs=12 md=6>
+        <MudText Typo="Typo.body1" Align="Align.Left">
                 2024 <b>João Pito.</b>
             </MudText>
-            <MudText Typo="Typo.body1">
+    </MudItem>
+    <MudItem xs=12 md=4>
+        <MudText Typo="Typo.body1" Align="Align.Right">
             We do not collect, sell or share any of your personal information.
             </MudText>
-        </MudStack>
     </MudItem>
+    <MudItem xs=12 md=1></MudItem>
 </MudGrid>
