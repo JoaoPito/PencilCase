@@ -22,7 +22,7 @@
             <div class="d-flex justify-space-around">
                 <MudImage Src="@ImgSrc" ObjectFit="ObjectFit.Cover" 
                     Class="flex-shrink overflow-hidden rounded-xl"
-                    Width="@_imgWidth" ObjectPosition="ObjectPosition.Right"/>
+                    Width="@_imgWidth" Height="@_imgHeight" ObjectPosition="ObjectPosition.Right"/>
             </div>
         </MudItem>
         @if(ButtonText != String.Empty){
@@ -77,7 +77,7 @@
             <div class="d-flex justify-space-around">
                 <MudImage Src="@ImgSrc" ObjectFit="ObjectFit.Cover" 
                     Class="flex-shrink overflow-hidden rounded-xl"
-                    Width="@_imgWidth" ObjectPosition="ObjectPosition.Right"/>
+                    Width="@_imgWidth" Height="@_imgHeight" ObjectPosition="ObjectPosition.Right"/>
             </div>
         </MudItem>
         @if(Alignment == ParagraphAlign.Right)
@@ -135,7 +135,8 @@
     
     
 
-    private int _imgWidth = 500;
+    private int _imgWidth = 700;
+    private int _imgHeight = 500;
     private int _elemsSizeFull = 10;
     private int _textGridSizeMd = 4;
     private int _imgGridSizeMd = 6;
