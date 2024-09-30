@@ -27,10 +27,10 @@
                         Width="@_imgWidth" Height="@_imgHeight" ObjectPosition="ObjectPosition.Right"/>
                 </div>
             </MudItem>
+            <MudFlexBreak />
         }
         
         @if(ButtonText != String.Empty){
-            <MudFlexBreak />
             <MudItem xs="@_elemsSizeFull">
                 <div class="d-flex justify-center my-12">
                     <MudButton Href="@ButtonHref"
@@ -115,7 +115,6 @@
                         </MudButton>
                     </div>
                 }
-
             </MudItem>
         }
     }
