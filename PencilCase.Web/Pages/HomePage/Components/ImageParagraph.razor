@@ -18,13 +18,17 @@
             </MudStack>
         </MudItem>
         <MudFlexBreak />
-        <MudItem xs="@_elemsSizeFull">
-            <div class="d-flex justify-space-around">
-                <MudImage Src="@ImgSrc" ObjectFit="ObjectFit.Cover" 
-                    Class="flex-shrink overflow-hidden rounded-xl"
-                    Width="@_imgWidth" Height="@_imgHeight" ObjectPosition="ObjectPosition.Right"/>
-            </div>
-        </MudItem>
+        @if(ImgSrc != String.Empty && ImgSrc != null)
+        {
+            <MudItem xs="@_elemsSizeFull">
+                <div class="d-flex justify-space-around">
+                    <MudImage Src="@ImgSrc" ObjectFit="ObjectFit.Cover" 
+                        Class="flex-shrink overflow-hidden rounded-xl"
+                        Width="@_imgWidth" Height="@_imgHeight" ObjectPosition="ObjectPosition.Right"/>
+                </div>
+            </MudItem>
+        }
+        
         @if(ButtonText != String.Empty){
             <MudFlexBreak />
             <MudItem xs="@_elemsSizeFull">
@@ -73,13 +77,16 @@
 
             </MudItem>
         }
-        <MudItem xs="@_elemsSizeFull" md="@_imgGridSizeMd">
-            <div class="d-flex justify-space-around">
-                <MudImage Src="@ImgSrc" ObjectFit="ObjectFit.Cover" 
-                    Class="flex-shrink overflow-hidden rounded-xl"
-                    Width="@_imgWidth" Height="@_imgHeight" ObjectPosition="ObjectPosition.Right"/>
-            </div>
-        </MudItem>
+         @if(ImgSrc != String.Empty && ImgSrc != null)
+        {
+            <MudItem xs="@_elemsSizeFull" md="@_imgGridSizeMd">
+                <div class="d-flex justify-space-around">
+                    <MudImage Src="@ImgSrc" ObjectFit="ObjectFit.Cover" 
+                        Class="flex-shrink overflow-hidden rounded-xl"
+                        Width="@_imgWidth" Height="@_imgHeight" ObjectPosition="ObjectPosition.Right"/>
+                </div>
+            </MudItem>
+        }
         @if(Alignment == ParagraphAlign.Right)
         {
             <MudItem xs="@_elemsSizeFull" md="@_textGridSizeMd">
