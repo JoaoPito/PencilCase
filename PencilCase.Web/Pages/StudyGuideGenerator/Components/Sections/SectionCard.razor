@@ -1,0 +1,31 @@
+<MudCard Elevation="10">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <div class="d-flex flex-grow-1">
+                @if(FragmentGenerator == null){
+                    <MudSkeleton class="flex-grow-1"/>
+                } else {
+                    <MudText Typo="Typo.h6">@FragmentGenerator.Name</MudText>
+                }
+            </div>
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <SectionCardToolbar OnAddClicked="@(async () => await OnAddClicked(FragmentGenerator))"/>
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent>
+        <div class="d-flex flex-grow-1">
+            @if(FragmentGenerator == null){
+                <MudSkeleton class="flex-grow-1" />
+            } else {
+                <MudText Typo="Typo.body2">@FragmentGenerator.Description</MudText>
+            }
+        </div>
+        
+    </MudCardContent>
+</MudCard>
+
+@code{
+    [Parameter] public FragmentGenerator? FragmentGenerator { get; set; } = null;
+    [Parameter] public Func<FragmentGenerator, Task>? OnAddClicked { get; set; } = null;
+}

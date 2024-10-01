@@ -1,0 +1,52 @@
+<MudCard Elevation="3">
+    <MudCardHeader>
+        <MudText Typo="Typo.h5" Align="Align.Start">Sections</MudText>
+    </MudCardHeader>
+    <MudCardContent Class="pa-0">
+        <div class="rounded-b mud-background-gray 
+            overflow-y-scroll overflow-x-hidden"
+            style="height: 75vh;">
+            @if(Items.Count() == 0 && IsLoadingSections)
+            {
+                <MudProgressLinear Color="Color.Secondary" 
+                                Indeterminate="true" />
+                <div class="pa-6">
+                    <MudStack Spacing="4">
+                        @for(int i = 0; i < 3; i++)
+                        {
+                            <SectionPlaceholder />
+                        }
+                    </MudStack>
+                </div>
+            }
+            else
+            {
+                <div class="pa-6">
+                    <MudStack Spacing="4">
+                        @foreach(var generator in Items
+                            .OrderBy(f => f.Order)
+                            .Select(i => i.Generator))
+                        {
+                            <SectionCard 
+                                FragmentGenerator=@generator 
+                                OnAddClicked="OnAddClicked"/>
+                        }
+                    </MudStack>
+                </div>
+            }
+        </div>
+    </MudCardContent>
+</MudCard>
+
+@code 
+{
+    [Parameter] public bool IsLoadingSections { get; set; } = false;
+    [Parameter] public List<FragmentDropItem> Items { get; set; } = new();
+    [Parameter] public Func<FragmentGenerator, Task>? OnAddGeneratorClicked { get; set; }
+
+    async Task OnAddClicked(FragmentGenerator generator)
+    {
+        if(OnAddGeneratorClicked is not null)
+            await OnAddGeneratorClicked(generator);
+    }
+}

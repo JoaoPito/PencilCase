@@ -8,11 +8,7 @@
 <MudLayout>
     <MudAppBar Elevation="1" Dense="true">
         <MudLink Href="/" Color="Color.Inherit" Typo="Typo.h5" class="d-flex flex-row align-center">
-        <img src="icon_256.png" style="height: 48px;" class="mr-2">
-        <MudText 
-            Typo="Typo.h5">
-            pencilcase
-        </MudText>
+            <Logo />
         </MudLink>
         <MudSpacer/>    
         <MudToggleIconButton
@@ -23,6 +19,7 @@
     </MudAppBar>
     <MudMainContent>
             @Body
+            <Footer />
     </MudMainContent>
 </MudLayout>
 
@@ -46,6 +43,41 @@
         LayoutProperties = new LayoutProperties()
         {
             DefaultBorderRadius = "14px",
+        },
+        Typography = new Typography()
+        {
+            Default = new Default()
+            {
+                FontFamily = new[] { "Noto Sans",  "Playwrite CU" },
+                FontWeight = 300
+            },
+            H1 = new H1()
+            {
+                FontSize = "5.5rem",
+                FontWeight = 500
+            },
+            H2 = new H2()
+            {
+                FontWeight = 400
+            },
+            H3 = new H3()
+            {
+                FontSize = "2.25rem",
+                FontWeight = 300
+            },
+            H4 = new H4()
+            {
+                FontSize = "2.0rem",
+                FontWeight = 200
+            },
+            Body1 = new Body1()
+            {
+                FontSize = "1.05rem",
+            },
+            Button = new Button()
+            {
+                FontWeight = 500
+            }
         }
     };
 

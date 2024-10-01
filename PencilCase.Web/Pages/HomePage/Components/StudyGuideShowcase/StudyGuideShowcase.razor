@@ -1,0 +1,55 @@
+<MudStack Spacing="16">
+    <div class="feature-title mb-14">
+        <MudGrid Justify="Justify.Center">
+            <MudItem xs="10">
+                <MudChip T="string" Icon="@Icons.Material.Rounded.Article" Size="Size.Large"
+                    Variant="Variant.Text" Href="/studyguide" style=@($"color: {Color};")><b>Study Guides</b></MudChip>
+            </MudItem>
+            <MudFlexBreak />
+            <MudItem xs="10">
+                <MudText Typo="Typo.h2" Align="Align.Left">Get Straight to What Matters</MudText>
+                <MudText Typo="Typo.h6" Align="Align.Left">
+                    pencilcase provides tools for you to skip the irrelevant steps in your study routine and focus on what truly matters.
+                    </MudText>
+            </MudItem>
+            <MudFlexBreak />
+        </MudGrid>
+    </div>
+    
+    <div class="feature-paragraph mb-12">
+        <ImageParagraph Color="@Color"  ImgSrc="home-page/sg_paragraph01.png"
+            Title="Ease and Speed to Explore."
+            Content="No more hunting for resources online. With our study guides, you can cut down hours of research to just seconds. Simply choose a topic and the sections that matter to you."
+            BulletPoints="@_researchBulletPoints" />
+    </div>
+
+    <div class="feature-paragraph mb-12">
+        <ImageParagraph Color="@Color"  ImgSrc="home-page/sg_paragraph02.png"
+            Alignment="ImageParagraph.ParagraphAlign.Right" 
+            Title="Choose any subject. In any way you like." 
+            Content="With pencilcase's AI-assisted study guides, you're free to explore any topic that comes to mind. All you need to do is choose a subject, and we'll take care of the rest."
+            />
+    </div>
+    <div class="feature-paragraph mb-10">
+        <PagesParagraph Color="@Color"  
+            ImgLeftSrc="home-page/notion_export_feature.png" ImgCenterSrc="home-page/pencilcase_export_feature.png" 
+            ImgRightSrc="home-page/obsidian-export-feature.png"
+            Title="It integrates with your workflow." 
+            Content="Our tools are designed to seamlessly fit into your routine. **You don’t need to change what already works, but that doesn’t mean you can’t improve it.**"
+            ButtonText="Start now" ButtonHref="/studyguide" />
+    </div>
+    <MudText Typo="Typo.body2">
+    *Feature not available in the moment. Planned to be released soon.
+    </MudText>
+</MudStack>
+
+@code {
+    [Parameter] public String Color { get; set; } = Colors.Pink.Accent2;
+    [Parameter] public String TextColor { get; set; } = Colors.Shades.Black;
+
+    List<String> _researchBulletPoints = new(){
+        "Wikipedia",
+        "Videos",
+        "Books*",
+        "Academic papers*"};
+}

@@ -1,0 +1,32 @@
+﻿@page "/"
+@using PencilCase.Web.Pages.HomePage.Components
+@using PencilCase.Web.Pages.HomePage.Components.StudyGuideShowcase
+
+@inject NavigationManager Navigation
+
+<PageTitle>pencilcase</PageTitle>
+
+<MainCover />
+
+<div style=@($"color: {_studyGuideTextColor};")>
+    <ScrollingTagList Items="@_scrollerContent" Color="@_studyGuideColor" />
+</div>
+
+<section class="my-6 mx-16 d-flex">
+    <StudyGuideShowcase Color="@_studyGuideColor" TextColor="@_studyGuideTextColor"/>
+</section>
+
+@code{
+    List<String> _scrollerContent = [
+        "start learning any subject.", 
+        "get ready for your next study session.",
+        "quickly find references.", 
+        "follow bite-sized steps.", 
+        "use it in your favorite note-taking app.",
+        "simplify your routine.",
+        "eliminate friction.",
+        "focus on what matters."];
+
+    String _studyGuideColor = Colors.Pink.Accent2;
+    String _studyGuideTextColor = Colors.Shades.Black;
+}

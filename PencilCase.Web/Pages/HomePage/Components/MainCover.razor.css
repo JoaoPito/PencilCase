@@ -1,0 +1,66 @@
+.cover {
+    background-image: url("home-page/home-cover.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    display: flex; 
+    min-block-size: 110vh;
+    place-content: center end;
+    text-align: right;
+    margin-top: -64px;
+    color: hsl(0, 0%, 90%)
+}
+
+.cover h1 {
+    color: rgb(255, 255, 255);
+}
+
+@supports (animation-timeline: view()){
+    .overlay {
+        animation: fade-out linear forwards;
+        animation-timeline: view();
+        animation-range-start: exit;
+        animation-range-end: exit 90vh;
+    }
+}
+
+.overlay {
+    border-image: fill 1 linear-gradient(
+        rgba(0%, 0%, 0%, 15%), 
+        rgba(0%, 0%, 0%, 100%) 95%);
+}
+
+.main-text {
+    opacity: 0;
+    animation: fade-in 1s ease-in forwards;
+}
+
+
+.main-text.subtitle {
+    animation-delay: 0.5s;
+}
+
+@keyframes fade-out {
+    to {
+        border-image: fill 1 linear-gradient(
+        rgba(0%, 0%, 0%, 15%), 
+        rgba(0%, 0%, 0%, 100%) 0%);
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.photo-credits {
+    place-content: end;
+    text-align: right;
+    margin-top: -80px;
+    padding: 16px;
+    color: hsl(0, 0%, 90%);
+}

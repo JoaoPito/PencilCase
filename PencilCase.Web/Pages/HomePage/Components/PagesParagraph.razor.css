@@ -1,0 +1,55 @@
+.page.center {
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+}
+
+.page.left {
+    justify-content: center;
+    scale: 0.75;
+    opacity: 0.25;
+    z-index: 1;
+    transform: translate(50%, 0); 
+}
+
+.page.right {
+    justify-content: center;
+    scale: 0.75;
+    opacity: 0.25;
+    z-index: 1;
+    transform: translate(-50%, 0); 
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .page.left {
+        transform: translate(150%, 0); 
+        animation: go-to-left ease-out forwards;
+        animation-timeline: view();
+        animation-range-start: cover;
+        animation-range-end: contain -15%;
+    }
+
+    .page.right {
+        transform: translate(-150%, 0); 
+        animation: go-to-right ease-out forwards;
+        animation-timeline: view();
+        animation-range-start: cover;
+        animation-range-end: contain -15%;
+    }
+
+    @keyframes go-to-left {
+        to { 
+            transform: translate(50%, 0); 
+            scale: 0.85;
+            opacity: 1.0; }
+        }
+    }
+
+    @keyframes go-to-right {
+        to {
+            transform: translate(-50%, 0); 
+            scale: 0.85;
+            opacity: 1.0; }
+        }
+    }
+}
