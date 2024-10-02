@@ -22,7 +22,7 @@ class WikipediaSearch(BaseTool):
         "search for articles in a topic on wikipedia. Gets the title, content and url of the article."
     )
 
-    num_results = 3
+    num_results:int = 3
     
     def __get_page_info_from_query__(self, query,  summary_chars):
         query = self.__cleanup_query__(query)

@@ -15,7 +15,7 @@ from typing import Optional
 from app.generators.generator import Generator
 
 from langchain_core.callbacks import CallbackManagerForToolRun
-from langchain_community.tools import BaseTool
+from langchain.tools import BaseTool
 from langchain.prompts import ChatPromptTemplate
 from operator import itemgetter
 
@@ -32,7 +32,7 @@ class YouTubeSearchTool(BaseTool):
         "Never use commas in the first part"
     )
     
-    num_results = 10
+    num_results:int = 10
     
     def _format_to_md(self, results):
         markdown_str = ""

@@ -8,11 +8,11 @@
 
 <MainCover />
 
-<div style=@($"color: {_studyGuideTextColor};")>
+<div style=@($"color: {_studyGuideTextColor}; width: 100vw") >
     <ScrollingTagList Items="@_scrollerContent" Color="@_studyGuideColor" />
 </div>
 
-<section class="my-6 mx-16 d-flex">
+<section class="my-6 mx-16" style="max-width: 100vw;">
     <StudyGuideShowcase Color="@_studyGuideColor" TextColor="@_studyGuideTextColor"/>
 </section>
 
