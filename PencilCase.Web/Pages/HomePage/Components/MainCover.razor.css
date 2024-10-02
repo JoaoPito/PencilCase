@@ -1,4 +1,6 @@
 .cover {
+    width: 100vw;
+
     background-image: url("home-page/home-cover.jpg");
     background-size: cover;
     background-repeat: no-repeat;
