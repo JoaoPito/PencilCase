@@ -3,7 +3,7 @@ using PencilCase.Shared.Models;
 
 namespace PencilCase.Shared.Files;
 
-public abstract class TextFileExporter
+public abstract class FileExporter
 {
-    public abstract TextFile ExportStudyGuide(StudyGuide content);
+    public abstract BinaryFile ExportStudyGuide(StudyGuide content);
 }

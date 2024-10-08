@@ -3,7 +3,7 @@ using PencilCase.Shared.Models;
 
 namespace PencilCase.Shared.Files.FileExporters;
 
-public class MarkdownExporter : TextFileExporter
+public class MarkdownExporter : FileExporter
 {
     public override TextFile ExportStudyGuide(StudyGuide studyGuide){
         var filename = FormatAsFilename($"pencilcase_{studyGuide.Topic}");
