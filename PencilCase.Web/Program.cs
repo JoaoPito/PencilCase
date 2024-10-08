@@ -20,6 +20,7 @@ builder.Services.AddHttpClient("API", client =>
 builder.Services.AddTransient<FragmentApi>();
 builder.Services.AddTransient<MarkdownExporter>();
 builder.Services.AddTransient<PdfExporter>();
+builder.Services.AddTransient<PdfAttributes, PdfDefaultAttributes>();
 
 builder.Services.AddMudServices();
 builder.Services.AddMudMarkdownServices();
