@@ -5,8 +5,10 @@ namespace PencilCase.Shared.Files.FileExporters;
 
 public abstract class PdfAttributes
 {
-    public abstract XUnit TitleSize { get; }
-    public abstract XUnit BodySize { get; }
+    public abstract int TitleFontSize { get; }
+    public abstract int BodyFontSize { get; }
+    public abstract string TitleFontName { get; }
+    public abstract string BodyFontName { get; }
     public abstract XFont TitleFont { get; }
     public abstract XFont BodyFont { get; }
 
