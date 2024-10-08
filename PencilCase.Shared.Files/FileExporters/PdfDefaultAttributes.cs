@@ -29,9 +29,12 @@ public class PdfDefaultAttributes : PdfAttributes
     private void AddFooter(PdfPage page, XGraphics gfx)
     {
         var tf = new XTextFormatter(gfx);
+        tf.Alignment = XParagraphAlignment.Left;
         tf.DrawString(footerText, footerFont, XBrushes.Black, 
-            new XRect(page.Width - (Margins / 2) - (footerText.Length * 2), page.Height - Margins - 8, 
-                page.Width - Margins, page.Height - Margins), 
+            new XRect(Margins, 
+                page.Height - (Margins / 2) - 8, 
+                page.Width, 
+                page.Height - Margins), 
             XStringFormats.TopLeft);
     }
 }
