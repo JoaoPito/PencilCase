@@ -54,7 +54,8 @@ public class PdfExporter : FileExporter
     private void AddTitleToPage(string Title, PdfPage page, XTextFormatter tf)
     {
         var titleFont = attributes.TitleFont;
-        var titleRect = new XRect(attributes.Margins, attributes.Margins, 
+        var titleRect = new XRect(attributes.Margins,
+                            attributes.Margins, 
                             page.Width - (2 * attributes.Margins), 
                             page.Height - (2 * attributes.Margins));
 
@@ -64,8 +65,10 @@ public class PdfExporter : FileExporter
     private void AddBodyToPage(string Content, PdfPage page, XTextFormatter tf)
     {
         var contentFont = attributes.BodyFont;
-        var bodyRect = new XRect(attributes.Margins, attributes.Margins + (2 * attributes.TitleFontSize), 
-                            page.Width - attributes.Margins, page.Height - attributes.Margins);
+        var bodyRect = new XRect(attributes.Margins,
+                            attributes.Margins + (2 * attributes.TitleFontSize), 
+                            page.Width - (2 * attributes.Margins), 
+                            page.Height - (2 * attributes.Margins) - attributes.TitleFontSize);
 
         tf.DrawString(Content, contentFont, XBrushes.Black, 
             bodyRect, XStringFormats.TopLeft);
