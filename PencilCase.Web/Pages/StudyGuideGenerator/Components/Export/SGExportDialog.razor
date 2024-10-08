@@ -1,9 +1,11 @@
 @using PencilCase.Shared.Files.FileExporters;
 @using PencilCase.Shared.Files.Types
+@using PdfSharp.Fonts;
 
 @inject MarkdownExporter markdownExporter
 @inject PdfExporter pdfExporter
 @inject IJSRuntime JS
+@inject HttpClient httpClient
 
 <MudDialog>
     <TitleContent>
@@ -78,9 +80,28 @@
         CloseDialog();
     }
 
+    private async Task PreparePdfFonts()
+    {
+        var fontFile = await LoadFontFile();
+        RegisterFontResolver(fontFile);
+    }
+
+    private async Task<byte[]> LoadFontFile()
+    {
+        return await httpClient.GetByteArrayAsync("/fonts/NotoSans-Regular.ttf");
+    }
+
+    private void RegisterFontResolver(byte[] fontData)
+    {
+        GlobalFontSettings.FontResolver = new NotoPdfFontResolver(fontData);
+    }
+
     private async Task DownloadToPdf(){
         _loading = true;
         this.StateHasChanged();
+
+        await PreparePdfFonts();
+
         var pdfFile = pdfExporter.ExportStudyGuide(StudyGuide);
         await DownloadTextFile(pdfFile);
         _loading = false;
