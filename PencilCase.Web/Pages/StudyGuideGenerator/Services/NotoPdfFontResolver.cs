@@ -24,7 +24,6 @@ public class NotoPdfFontResolver : IFontResolver
 
     public FontResolverInfo? ResolveTypeface(string familyName, bool isBold, bool isItalic)
     {
-        Console.WriteLine($"Family Name: {familyName}");
         if (familyName.ToLower() == "noto sans")
         {
             return new FontResolverInfo("NotoSansRegular");
