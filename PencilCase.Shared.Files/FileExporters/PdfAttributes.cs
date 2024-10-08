@@ -14,5 +14,5 @@ public abstract class PdfAttributes
 
     public abstract XUnit Margins { get; }
 
-    public abstract void SetupPage(PdfPage page);
+    public abstract void SetupPage(PdfPage page, XGraphics gfx);
 }
