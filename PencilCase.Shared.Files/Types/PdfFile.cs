@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace PencilCase.Shared.Files.Types;
 
-public class PdfFile : TextFile
+public class PdfFile : BinaryFile
 {
-    public PdfFile(String name, String contents) : base(name, contents, ".pdf")
+    public PdfFile(String name, byte[] contents) : base(name, contents, ".pdf")
     {
 
     }

@@ -2,24 +2,10 @@ using System.Text;
 
 namespace PencilCase.Shared.Files.Types;
 
-public abstract class TextFile
+public abstract class TextFile : BinaryFile
 {
-    public string Name { get; }
-    public string Contents { get; }
-    public string Extension { get; }
-
-    public TextFile(String name, String contents, String extension)
+    public TextFile(String name, String contents, String extension) : base(name, Encoding.UTF8.GetBytes(contents), extension)
     {
-        this.Name = name;
-        this.Contents = contents;
-        this.Extension = extension;
-    }
-
-    public String GetFileName(){
-        return Name + Extension;
-    }
-
-    public byte[] GetContents(){
-        return Encoding.UTF8.GetBytes(Contents);
+        
     }
 }
