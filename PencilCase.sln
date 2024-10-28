@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PencilCase.Shared.Models", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PencilCase.Shared.Files", "PencilCase.Shared.Files\PencilCase.Shared.Files.csproj", "{0F765D46-DDBB-4339-B530-A3861CE73038}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PencilCase.Shared.Data", "PencilCase.Shared.Data\PencilCase.Shared.Data.csproj", "{C8F61501-DFD8-4E1E-A203-9367A516303A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{0F765D46-DDBB-4339-B530-A3861CE73038}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F765D46-DDBB-4339-B530-A3861CE73038}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F765D46-DDBB-4339-B530-A3861CE73038}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8F61501-DFD8-4E1E-A203-9367A516303A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8F61501-DFD8-4E1E-A203-9367A516303A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8F61501-DFD8-4E1E-A203-9367A516303A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8F61501-DFD8-4E1E-A203-9367A516303A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
