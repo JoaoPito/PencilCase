@@ -22,8 +22,8 @@
 
   <ItemGroup>
     <Folder Include="Extensions/" />
-    <Folder Include="Requests/" />
     <Folder Include="Responses/" />
+    <Folder Include="Responses/Blocks/" />
   </ItemGroup>
 
 </Project>
