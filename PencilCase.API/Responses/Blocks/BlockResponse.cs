@@ -9,5 +9,5 @@ public record class BlockResponse(
     BlockType Type,
     BlockPropertiesResponse Properties,
     IEnumerable<Guid> ChildrenIds,
-    Guid ParentId
+    Guid? ParentId
     );

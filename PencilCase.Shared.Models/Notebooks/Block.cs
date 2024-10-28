@@ -10,5 +10,5 @@ public record Block
     public BlockProperties? Properties { get; set; }
     public virtual ICollection<Block> Children { get; set; } = new List<Block>();
     public virtual Block? Parent { get; set; } = null;
-    public Guid ParentId { get; set; } = new Guid();
+    public Guid? ParentId { get; set; }
 }
