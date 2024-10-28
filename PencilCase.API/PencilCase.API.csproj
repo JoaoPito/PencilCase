@@ -8,12 +8,22 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.10" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\PencilCase.Shared.Data\PencilCase.Shared.Data.csproj" />
     <ProjectReference Include="..\PencilCase.Shared.Models\PencilCase.Shared.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Extensions/" />
+    <Folder Include="Requests/" />
+    <Folder Include="Responses/" />
   </ItemGroup>
 
 </Project>
