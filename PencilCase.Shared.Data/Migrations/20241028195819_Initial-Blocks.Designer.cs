@@ -12,7 +12,7 @@ using PencilCase.Shared.Data.Database;
 namespace PencilCase.Shared.Data.Migrations
 {
     [DbContext(typeof(BlocksDbContext))]
-    [Migration("20241028194456_Initial-Blocks")]
+    [Migration("20241028195819_Initial-Blocks")]
     partial class InitialBlocks
     {
         /// <inheritdoc />
@@ -31,22 +31,17 @@ namespace PencilCase.Shared.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("BlockId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("ParentId")
+                    b.Property<Guid>("ParentId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BlockId");
 
                     b.HasIndex("ParentId");
 
@@ -81,13 +76,11 @@ namespace PencilCase.Shared.Data.Migrations
 
             modelBuilder.Entity("PencilCase.Shared.Models.Notebooks.Block", b =>
                 {
-                    b.HasOne("PencilCase.Shared.Models.Notebooks.Block", null)
-                        .WithMany()
-                        .HasForeignKey("BlockId");
-
                     b.HasOne("PencilCase.Shared.Models.Notebooks.Block", "Parent")
                         .WithMany("Children")
-                        .HasForeignKey("ParentId");
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Parent");
                 });

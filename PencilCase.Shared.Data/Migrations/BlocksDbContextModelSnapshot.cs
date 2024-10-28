@@ -28,22 +28,17 @@ namespace PencilCase.Shared.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("BlockId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("ParentId")
+                    b.Property<Guid>("ParentId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BlockId");
 
                     b.HasIndex("ParentId");
 
@@ -78,13 +73,11 @@ namespace PencilCase.Shared.Data.Migrations
 
             modelBuilder.Entity("PencilCase.Shared.Models.Notebooks.Block", b =>
                 {
-                    b.HasOne("PencilCase.Shared.Models.Notebooks.Block", null)
-                        .WithMany()
-                        .HasForeignKey("BlockId");
-
                     b.HasOne("PencilCase.Shared.Models.Notebooks.Block", "Parent")
                         .WithMany("Children")
-                        .HasForeignKey("ParentId");
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Parent");
                 });

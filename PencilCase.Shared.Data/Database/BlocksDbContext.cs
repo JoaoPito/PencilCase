@@ -16,7 +16,10 @@ public class BlocksDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Block>()
-            .HasMany<Block>();
+            .HasMany(b => b.Children)
+            .WithOne(b => b.Parent)
+            .HasForeignKey(b => b.ParentId);
+
         modelBuilder.Entity<Block>()
             .HasOne(b => b.Properties)
             .WithOne(p => p.Parent)
