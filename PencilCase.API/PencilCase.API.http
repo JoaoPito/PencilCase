@@ -1,0 +1,6 @@
+@PencilCase.API_HostAddress = http://localhost:5147
+
+GET {{PencilCase.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

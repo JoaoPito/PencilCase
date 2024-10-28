@@ -8,8 +8,7 @@ public class DAL<T> where T: class
     private readonly ApiDbContext _context;
     public DAL(ApiDbContext context)
     {
-            this._context = context;
-        
+        this._context = context;
     }
 
     public IEnumerable<T> GetAll()
