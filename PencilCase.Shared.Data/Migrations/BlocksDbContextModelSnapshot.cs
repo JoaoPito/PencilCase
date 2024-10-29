@@ -32,7 +32,7 @@ namespace PencilCase.Shared.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("ParentId")
+                    b.Property<Guid?>("ParentId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("Type")
@@ -75,9 +75,7 @@ namespace PencilCase.Shared.Data.Migrations
                 {
                     b.HasOne("PencilCase.Shared.Models.Notebooks.Block", "Parent")
                         .WithMany("Children")
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ParentId");
 
                     b.Navigation("Parent");
                 });
