@@ -48,7 +48,7 @@ public static class BlocksExtensions
         .WithOpenApi(x => new OpenApiOperation(x)
         {
             Summary = "Create a new block",
-            Description = "Creates a new block and returns information about the created object."
+            Description = "Creates a new block and returns information about the created object. Created and Modified times are assigned to the current UTC time."
         });
     }
 
