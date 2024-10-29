@@ -38,9 +38,18 @@ public static class BlocksExtensions
             Description = "Returns information about selected block using its ID."
         });
 
-        group.MapPost("", async ([FromServices] DAL<Block> dal, [FromBody] BlockRequest request) => 
+        group.MapPost("", async ([FromServices] DAL<Block> dal, [FromBody] BlockPostRequest request) => 
         {
-            var newBlock = MapRequestToEntity(request, dal);
+            var newBlock = new Block();
+            try
+            {
+                newBlock = MapRequestToEntity(request, dal);
+            }
+            catch(InvalidOperationException exc)
+            {
+                return Results.BadRequest(new { message = exc.Message });
+            }
+
             await dal.Add(newBlock);
             return Results.CreatedAtRoute("GetById", new { id = newBlock.Id }, MapEntityToResponse(newBlock));
         })
@@ -51,7 +60,7 @@ public static class BlocksExtensions
             Description = "Creates a new block and returns information about the created object. Created and Modified times are assigned to the current UTC time."
         });
 
-        group.MapPut("{id}", async (Guid id, [FromServices] DAL<Block> dal, [FromBody] BlockEditRequest request) => 
+        group.MapPut("{id}", async (Guid id, [FromServices] DAL<Block> dal, [FromBody] BlockPutRequest request) => 
         {
             var block = dal.GetBy(b => b.Id == id);
             if(block == null)
@@ -76,6 +85,33 @@ public static class BlocksExtensions
         {
             Summary = "Update Block contents.",
             Description = "Updates block contents and properties, as well as changes the parent/child relationships."
+        });
+
+        group.MapPatch("{id}", async (Guid id, [FromServices] DAL<Block> dal, [FromBody] BlockPatchRequest request) => 
+        {
+            var block = dal.GetBy(b => b.Id == id);
+            if(block == null)
+                return Results.NotFound();
+
+            var properties = block.Properties ?? new BlockProperties();
+            if(request.Properties != null)
+            {
+                properties.Order = request.Properties.Order ?? properties.Order;
+            }
+            properties.LastModified = DateTime.UtcNow;
+            block.Properties = properties;
+
+            block.Name = request.Name ?? block.Name;
+            block.Type = request.Type ?? block.Type;
+            if(request.ParentId != null)
+            {
+                block.Parent = TryGetParent(request.ParentId, dal);
+                block.ParentId = request.ParentId;
+            }
+            block.Children = request.ChildrenIds != null ? dal.GetAllBy(b => request.ChildrenIds.Contains(b.Id)).ToList() : block.Children;
+
+            await dal.Update(block);
+            return Results.Ok();
         });
     }
 
@@ -107,7 +143,7 @@ public static class BlocksExtensions
         );
     }
 
-    static Block MapRequestToEntity(BlockRequest request, DAL<Block> dal)
+    static Block MapRequestToEntity(BlockPostRequest request, DAL<Block> dal)
     {
         var block = new Block();
 
