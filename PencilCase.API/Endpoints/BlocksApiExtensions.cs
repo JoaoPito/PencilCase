@@ -68,9 +68,18 @@ public static class BlocksExtensions
 
             var properties = block.Properties ?? new BlockProperties();
 
+            try
+            {
+                block.Parent = GetParent(request.ParentId, dal);
+            }
+            catch(InvalidOperationException exc)
+            {
+                return Results.BadRequest(new { message = exc.Message });
+            }
+
             block.Name = request.Name;
             block.Type = request.Type;
-            block.Parent = TryGetParent(request.ParentId, dal);
+            block.Parent = GetParent(request.ParentId, dal);
             block.ParentId = request.ParentId;
             properties.Order = request.Properties.Order;
             properties.LastModified = DateTime.UtcNow;
@@ -105,7 +114,14 @@ public static class BlocksExtensions
             block.Type = request.Type ?? block.Type;
             if(request.ParentId != null)
             {
-                block.Parent = TryGetParent(request.ParentId, dal);
+                try
+                {
+                    block.Parent = GetParent(request.ParentId, dal);
+                }
+                catch(InvalidOperationException exc)
+                {
+                    return Results.BadRequest(new { message = exc.Message });
+                }
                 block.ParentId = request.ParentId;
             }
             block.Children = request.ChildrenIds != null ? dal.GetAllBy(b => request.ChildrenIds.Contains(b.Id)).ToList() : block.Children;
@@ -166,7 +182,7 @@ public static class BlocksExtensions
             Order = request.Properties.Order
         };
 
-        var parent = TryGetParent(request.ParentId, dal);
+        var parent = GetParent(request.ParentId, dal);
 
         block.Type = request.Type;
         block.Name = request.Name;
@@ -178,7 +194,7 @@ public static class BlocksExtensions
         return block;
     }
 
-    static Block? TryGetParent(Guid? parentId, DAL<Block> dal)
+    static Block? GetParent(Guid? parentId, DAL<Block> dal)
     {
         var parent = dal.GetBy(b => b.Id == parentId);
         if (parentId == null && parent != null)
