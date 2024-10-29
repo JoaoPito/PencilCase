@@ -113,6 +113,19 @@ public static class BlocksExtensions
             await dal.Update(block);
             return Results.Ok();
         });
+
+        group.MapDelete("{id}", async ([FromServices] DAL<Block> dal, Guid id) => 
+        {
+            var block = dal.GetBy(b => b.Id == id);
+            if(block == null)
+                return Results.NotFound();
+            
+            if(block.ParentId == null)
+                return Results.BadRequest("Cannot delete root block!");
+            
+            await dal.Delete(block);
+            return Results.NoContent();
+        });
     }
 
     static IEnumerable<BlockResponse> MapEntityListToResponseList(IEnumerable<Block> entities)
