@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Asp.Versioning.Http" Version="8.1.0" />
+    <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -18,10 +20,6 @@
   <ItemGroup>
     <ProjectReference Include="..\PencilCase.Shared.Data\PencilCase.Shared.Data.csproj" />
     <ProjectReference Include="..\PencilCase.Shared.Models\PencilCase.Shared.Models.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Extensions/" />
   </ItemGroup>
 
 </Project>
