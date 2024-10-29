@@ -5,7 +5,7 @@ namespace PencilCase.API.Responses.Blocks;
 
 public record class BlockResponse(
     Guid Id, 
-    String Nome, 
+    String Name, 
     BlockType Type,
     BlockPropertiesResponse Properties,
     IEnumerable<Guid> ChildrenIds,
