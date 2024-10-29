@@ -18,13 +18,15 @@ public class BlocksDbContext : DbContext
         modelBuilder.Entity<Block>()
             .HasMany(b => b.Children)
             .WithOne(b => b.Parent)
-            .HasForeignKey(b => b.ParentId);
+            .HasForeignKey(b => b.ParentId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Block>()
             .HasOne(b => b.Properties)
             .WithOne(p => p.Parent)
             .HasForeignKey<BlockProperties>(p => p.ParentId)
-            .IsRequired();
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);;
         base.OnModelCreating(modelBuilder);
     }
 }
