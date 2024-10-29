@@ -4,11 +4,14 @@ using PencilCase.Shared.Models.Notebooks;
 
 namespace PencilCase.API.Requests.Blocks;
 
-public record BlockEditRequest(
-    [Required] Guid Id, 
-    string Name, 
-    BlockType Type, 
-    BlockPropertiesRequest Properties, 
+public record BlockPostRequest
+(
+    [Required] 
+    String Name,
+    [Required]
+    BlockType Type,
+    BlockPropertiesRequest Properties,
     IEnumerable<Guid> ChildrenIds,
+    [Required]
     Guid? ParentId
-    ) : BlockRequest(Name, Type, Properties, ChildrenIds, ParentId);
+);
