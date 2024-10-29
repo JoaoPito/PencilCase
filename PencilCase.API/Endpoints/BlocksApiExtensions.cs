@@ -50,6 +50,33 @@ public static class BlocksExtensions
             Summary = "Create a new block",
             Description = "Creates a new block and returns information about the created object. Created and Modified times are assigned to the current UTC time."
         });
+
+        group.MapPut("{id}", async (Guid id, [FromServices] DAL<Block> dal, [FromBody] BlockEditRequest request) => 
+        {
+            var block = dal.GetBy(b => b.Id == id);
+            if(block == null)
+                return Results.NotFound();
+
+            var properties = block.Properties ?? new BlockProperties();
+
+            block.Name = request.Name;
+            block.Type = request.Type;
+            block.Parent = TryGetParent(request.ParentId, dal);
+            block.ParentId = request.ParentId;
+            properties.Order = request.Properties.Order;
+            properties.LastModified = DateTime.UtcNow;
+            block.Properties = properties;
+            block.Children = dal.GetAllBy(b => request.ChildrenIds.Contains(b.Id)).ToList();
+
+            await dal.Update(block);
+            return Results.Ok();
+        })
+        .WithName("Update")
+        .WithOpenApi(x => new OpenApiOperation(x)
+        {
+            Summary = "Update Block contents.",
+            Description = "Updates block contents and properties, as well as changes the parent/child relationships."
+        });
     }
 
     static IEnumerable<BlockResponse> MapEntityListToResponseList(IEnumerable<Block> entities)
@@ -72,7 +99,7 @@ public static class BlocksExtensions
 
         return new BlockResponse(
             Id: entity.Id,
-            Nome: entity.Name,
+            Name: entity.Name,
             Type: entity.Type,
             Properties: properties,
             ChildrenIds: entity.Children.Select(c => c.Id).ToList(),
@@ -90,11 +117,7 @@ public static class BlocksExtensions
             Order = request.Properties.Order
         };
 
-        var parent = dal.GetBy(b => b.Id == request.ParentId);
-        if (request.ParentId == null && parent != null)
-            throw new InvalidOperationException("Root block already exists!");
-        if (request.ParentId != null && parent == null)
-            throw new InvalidOperationException("Parent block does not exist!");
+        var parent = TryGetParent(request.ParentId, dal);
 
         block.Type = request.Type;
         block.Name = request.Name;
@@ -104,5 +127,15 @@ public static class BlocksExtensions
         block.Parent = parent;
 
         return block;
+    }
+
+    static Block? TryGetParent(Guid? parentId, DAL<Block> dal)
+    {
+        var parent = dal.GetBy(b => b.Id == parentId);
+        if (parentId == null && parent != null)
+            throw new InvalidOperationException("Root block already exists!");
+        if (parentId != null && parent == null)
+            throw new InvalidOperationException("Parent block does not exist!");
+        return parent;
     }
 }
