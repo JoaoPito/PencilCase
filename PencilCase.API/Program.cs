@@ -1,6 +1,6 @@
 using Asp.Versioning;
 using Microsoft.EntityFrameworkCore;
-using PencilCase.API.Extensions;
+using PencilCase.API.Endpoints;
 using PencilCase.Shared.Data.Database;
 using PencilCase.Shared.Models.Notebooks;
 

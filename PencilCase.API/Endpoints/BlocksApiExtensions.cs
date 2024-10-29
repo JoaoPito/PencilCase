@@ -8,7 +8,7 @@ using PencilCase.API.Responses.Blocks;
 using PencilCase.Shared.Data.Database;
 using PencilCase.Shared.Models.Notebooks;
 
-namespace PencilCase.API.Extensions;
+namespace PencilCase.API.Endpoints;
 
 public static class BlocksExtensions
 {
