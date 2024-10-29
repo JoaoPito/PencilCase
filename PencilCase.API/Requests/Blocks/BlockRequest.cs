@@ -13,5 +13,5 @@ public record BlockRequest
     BlockPropertiesRequest Properties,
     IEnumerable<Guid> ChildrenIds,
     [Required]
-    Guid ParentId
+    Guid? ParentId
 );

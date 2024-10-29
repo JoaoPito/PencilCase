@@ -30,7 +30,8 @@ builder.Services.AddScoped<DAL<Block>>();
 var connectionString = builder.Configuration.GetConnectionString("ApiDatabase");
 
 builder.Services.AddDbContext<BlocksDbContext>(options => {
-    options.UseNpgsql(connectionString);
+    options.UseNpgsql(connectionString)
+        .UseLazyLoadingProxies();
 });
 
 var app = builder.Build();

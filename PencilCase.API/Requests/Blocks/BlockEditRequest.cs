@@ -10,5 +10,5 @@ public record BlockEditRequest(
     BlockType Type, 
     BlockPropertiesRequest Properties, 
     IEnumerable<Guid> ChildrenIds,
-    Guid ParentId
+    Guid? ParentId
     ) : BlockRequest(Name, Type, Properties, ChildrenIds, ParentId);
