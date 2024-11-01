@@ -1,28 +1,48 @@
-@page "/{BlockId}"
-@using Block = PencilCase.Shared.Models.Notebooks.Block
+@page "/block/{BlockId}"
+@using PencilCase.Shared.DTOs.Responses.Blocks
 @inject IBlocksApi BlocksApi
 
-<PageTitle>@_block.Name</PageTitle>
-<h1>@_block.Name</h1>
-<h4>Type: @_block.Type</h4>
-<p>@_block.Children.Count()</p>
-<MudStack>
-    @foreach (var child in _block.Children)
-    {
-        <MudItem><b>@child.Name</b></MudItem>
-    }
-</MudStack>
+<PageTitle>@((_block == null) ? "pencilcase" : _block.Name)</PageTitle>
+@if (_block is not null)
+{
+    <h1>@_block.Name</h1>
+    <h4>Type: @_block.Type</h4>
+    <p>@(_block.ChildrenIds.Count()) sub-blocks</p>
+    <MudStack Spacing="4" >
+        @foreach (var child in _blockChildren)
+        {
+            <MudItem Spacing="0" Class="mx-4">
+                <MudStack>
+                    <MudItem><b>@child.Name</b></MudItem>
+                    <MudItem>   @child.Type</MudItem>
+                    <MudItem>   @child.ChildrenIds.Count() sub-blocks</MudItem>
+                </MudStack>
+            </MudItem>
+        }
+    </MudStack>
+}
+
 
 @code {
-    [Parameter] public string BlockId { get; set; } = string.Empty;
-    Block _block;
-    
-    
+    [Parameter] public string? BlockId { get; set; } = string.Empty;
+    BlockResponse? _block;
+    IEnumerable<BlockResponse> _blockChildren = new List<BlockResponse?>();
 
     protected override async Task OnInitializedAsync()
     {
         _block = (BlockId == null) ? await BlocksApi.GetLastUsedBlock() : await BlocksApi.GetBlock(Guid.Parse(BlockId));
+        if(_block != null)
+            await LoadChildren(_block.ChildrenIds);
         await base.OnInitializedAsync();
+    }
+
+    async Task LoadChildren(IEnumerable<Guid> childrenIds)
+    {
+        foreach (var id in childrenIds)
+        {
+            var child = await BlocksApi.GetBlock(id);
+            if (child != null) _blockChildren = _blockChildren.Append<BlockResponse>(child);
+        }
     }
 
 }
