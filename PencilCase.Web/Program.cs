@@ -18,6 +18,13 @@ builder.Services.AddHttpClient("API", client =>
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
 builder.Services.AddTransient<FragmentApi>();
+
+builder.Services.AddHttpClient("BlocksAPI", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["BlocksAPI:url"]!);
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+});
+builder.Services.AddTransient<IBlocksApi, BlocksApi>();
 builder.Services.AddTransient<MarkdownExporter>();
 
 builder.Services.AddMudServices();
