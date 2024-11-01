@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PencilCase.Shared.Data", "P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PencilCase.API", "PencilCase.API\PencilCase.API.csproj", "{334B4540-EE83-46A8-955D-205EDF284D30}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PencilCase.Shared.DTOs", "PencilCase.Shared.DTOs\PencilCase.Shared.DTOs.csproj", "{CD267B76-6729-4C23-BD69-826632BD8729}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{334B4540-EE83-46A8-955D-205EDF284D30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{334B4540-EE83-46A8-955D-205EDF284D30}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{334B4540-EE83-46A8-955D-205EDF284D30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD267B76-6729-4C23-BD69-826632BD8729}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD267B76-6729-4C23-BD69-826632BD8729}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD267B76-6729-4C23-BD69-826632BD8729}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD267B76-6729-4C23-BD69-826632BD8729}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
