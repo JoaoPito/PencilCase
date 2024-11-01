@@ -34,7 +34,19 @@ builder.Services.AddDbContext<BlocksDbContext>(options => {
         .UseLazyLoadingProxies();
 });
 
+builder.Services.AddCors(
+    options => options.AddPolicy(
+        "wasm-frontend",
+        policy => policy.WithOrigins([builder.Configuration["BackendUrl"] ?? "http://localhost:5147",
+                builder.Configuration["FrontendUrl"] ?? "http://localhost:5096"])
+            .AllowAnyMethod()
+            .SetIsOriginAllowed(pol => true)
+            .AllowAnyHeader()
+            .AllowCredentials()));
+
 var app = builder.Build();
+
+app.UseCors("wasm-frontend");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
