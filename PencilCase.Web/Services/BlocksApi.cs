@@ -20,9 +20,11 @@ public class BlocksApi : IBlocksApi
         return blockResponse;
     }
 
-    public void AddBlock(Block block)
+    public async Task AddBlock(Block block)
     {
-        throw new NotImplementedException();
+        var response = await _httpClient.PostAsJsonAsync<Block>($"", block);
+        if (!response.IsSuccessStatusCode)
+            throw new HttpRequestException($"Error while adding block {block.Id}");
     }
 
     Task<Block?> IBlocksApi.GetLastUsedBlock()
