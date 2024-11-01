@@ -12,7 +12,7 @@ public class BlocksApi : IBlocksApi
         _httpClient = httpClientFactory.CreateClient("BlocksAPI");
     }
     
-    public async Task<Block?> GetBlock(string id)
+    public async Task<Block?> GetBlock(Guid id)
     {
         var blockResponse = await _httpClient.GetFromJsonAsync<Block>($"{id}");
         if (blockResponse == null)
