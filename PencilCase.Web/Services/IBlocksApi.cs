@@ -1,10 +1,11 @@
-using PencilCase.Shared.Models.Notebooks;
+using PencilCase.Shared.DTOs.Requests.Blocks;
+using PencilCase.Shared.DTOs.Responses.Blocks;
 
 namespace PencilCase.Web.Services;
 
 public interface IBlocksApi
 {
-    public Task<Block?> GetBlock(Guid id);
-    public Task AddBlock(Block block);
-    public Task<Block?> GetLastUsedBlock();
+    public Task<BlockResponse?> GetBlock(Guid id);
+    public Task AddBlock(BlockPostRequest block);
+    public Task<BlockResponse?> GetLastUsedBlock();
 }
