@@ -2,10 +2,10 @@ using Asp.Versioning;
 using Asp.Versioning.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
-using PencilCase.API.Requests.Blocks;
-using PencilCase.API.Responses.BlockProperties;
-using PencilCase.API.Responses.Blocks;
 using PencilCase.Shared.Data.Database;
+using PencilCase.Shared.DTOs.Requests.Blocks;
+using PencilCase.Shared.DTOs.Responses.BlockProperties;
+using PencilCase.Shared.DTOs.Responses.Blocks;
 using PencilCase.Shared.Models.Notebooks;
 
 namespace PencilCase.API.Endpoints;

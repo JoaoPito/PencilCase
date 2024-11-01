@@ -6,4 +6,12 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Compile Remove="Class1.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\PencilCase.Shared.Models\PencilCase.Shared.Models.csproj" />
+    </ItemGroup>
+
 </Project>
