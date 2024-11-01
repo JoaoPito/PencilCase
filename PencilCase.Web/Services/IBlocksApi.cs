@@ -4,6 +4,7 @@ namespace PencilCase.Web.Services;
 
 public interface IBlocksApi
 {
-    public Block GetBlock(string id);
-    public Block GetLastUsedBlock();
+    public Task<Block?> GetBlock(string id);
+    public void AddBlock(Block block);
+    public Task<Block?> GetLastUsedBlock();
 }
