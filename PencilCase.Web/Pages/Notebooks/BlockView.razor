@@ -5,27 +5,32 @@
 <PageTitle>@((_block == null) ? "pencilcase" : _block.Name)</PageTitle>
 @if (_block is not null)
 {
-    <h1>@_block.Name</h1>
-    <h4>Type: @_block.Type</h4>
-    <p>@(_block.ChildrenIds.Count()) sub-blocks</p>
-    <MudStack Spacing="4" >
+    <MudText Typo="Typo.h4"><b>@_block.Name</b></MudText>
+    <MudText Typo="Typo.subtitle1">@_block.Type</MudText>
+    <MudText Typo="Typo.subtitle2">Created on @_block.Properties.CreatedOn.ToLocalTime()</MudText>
+    <MudText Typo="Typo.subtitle2">@(_block.ChildrenIds.Count()) sub-blocks</MudText>
+    <MudStack Spacing="4" Class="my-4">
         @foreach (var child in _blockChildren)
         {
             <MudItem Spacing="0" Class="mx-4">
-                <MudStack>
-                    <MudItem><b>@child.Name</b></MudItem>
-                    <MudItem>   @child.Type</MudItem>
-                    <MudItem>   @child.ChildrenIds.Count() sub-blocks</MudItem>
-                </MudStack>
+                <MudPaper Class="pa-4" Elevation="5">
+                    <MudText><b>@child.Name</b></MudText>
+                    <MudText Typo="Typo.subtitle2">@child.Properties.CreatedOn.ToLocalTime()</MudText>
+                    <MudText Typo="Typo.subtitle2">@child.Type</MudText>
+                    <MudText Typo="Typo.subtitle2">@child.ChildrenIds.Count() sub-blocks</MudText>
+                </MudPaper>
             </MudItem>
         }
     </MudStack>
 }
-
+else
+{
+    <MudProgressCircular Color="Color.Secondary" Indeterminate="true"/>
+}
 
 @code {
     [Parameter] public string? BlockId { get; set; } = string.Empty;
-    BlockResponse? _block;
+    BlockResponse? _block = null;
     IEnumerable<BlockResponse> _blockChildren = new List<BlockResponse?>();
 
     protected override async Task OnInitializedAsync()
