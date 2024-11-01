@@ -27,7 +27,7 @@ public class BlocksApi : IBlocksApi
             throw new HttpRequestException($"Error while adding block {block.Id}");
     }
 
-    Task<Block?> IBlocksApi.GetLastUsedBlock()
+    public async Task<Block?> GetLastUsedBlock()
     {
         throw new NotImplementedException();
     }
