@@ -8,21 +8,23 @@
         <MudItem xs="12" md="10">
             <MudTable Items="@_blockChildren" Hover="true" T="BlockResponse"
                       Loading="@_loading" LoadingProgressColor="Color.Secondary"
-                      OnRowClick="RowClickEvent"
+                      OnRowClick="RowClickEvent" SortLabel="Sort By"
                       Breakpoint="Breakpoint.Sm" Elevation="16">
                 <ToolBarContent>
                     <BlockIcon Block="Block" Size="Size.Large" />
-                    <MudText Typo="Typo.h3">@Block.Name</MudText>
+                    <MudText Typo="Typo.h3" Class="mx-4">@Block.Name</MudText>
+                    <MudSpacer />
+                    <MudText Typo="Typo.body2" Class="mx-4">@Block.ChildrenIds.Count() item(s)</MudText>
                 </ToolBarContent>
                 <HeaderContent>
                     <MudTh> </MudTh>
-                    <MudTh>Name</MudTh>
-                    <MudTh>Type</MudTh>
-                    <MudTh>Last Modified</MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<BlockResponse, object>(x=>x.Name)">Name</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<BlockResponse, object>(x=>x.Type)">Type</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<BlockResponse, object>(x=>x.Properties.LastModified)"></MudTableSortLabel>Date</MudTh>
                     <MudTh>Options</MudTh>
                 </HeaderContent>
                 <RowTemplate>
-                    <MudTd DataLabel=" ">
+                    <MudTd DataLabel=" " Style="text-align:center">
                         <BlockIcon Block="context" />
                     </MudTd>
                     <MudTd DataLabel="Name"><MudText><b>@context.Name</b></MudText></MudTd>
