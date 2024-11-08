@@ -26,8 +26,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _block = (BlockId == null) ? await BlocksApi.GetLastUsedBlock() : await BlocksApi.GetBlock(Guid.Parse(BlockId));
+        await LoadBlock();
         await base.OnInitializedAsync();
     }
-
+    
+    private async Task LoadBlock()
+    {
+        _block = (BlockId == null) ? await BlocksApi.GetLastUsedBlock() : await BlocksApi.GetBlock(Guid.Parse(BlockId));
+    }
 }

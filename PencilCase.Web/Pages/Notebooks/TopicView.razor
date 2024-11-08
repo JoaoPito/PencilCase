@@ -1,9 +1,13 @@
 @using PencilCase.Shared.DTOs.Responses.Blocks
 @using PencilCase.Shared.Models.Notebooks
+@inject NavigationManager NavigationManager
 
 @if (Block is not null)
 {
-    <MudTable Items="@_blockChildren" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Secondary">
+    <MudTable Items="@_blockChildren" Hover="true" T="BlockResponse"
+              Loading="@_loading" LoadingProgressColor="Color.Secondary"
+              OnRowClick="RowClickEvent"
+              Breakpoint="Breakpoint.Sm">
         <HeaderContent>
             <MudTh>Type</MudTh>
             <MudTh>Name</MudTh>
@@ -49,4 +53,15 @@ else
         await base.OnInitializedAsync();
     }
 
+    void RedirectToBlock(BlockResponse block)
+    {
+        NavigationManager.NavigateTo($"/block/{block.Id}", true);
+    }
+
+    private void RowClickEvent(TableRowClickEventArgs<BlockResponse> tableRowClickEventArgs)
+    {
+        var block = tableRowClickEventArgs.Item;
+        if (block is not null)
+            RedirectToBlock(block);
+    }
 }
