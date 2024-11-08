@@ -10,7 +10,13 @@
         @switch (_block.Type)
         {
             case BlockType.Topic:
-                <TopicView Block=@_block BlocksApi=@BlocksApi/>
+                <TopicView Block="_block" BlocksApi=@BlocksApi/>
+                break;
+            case BlockType.Notebook:
+                <MudText Typo="Typo.h5">Notebook placeholder</MudText>
+                break;
+            case BlockType.Cell:
+                <MudText Typo="Typo.h5">Cell placeholder</MudText>
                 break;
             default:
                 <MudText Typo="Typo.h4">Ooops... Seems like something wrong happened :(</MudText>
