@@ -9,12 +9,13 @@
               OnRowClick="RowClickEvent"
               Breakpoint="Breakpoint.Sm">
         <HeaderContent>
-            <MudTh>Type</MudTh>
+            <MudTh> </MudTh>
             <MudTh>Name</MudTh>
+            <MudTh>Type</MudTh>
             <MudTh>Last Modified</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Type">@switch (context.Type)
+            <MudTd DataLabel=" ">@switch (context.Type)
                                     {
                                         case BlockType.Notebook:
                                             <MudIcon Icon="@Icons.Material.Rounded.InsertDriveFile"></MudIcon>
@@ -27,7 +28,8 @@
                                             break;
                                     }</MudTd>
             <MudTd DataLabel="Name"><MudText><b>@context.Name</b></MudText></MudTd>
-            <MudTd DataLabel="Date">@context.Properties.LastModified</MudTd>
+            <MudTd DataLabel="Type"><MudText Typo="Typo.body2">@context.Type</MudText></MudTd>
+            <MudTd DataLabel="Date"><MudText Typo="Typo.body2">@context.Properties.LastModified</MudText></MudTd>
         </RowTemplate>
     </MudTable>
 }
