@@ -8,7 +8,6 @@
             <MudTh>Type</MudTh>
             <MudTh>Name</MudTh>
             <MudTh>Last Modified</MudTh>
-            <MudTh>Created On</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Type">@switch (context.Type)
@@ -23,9 +22,8 @@
                                             <MudIcon Icon="@Icons.Material.Rounded.Folder"></MudIcon>
                                             break;
                                     }</MudTd>
-            <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Last Modified">@context.Properties.LastModified</MudTd>
-            <MudTd DataLabel="Created On">@context.Properties.CreatedOn</MudTd>
+            <MudTd DataLabel="Name"><MudText><b>@context.Name</b></MudText></MudTd>
+            <MudTd DataLabel="Date">@context.Properties.LastModified</MudTd>
         </RowTemplate>
     </MudTable>
 }
