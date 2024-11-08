@@ -1,0 +1,42 @@
+@using PencilCase.Shared.DTOs.Responses.Blocks
+
+@if (Block is not null)
+{
+    <MudText Typo="Typo.h4"><b>@Block.Name</b></MudText>
+    <MudText Typo="Typo.subtitle1">@Block.Type</MudText>
+    <MudText Typo="Typo.subtitle2">Created on @Block.Properties.CreatedOn.ToLocalTime()</MudText>
+    <MudText Typo="Typo.subtitle2">@(Block.ChildrenIds.Count()) sub-blocks</MudText>
+    <MudStack Spacing="4" Class="my-4">
+        @foreach (var child in _blockChildren)
+        {
+            <MudItem Spacing="0" Class="mx-4">
+                <MudPaper Class="pa-4" Elevation="5">
+                    <MudText><b>@child.Name</b></MudText>
+                    <MudText Typo="Typo.subtitle2">@child.Properties.CreatedOn.ToLocalTime()</MudText>
+                    <MudText Typo="Typo.subtitle2">@child.Type</MudText>
+                    <MudText Typo="Typo.subtitle2">@child.ChildrenIds.Count() sub-blocks</MudText>
+                </MudPaper>
+            </MudItem>
+        }
+    </MudStack>
+}
+else
+{
+    <MudProgressCircular Color="Color.Secondary" Indeterminate="true"/>
+}
+
+
+@code {
+    private IEnumerable<BlockResponse> _blockChildren = new List<BlockResponse>();
+    [Parameter] public BlockResponse? Block { get; set; } = null;
+    [Parameter] public IBlocksApi BlocksApi { get; set; } = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(Block is not null)
+            _blockChildren = await BlocksApi.LoadAllAsync(Block.ChildrenIds);
+        
+        await base.OnInitializedAsync();
+    }
+
+}

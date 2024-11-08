@@ -1,43 +1,32 @@
 @page "/block/{BlockId}"
 @using PencilCase.Shared.DTOs.Responses.Blocks
+@using PencilCase.Shared.Models.Notebooks
 @inject IBlocksApi BlocksApi
 
 <PageTitle>@((_block == null) ? "pencilcase" : _block.Name)</PageTitle>
-@if (_block is not null)
-{
-    <MudText Typo="Typo.h4"><b>@_block.Name</b></MudText>
-    <MudText Typo="Typo.subtitle1">@_block.Type</MudText>
-    <MudText Typo="Typo.subtitle2">Created on @_block.Properties.CreatedOn.ToLocalTime()</MudText>
-    <MudText Typo="Typo.subtitle2">@(_block.ChildrenIds.Count()) sub-blocks</MudText>
-    <MudStack Spacing="4" Class="my-4">
-        @foreach (var child in _blockChildren)
+<div class="pa-4">
+    @if (_block is not null)
+    {
+        @switch (_block.Type)
         {
-            <MudItem Spacing="0" Class="mx-4">
-                <MudPaper Class="pa-4" Elevation="5">
-                    <MudText><b>@child.Name</b></MudText>
-                    <MudText Typo="Typo.subtitle2">@child.Properties.CreatedOn.ToLocalTime()</MudText>
-                    <MudText Typo="Typo.subtitle2">@child.Type</MudText>
-                    <MudText Typo="Typo.subtitle2">@child.ChildrenIds.Count() sub-blocks</MudText>
-                </MudPaper>
-            </MudItem>
+            case BlockType.Topic:
+                <TopicView Block=@_block BlocksApi=@BlocksApi/>
+                break;
+            default:
+                <MudText Typo="Typo.h4">Ooops... Seems like something wrong happened :(</MudText>
+                break;
         }
-    </MudStack>
-}
-else
-{
-    <MudProgressCircular Color="Color.Secondary" Indeterminate="true"/>
-}
+    }
+</div>
+
 
 @code {
     [Parameter] public string? BlockId { get; set; } = string.Empty;
     BlockResponse? _block = null;
-    IEnumerable<BlockResponse> _blockChildren = new List<BlockResponse>();
 
     protected override async Task OnInitializedAsync()
     {
         _block = (BlockId == null) ? await BlocksApi.GetLastUsedBlock() : await BlocksApi.GetBlock(Guid.Parse(BlockId));
-        if (_block != null)
-            _blockChildren = await BlocksApi.LoadAllAsync(_block.ChildrenIds);
         await base.OnInitializedAsync();
     }
 
