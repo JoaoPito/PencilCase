@@ -1,41 +1,53 @@
 @using PencilCase.Shared.DTOs.Responses.Blocks
+@using PencilCase.Shared.Models.Notebooks
 
 @if (Block is not null)
 {
-    <MudText Typo="Typo.h4"><b>@Block.Name</b></MudText>
-    <MudText Typo="Typo.subtitle1">@Block.Type</MudText>
-    <MudText Typo="Typo.subtitle2">Created on @Block.Properties.CreatedOn.ToLocalTime()</MudText>
-    <MudText Typo="Typo.subtitle2">@(Block.ChildrenIds.Count()) sub-blocks</MudText>
-    <MudStack Spacing="4" Class="my-4">
-        @foreach (var child in _blockChildren)
-        {
-            <MudItem Spacing="0" Class="mx-4">
-                <MudPaper Class="pa-4" Elevation="5">
-                    <MudText><b>@child.Name</b></MudText>
-                    <MudText Typo="Typo.subtitle2">@child.Properties.CreatedOn.ToLocalTime()</MudText>
-                    <MudText Typo="Typo.subtitle2">@child.Type</MudText>
-                    <MudText Typo="Typo.subtitle2">@child.ChildrenIds.Count() sub-blocks</MudText>
-                </MudPaper>
-            </MudItem>
-        }
-    </MudStack>
+    <MudTable Items="@_blockChildren" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Secondary">
+        <HeaderContent>
+            <MudTh>Type</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Last Modified</MudTh>
+            <MudTh>Created On</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Type">@switch (context.Type)
+                                    {
+                                        case BlockType.Notebook:
+                                            <MudIcon Icon="@Icons.Material.Rounded.InsertDriveFile"></MudIcon>
+                                            break;
+                                        case BlockType.Cell:
+                                            <MudIcon Icon="@Icons.Material.Rounded.TextSnippet"></MudIcon>
+                                            break;
+                                        default:
+                                            <MudIcon Icon="@Icons.Material.Rounded.Folder"></MudIcon>
+                                            break;
+                                    }</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Last Modified">@context.Properties.LastModified</MudTd>
+            <MudTd DataLabel="Created On">@context.Properties.CreatedOn</MudTd>
+        </RowTemplate>
+    </MudTable>
 }
 else
 {
     <MudProgressCircular Color="Color.Secondary" Indeterminate="true"/>
 }
 
-
 @code {
     private IEnumerable<BlockResponse> _blockChildren = new List<BlockResponse>();
     [Parameter] public BlockResponse? Block { get; set; } = null;
     [Parameter] public IBlocksApi BlocksApi { get; set; } = null!;
+    bool _loading = true;
 
     protected override async Task OnInitializedAsync()
     {
-        if(Block is not null)
+        if (Block is not null)
+        {
+            _loading = true;
             _blockChildren = await BlocksApi.LoadAllAsync(Block.ChildrenIds);
-        
+            _loading = false;
+        }
         await base.OnInitializedAsync();
     }
 
