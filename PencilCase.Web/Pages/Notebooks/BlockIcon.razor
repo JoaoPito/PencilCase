@@ -1,0 +1,23 @@
+@using PencilCase.Shared.DTOs.Responses.Blocks
+@using PencilCase.Shared.Models.Notebooks
+
+@if (Block is not null)
+{
+    @switch (Block.Type)
+    {
+        case BlockType.Notebook:
+            <MudIcon Icon="@Icons.Material.Rounded.InsertDriveFile" Size="Size"></MudIcon>
+            break;
+        case BlockType.Cell:
+            <MudIcon Icon="@Icons.Material.Rounded.TextSnippet" Size="Size"></MudIcon>
+            break;
+        default:
+            <MudIcon Icon="@Icons.Material.Rounded.Folder" Size="Size"></MudIcon>
+            break;
+    }
+}
+
+@code {
+    [Parameter] public BlockResponse? Block { get; set; } = null;
+    [Parameter] public MudBlazor.Size Size { get; set; }
+}

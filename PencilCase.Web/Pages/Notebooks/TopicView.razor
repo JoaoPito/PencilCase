@@ -4,34 +4,35 @@
 
 @if (Block is not null)
 {
-    <MudTable Items="@_blockChildren" Hover="true" T="BlockResponse"
-              Loading="@_loading" LoadingProgressColor="Color.Secondary"
-              OnRowClick="RowClickEvent"
-              Breakpoint="Breakpoint.Sm">
-        <HeaderContent>
-            <MudTh> </MudTh>
-            <MudTh>Name</MudTh>
-            <MudTh>Type</MudTh>
-            <MudTh>Last Modified</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel=" ">@switch (context.Type)
-                                    {
-                                        case BlockType.Notebook:
-                                            <MudIcon Icon="@Icons.Material.Rounded.InsertDriveFile"></MudIcon>
-                                            break;
-                                        case BlockType.Cell:
-                                            <MudIcon Icon="@Icons.Material.Rounded.TextSnippet"></MudIcon>
-                                            break;
-                                        default:
-                                            <MudIcon Icon="@Icons.Material.Rounded.Folder"></MudIcon>
-                                            break;
-                                    }</MudTd>
-            <MudTd DataLabel="Name"><MudText><b>@context.Name</b></MudText></MudTd>
-            <MudTd DataLabel="Type"><MudText Typo="Typo.body2">@context.Type</MudText></MudTd>
-            <MudTd DataLabel="Date"><MudText Typo="Typo.body2">@context.Properties.LastModified</MudText></MudTd>
-        </RowTemplate>
-    </MudTable>
+    <MudGrid Justify="Justify.Center">
+        <MudItem xs="12" md="10">
+            <MudTable Items="@_blockChildren" Hover="true" T="BlockResponse"
+                      Loading="@_loading" LoadingProgressColor="Color.Secondary"
+                      OnRowClick="RowClickEvent"
+                      Breakpoint="Breakpoint.Sm" Elevation="16">
+                <ToolBarContent>
+                    <BlockIcon Block="Block" Size="Size.Large" />
+                    <MudText Typo="Typo.h3">@Block.Name</MudText>
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh> </MudTh>
+                    <MudTh>Name</MudTh>
+                    <MudTh>Type</MudTh>
+                    <MudTh>Last Modified</MudTh>
+                    <MudTh>Options</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel=" ">
+                        <BlockIcon Block="context" />
+                    </MudTd>
+                    <MudTd DataLabel="Name"><MudText><b>@context.Name</b></MudText></MudTd>
+                    <MudTd DataLabel="Type"><MudText Typo="Typo.body2">@context.Type</MudText></MudTd>
+                    <MudTd DataLabel="Date"><MudText Typo="Typo.body2">@context.Properties.LastModified.ToLocalTime()</MudText></MudTd>
+                    <MudTd DataLabel="Options"><MudIconButton Icon="@Icons.Material.Rounded.MoreHoriz"/></MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudItem>
+    </MudGrid>
 }
 else
 {
