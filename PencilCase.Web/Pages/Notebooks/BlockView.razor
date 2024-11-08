@@ -31,23 +31,14 @@ else
 @code {
     [Parameter] public string? BlockId { get; set; } = string.Empty;
     BlockResponse? _block = null;
-    IEnumerable<BlockResponse> _blockChildren = new List<BlockResponse?>();
+    IEnumerable<BlockResponse> _blockChildren = new List<BlockResponse>();
 
     protected override async Task OnInitializedAsync()
     {
         _block = (BlockId == null) ? await BlocksApi.GetLastUsedBlock() : await BlocksApi.GetBlock(Guid.Parse(BlockId));
-        if(_block != null)
-            await LoadChildren(_block.ChildrenIds);
+        if (_block != null)
+            _blockChildren = await BlocksApi.LoadAllAsync(_block.ChildrenIds);
         await base.OnInitializedAsync();
-    }
-
-    async Task LoadChildren(IEnumerable<Guid> childrenIds)
-    {
-        foreach (var id in childrenIds)
-        {
-            var child = await BlocksApi.GetBlock(id);
-            if (child != null) _blockChildren = _blockChildren.Append<BlockResponse>(child);
-        }
     }
 
 }

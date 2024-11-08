@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using MudBlazor;
 using PencilCase.Shared.DTOs.Requests.Blocks;
 using PencilCase.Shared.DTOs.Responses.Blocks;
 
@@ -31,5 +32,17 @@ public class BlocksApi : IBlocksApi
     public async Task<BlockResponse?> GetLastUsedBlock()
     {
         throw new NotImplementedException();
+    }
+    
+    public async Task<IEnumerable<BlockResponse>> LoadAllAsync(IEnumerable<Guid> childrenIds)
+    {
+        var children = new List<BlockResponse>();
+        foreach (var id in childrenIds)
+        {
+            var child = await GetBlock(id);
+            if (child != null) children = children.Append<BlockResponse>(child).ToList();
+        }
+
+        return children;
     }
 }
