@@ -5,11 +5,12 @@
 
 @if (Block is not null)
 {
-    <MudGrid Justify="Justify.Center">
+    <MudGrid Justify="Justify.Center" Class="my-4">
         <MudItem xs="12" md="10">
             <MudTable Items="@_blockChildren" Hover="true" T="BlockViewModel"
                       Loading="@_loading" LoadingProgressColor="Color.Secondary"
-                      OnRowClick="RowClickEvent" SortLabel="Sort By"
+                      OnRowClick="RowClickEvent" RowClass="cursor-pointer"
+                      SortLabel="Sort By" 
                       EditTrigger="TableEditTrigger.EditButton" 
                       ApplyButtonPosition="TableApplyButtonPosition.End" EditButtonPosition="TableEditButtonPosition.End"
                       CanCancelEdit="true" RowEditPreview="BackupItemBeforeEditing"
@@ -25,11 +26,11 @@
                     <MudTh> </MudTh>
                     <MudTh><MudTableSortLabel SortBy="new Func<BlockViewModel, object>(x=>x.Name)">Name</MudTableSortLabel></MudTh>
                     <MudTh><MudTableSortLabel SortBy="new Func<BlockViewModel, object>(x=>x.Type)">Type</MudTableSortLabel></MudTh>
-                    <MudTh><MudTableSortLabel SortBy="new Func<BlockViewModel, object>(x=>x.Properties.LastModified)"></MudTableSortLabel>Date</MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<BlockViewModel, object>(x=>x.Properties.LastModified)" InitialDirection="SortDirection.Descending">Date</MudTableSortLabel></MudTh>
                 </HeaderContent>
                 <RowTemplate>
                     <MudTd DataLabel=" " Style="text-align:center">
-                        <BlockIcon Block="context" />
+                        <BlockIcon Block="context" Size="Size.Medium" />
                     </MudTd>
                     <MudTd DataLabel="Name"><MudText><b>@context.Name</b></MudText></MudTd>
                     <MudTd DataLabel="Type"><MudText Typo="Typo.body2">@context.Type</MudText></MudTd>
@@ -37,7 +38,7 @@
                 </RowTemplate>
                 <RowEditingTemplate>
                     <MudTd DataLabel=" " Style="text-align:center">
-                        <BlockIcon Block="context" />
+                        <BlockIcon Block="context" Size="Size.Medium" />
                     </MudTd>
                     <MudTd DataLabel="Name">
                         <MudTextField @bind-Value="context.Name" Required></MudTextField>
@@ -69,6 +70,10 @@ else
 
     BlockViewModel _rowBeforeEditing = new();
 
+    record RowClickRecord(DateTime ClickTimestamp, BlockViewModel? RowClicked);
+
+    RowClickRecord? _lastRowClicked = null;
+
     protected override async Task OnInitializedAsync()
     {
         if (Block is not null)
@@ -82,14 +87,24 @@ else
     
     void RedirectToBlock(BlockViewModel block)
     {
-        //NavigationManager.NavigateTo($"/block/{block.Id}", true);
+        NavigationManager.NavigateTo($"/block/{block.Id}", true);
     }
 
     private void RowClickEvent(TableRowClickEventArgs<BlockViewModel> tableRowClickEventArgs)
     {
         var block = tableRowClickEventArgs.Item;
-        if (block is not null)
-            RedirectToBlock(block);
+        var clickRecord = new RowClickRecord(DateTime.Now, block);
+
+        if (block != null && _lastRowClicked != null && _lastRowClicked.RowClicked == clickRecord.RowClicked)
+        {
+            var clickDuration = clickRecord.ClickTimestamp - _lastRowClicked.ClickTimestamp;
+            if (clickDuration > TimeSpan.FromMilliseconds(100) && clickDuration < TimeSpan.FromMilliseconds(500))
+            {
+                RedirectToBlock(block);
+            }
+        }
+
+        _lastRowClicked = clickRecord;
     }
 
     private void BackupItemBeforeEditing(Object obj)
