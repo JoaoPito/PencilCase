@@ -57,4 +57,11 @@ public class BlocksApi : IBlocksApi
         if (!response.IsSuccessStatusCode)
             throw new HttpRequestException($"Error while updating block with name '{block.Name}' and Id '{block.Id}'");
     }
+
+    public async Task DeleteBlock(Guid id)
+    {
+        var response = await _httpClient.DeleteAsync($"{id}");
+        if (!response.IsSuccessStatusCode)
+            throw new HttpRequestException($"Error while deleting block with Id '{id}'");
+    }
 }
