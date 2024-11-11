@@ -1,5 +1,6 @@
 @using PencilCase.Shared.DTOs.Responses.Blocks
 @using PencilCase.Shared.Models.Notebooks
+@using PencilCase.Web.Pages.Notebooks.Models
 
 @if (Block is not null)
 {
@@ -18,6 +19,6 @@
 }
 
 @code {
-    [Parameter] public BlockResponse? Block { get; set; } = null;
+    [Parameter] public BlockViewModel? Block { get; set; } = null;
     [Parameter] public MudBlazor.Size Size { get; set; }
 }

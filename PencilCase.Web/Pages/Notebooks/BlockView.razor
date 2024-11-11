@@ -1,6 +1,6 @@
 @page "/block/{BlockId}"
-@using PencilCase.Shared.DTOs.Responses.Blocks
 @using PencilCase.Shared.Models.Notebooks
+@using PencilCase.Web.Pages.Notebooks.Models
 @inject IBlocksApi BlocksApi
 
 <PageTitle>@((_block == null) ? "pencilcase" : _block.Name)</PageTitle>
@@ -28,7 +28,7 @@
 
 @code {
     [Parameter] public string? BlockId { get; set; } = string.Empty;
-    BlockResponse? _block = null;
+    BlockViewModel? _block = null;
 
     protected override async Task OnInitializedAsync()
     {
