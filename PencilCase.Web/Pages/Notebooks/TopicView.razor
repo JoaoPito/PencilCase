@@ -10,6 +10,10 @@
             <MudTable Items="@_blockChildren" Hover="true" T="BlockViewModel"
                       Loading="@_loading" LoadingProgressColor="Color.Secondary"
                       OnRowClick="RowClickEvent" SortLabel="Sort By"
+                      EditTrigger="TableEditTrigger.EditButton" 
+                      ApplyButtonPosition="TableApplyButtonPosition.End" EditButtonPosition="TableEditButtonPosition.End"
+                      CanCancelEdit="true" RowEditPreview="BackupItemBeforeEditing"
+                      RowEditCancel="ResetRowToOriginalValues" RowEditCommit="OnRowEditCommit"
                       Breakpoint="Breakpoint.Sm" Elevation="16">
                 <ToolBarContent>
                     <BlockIcon Block="Block" Size="Size.Large" />
@@ -32,10 +36,18 @@
                     <MudTd DataLabel="Date"><MudText Typo="Typo.body2">@context.Properties.LastModified.ToLocalTime()</MudText></MudTd>
                 </RowTemplate>
                 <RowEditingTemplate>
-                    <MudTd DataLabel="Name">
-                        <MudTextField @bind-Value="context.Name" Required ></MudTextField>
+                    <MudTd DataLabel=" " Style="text-align:center">
+                        <BlockIcon Block="context" />
                     </MudTd>
+                    <MudTd DataLabel="Name">
+                        <MudTextField @bind-Value="context.Name" Required></MudTextField>
+                    </MudTd>
+                    <MudTd DataLabel="Type"><MudText Typo="Typo.body2">@context.Type</MudText></MudTd>
+                    <MudTd DataLabel="Date"><MudText Typo="Typo.body2">@context.Properties.LastModified.ToLocalTime()</MudText></MudTd>
                 </RowEditingTemplate>
+                <EditButtonContent Context="button">
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
+                </EditButtonContent>
             </MudTable>
         </MudItem>
     </MudGrid>
@@ -51,6 +63,8 @@ else
     [Parameter] public IBlocksApi BlocksApi { get; set; } = null!;
     bool _loading = true;
 
+    BlockViewModel _rowBeforeEditing = new();
+
     protected override async Task OnInitializedAsync()
     {
         if (Block is not null)
@@ -64,7 +78,7 @@ else
     
     void RedirectToBlock(BlockViewModel block)
     {
-        NavigationManager.NavigateTo($"/block/{block.Id}", true);
+        //NavigationManager.NavigateTo($"/block/{block.Id}", true);
     }
 
     private void RowClickEvent(TableRowClickEventArgs<BlockViewModel> tableRowClickEventArgs)
@@ -72,5 +86,45 @@ else
         var block = tableRowClickEventArgs.Item;
         if (block is not null)
             RedirectToBlock(block);
+    }
+
+    private void BackupItemBeforeEditing(Object obj)
+    {
+        var blockViewModel = (BlockViewModel)obj;
+        _rowBeforeEditing = new BlockViewModel()
+        {
+            Id = blockViewModel.Id,
+            Name = blockViewModel.Name,
+            Properties = new BlockPropertiesViewModel()
+            {
+                CreatedOn = blockViewModel.Properties.CreatedOn,
+                LastModified = blockViewModel.Properties.LastModified,
+                Order = blockViewModel.Properties.Order
+            },
+            Type = blockViewModel.Type,
+            ChildrenIds = blockViewModel.ChildrenIds,
+            ParentId = blockViewModel.ParentId
+        };
+    }
+
+    private void ResetRowToOriginalValues(Object row)
+    {
+        ((BlockViewModel)row).Id = _rowBeforeEditing.Id;
+        ((BlockViewModel)row).Name = _rowBeforeEditing.Name;
+        ((BlockViewModel)row).Type = _rowBeforeEditing.Type;
+        ((BlockViewModel)row).Properties = new BlockPropertiesViewModel()
+        {
+            CreatedOn = _rowBeforeEditing.Properties.CreatedOn,
+            LastModified = _rowBeforeEditing.Properties.LastModified,
+            Order = _rowBeforeEditing.Properties.Order
+        };
+        ((BlockViewModel)row).ChildrenIds = _rowBeforeEditing.ChildrenIds;
+        ((BlockViewModel)row).ParentId = _rowBeforeEditing.ParentId;
+    }
+
+    private void OnRowEditCommit(Object row)
+    {
+        var blockViewModel = (BlockViewModel)row;
+        BlocksApi.UpdateBlock(blockViewModel);
     }
 }
