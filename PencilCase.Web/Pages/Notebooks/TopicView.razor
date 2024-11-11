@@ -1,12 +1,13 @@
 @using PencilCase.Shared.DTOs.Responses.Blocks
 @using PencilCase.Shared.Models.Notebooks
+@using PencilCase.Web.Pages.Notebooks.Models
 @inject NavigationManager NavigationManager
 
 @if (Block is not null)
 {
     <MudGrid Justify="Justify.Center">
         <MudItem xs="12" md="10">
-            <MudTable Items="@_blockChildren" Hover="true" T="BlockResponse"
+            <MudTable Items="@_blockChildren" Hover="true" T="BlockViewModel"
                       Loading="@_loading" LoadingProgressColor="Color.Secondary"
                       OnRowClick="RowClickEvent" SortLabel="Sort By"
                       Breakpoint="Breakpoint.Sm" Elevation="16">
@@ -18,10 +19,9 @@
                 </ToolBarContent>
                 <HeaderContent>
                     <MudTh> </MudTh>
-                    <MudTh><MudTableSortLabel SortBy="new Func<BlockResponse, object>(x=>x.Name)">Name</MudTableSortLabel></MudTh>
-                    <MudTh><MudTableSortLabel SortBy="new Func<BlockResponse, object>(x=>x.Type)">Type</MudTableSortLabel></MudTh>
-                    <MudTh><MudTableSortLabel SortBy="new Func<BlockResponse, object>(x=>x.Properties.LastModified)"></MudTableSortLabel>Date</MudTh>
-                    <MudTh>Options</MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<BlockViewModel, object>(x=>x.Name)">Name</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<BlockViewModel, object>(x=>x.Type)">Type</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<BlockViewModel, object>(x=>x.Properties.LastModified)"></MudTableSortLabel>Date</MudTh>
                 </HeaderContent>
                 <RowTemplate>
                     <MudTd DataLabel=" " Style="text-align:center">
@@ -30,8 +30,12 @@
                     <MudTd DataLabel="Name"><MudText><b>@context.Name</b></MudText></MudTd>
                     <MudTd DataLabel="Type"><MudText Typo="Typo.body2">@context.Type</MudText></MudTd>
                     <MudTd DataLabel="Date"><MudText Typo="Typo.body2">@context.Properties.LastModified.ToLocalTime()</MudText></MudTd>
-                    <MudTd DataLabel="Options"><MudIconButton Icon="@Icons.Material.Rounded.MoreHoriz"/></MudTd>
                 </RowTemplate>
+                <RowEditingTemplate>
+                    <MudTd DataLabel="Name">
+                        <MudTextField @bind-Value="context.Name" Required ></MudTextField>
+                    </MudTd>
+                </RowEditingTemplate>
             </MudTable>
         </MudItem>
     </MudGrid>
@@ -42,8 +46,8 @@ else
 }
 
 @code {
-    private IEnumerable<BlockResponse> _blockChildren = new List<BlockResponse>();
-    [Parameter] public BlockResponse? Block { get; set; } = null;
+    private IEnumerable<BlockViewModel> _blockChildren = new List<BlockViewModel>();
+    [Parameter] public BlockViewModel? Block { get; set; } = null;
     [Parameter] public IBlocksApi BlocksApi { get; set; } = null!;
     bool _loading = true;
 
@@ -57,13 +61,13 @@ else
         }
         await base.OnInitializedAsync();
     }
-
-    void RedirectToBlock(BlockResponse block)
+    
+    void RedirectToBlock(BlockViewModel block)
     {
         NavigationManager.NavigateTo($"/block/{block.Id}", true);
     }
 
-    private void RowClickEvent(TableRowClickEventArgs<BlockResponse> tableRowClickEventArgs)
+    private void RowClickEvent(TableRowClickEventArgs<BlockViewModel> tableRowClickEventArgs)
     {
         var block = tableRowClickEventArgs.Item;
         if (block is not null)
