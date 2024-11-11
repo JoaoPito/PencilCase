@@ -25,6 +25,8 @@ builder.Services.AddHttpClient("BlocksAPI", client =>
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
 builder.Services.AddTransient<IBlocksApi, BlocksApi>();
+builder.Services.AddTransient<BlockMapper>();
+
 builder.Services.AddTransient<MarkdownExporter>();
 
 builder.Services.AddMudServices();
