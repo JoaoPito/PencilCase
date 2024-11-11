@@ -46,8 +46,12 @@
                     <MudTd DataLabel="Date"><MudText Typo="Typo.body2">@context.Properties.LastModified.ToLocalTime()</MudText></MudTd>
                 </RowEditingTemplate>
                 <EditButtonContent Context="button">
-                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
+                    <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Rounded.Edit" Class="pa-1" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
+                    <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Rounded.Delete" Color="Color.Error" Class="pa-1" Disabled="@button.ButtonDisabled" />
                 </EditButtonContent>
+                <NoRecordsContent>
+                    <MudText>It's empty here...</MudText>
+                </NoRecordsContent>
             </MudTable>
         </MudItem>
     </MudGrid>
