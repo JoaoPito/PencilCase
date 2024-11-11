@@ -55,4 +55,17 @@ public class BlockMapper
             Order: properties.Order
         );
     }
+
+    public BlockPutRequest? MapViewModelToPutRequest(BlockViewModel? block)
+    {
+        if (block == null)
+            return null;
+        return new BlockPutRequest(
+            Name: block.Name,
+            Type: block.Type,
+            Properties: MapPropertiesViewModelToRequest(block.Properties),
+            ChildrenIds: block.ChildrenIds,
+            ParentId: block.ParentId
+        );
+    }
 }
