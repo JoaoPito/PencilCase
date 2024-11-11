@@ -10,4 +10,5 @@ public interface IBlocksApi
     public Task AddBlock(BlockViewModel block);
     public Task<BlockViewModel?> GetLastUsedBlock();
     public Task<IEnumerable<BlockViewModel>> LoadAllAsync(IEnumerable<Guid> blockIds);
+    public Task UpdateBlock(BlockViewModel block);
 }
