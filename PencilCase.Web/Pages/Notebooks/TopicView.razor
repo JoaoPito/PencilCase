@@ -46,7 +46,7 @@
                 </RowEditingTemplate>
                 <EditButtonContent Context="button">
                     <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Rounded.Edit" Class="pa-1" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
-                    <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Rounded.Delete" Color="Color.Error" Class="pa-1" Disabled="@button.ButtonDisabled" />
+                    <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Rounded.Delete" Color="Color.Error" Class="pa-1" OnClick="@(() => OnDeleteClicked(button))" Disabled="@button.ButtonDisabled" />
                 </EditButtonContent>
                 <NoRecordsContent>
                     <MudText>It's empty here...</MudText>
@@ -147,5 +147,27 @@ else
     {
         var blockViewModel = (BlockViewModel)row;
         BlocksApi.UpdateBlock(blockViewModel);
+    }
+
+    private async Task OnDeleteClicked(EditButtonContext context)
+    {
+        var block = (BlockViewModel?)context.Item;
+        if (block is not null)
+        {
+            await DeleteBlock(block.Id);
+            await _blocksTable.ReloadServerData();
+        }
+    }
+
+    private async Task DeleteBlock(Guid id)
+    {
+        var childrenList = Block?.ChildrenIds.ToList();
+        childrenList!.Remove(id);
+        Block!.ChildrenIds = childrenList;
+        await BlocksApi.DeleteBlock(id);
+        foreach (var Id in Block?.ChildrenIds!)
+        {
+            Console.WriteLine(Id);
+        }
     }
 }
