@@ -49,4 +49,12 @@ public class BlocksApi : IBlocksApi
 
         return children;
     }
+
+    public async Task UpdateBlock(BlockViewModel block)
+    {
+        var request = _blockMapper.MapViewModelToPutRequest(block);
+        var response = await _httpClient.PutAsJsonAsync<BlockPutRequest>($"{block.Id}", request!);
+        if (!response.IsSuccessStatusCode)
+            throw new HttpRequestException($"Error while updating block with name '{block.Name}' and Id '{block.Id}'");
+    }
 }
