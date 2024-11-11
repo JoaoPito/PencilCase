@@ -1,5 +1,4 @@
-@using PencilCase.Shared.DTOs.Responses.Blocks
-@using PencilCase.Shared.Models.Notebooks
+@using MudBlazorFix
 @using PencilCase.Web.Pages.Notebooks.Models
 @inject NavigationManager NavigationManager
 
@@ -7,15 +6,14 @@
 {
     <MudGrid Justify="Justify.Center" Class="my-4">
         <MudItem xs="12" md="10">
-            <MudTable Items="@_blockChildren" Hover="true" T="BlockViewModel"
-                      Loading="@_loading" LoadingProgressColor="Color.Secondary"
+            <MudTable ServerData="ServerReload" Hover="true" T="BlockViewModel" @ref="_blocksTable"
                       OnRowClick="RowClickEvent" RowClass="cursor-pointer"
                       SortLabel="Sort By" 
                       EditTrigger="TableEditTrigger.EditButton" 
                       ApplyButtonPosition="TableApplyButtonPosition.End" EditButtonPosition="TableEditButtonPosition.End"
                       CanCancelEdit="true" RowEditPreview="BackupItemBeforeEditing"
                       RowEditCancel="ResetRowToOriginalValues" RowEditCommit="OnRowEditCommit"
-                      Breakpoint="Breakpoint.Sm" Elevation="16">
+                      Breakpoint="Breakpoint.Sm" Elevation="16" LoadingProgressColor="Color.Secondary" >
                 <ToolBarContent>
                     <BlockIcon Block="Block" Size="Size.Large" />
                     <MudText Typo="Typo.h3" Class="mx-4">@Block.Name</MudText>
@@ -66,7 +64,7 @@ else
     private IEnumerable<BlockViewModel> _blockChildren = new List<BlockViewModel>();
     [Parameter] public BlockViewModel? Block { get; set; } = null;
     [Parameter] public IBlocksApi BlocksApi { get; set; } = null!;
-    bool _loading = true;
+    MudTable<BlockViewModel> _blocksTable = null!;
 
     BlockViewModel _rowBeforeEditing = new();
 
@@ -74,15 +72,19 @@ else
 
     RowClickRecord? _lastRowClicked = null;
 
-    protected override async Task OnInitializedAsync()
+    private async Task<TableData<BlockViewModel>> ServerReload(TableState state, CancellationToken token)
     {
         if (Block is not null)
         {
-            _loading = true;
             _blockChildren = await BlocksApi.LoadAllAsync(Block.ChildrenIds);
-            _loading = false;
+            var blockViewModels = _blockChildren
+                .ToList()
+                .OrderByDescending(b => b.Properties.LastModified);
+            var totalItems = blockViewModels.Count();
+            return new TableData<BlockViewModel>() { TotalItems = totalItems, Items = blockViewModels };
         }
-        await base.OnInitializedAsync();
+
+        return new TableData<BlockViewModel>();
     }
     
     void RedirectToBlock(BlockViewModel block)
