@@ -2,6 +2,7 @@
 @using PencilCase.Shared.Models.Notebooks
 @using PencilCase.Web.Pages.Notebooks.Models
 @inject IBlocksApi BlocksApi
+@inject NavigationManager NavigationManager
 
 <PageTitle>@((_block == null) ? "pencilcase" : _block.Name)</PageTitle>
 <div class="pa-4">
@@ -10,7 +11,7 @@
         @switch (_block.Type)
         {
             case BlockType.Topic:
-                <TopicView Block="_block" BlocksApi=@BlocksApi/>
+                <TopicView Block="_block" BlocksApi=@BlocksApi RedirectToBlock="RedirectTo"/>
                 break;
             case BlockType.Notebook:
                 <MudText Typo="Typo.h5">Notebook placeholder</MudText>
@@ -35,9 +36,16 @@
         await LoadBlock();
         await base.OnInitializedAsync();
     }
-    
+
     private async Task LoadBlock()
     {
         _block = (BlockId == null) ? await BlocksApi.GetLastUsedBlock() : await BlocksApi.GetBlock(Guid.Parse(BlockId));
+    }
+
+    private void RedirectTo(BlockViewModel block)
+    {
+        NavigationManager.NavigateTo($"/block/{block.Id}", forceLoad: true);
+        _block = block;
+        StateHasChanged();
     }
 }

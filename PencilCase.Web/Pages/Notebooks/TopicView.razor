@@ -1,6 +1,6 @@
 @using MudBlazorFix
 @using PencilCase.Web.Pages.Notebooks.Models
-@inject NavigationManager NavigationManager
+
 
 @if (Block is not null)
 {
@@ -64,6 +64,7 @@ else
     private IEnumerable<BlockViewModel> _blockChildren = new List<BlockViewModel>();
     [Parameter] public BlockViewModel? Block { get; set; } = null;
     [Parameter] public IBlocksApi BlocksApi { get; set; } = null!;
+    [Parameter] public EventCallback<BlockViewModel> RedirectToBlock { get; set; }
     MudTable<BlockViewModel> _blocksTable = null!;
 
     BlockViewModel _rowBeforeEditing = new();
@@ -84,15 +85,16 @@ else
             return new TableData<BlockViewModel>() { TotalItems = totalItems, Items = blockViewModels };
         }
 
-        return new TableData<BlockViewModel>();
+        return new TableData<BlockViewModel>() { TotalItems = 0, Items = new List<BlockViewModel>() };
     }
     
-    void RedirectToBlock(BlockViewModel block)
+    private async Task OnDoubleClicked(BlockViewModel block)
     {
-        NavigationManager.NavigateTo($"/block/{block.Id}", true);
+        await RedirectToBlock.InvokeAsync(block);
+        await _blocksTable.ReloadServerData();
     }
 
-    private void RowClickEvent(TableRowClickEventArgs<BlockViewModel> tableRowClickEventArgs)
+    private async Task RowClickEvent(TableRowClickEventArgs<BlockViewModel> tableRowClickEventArgs)
     {
         var block = tableRowClickEventArgs.Item;
         var clickRecord = new RowClickRecord(DateTime.Now, block);
@@ -102,7 +104,7 @@ else
             var clickDuration = clickRecord.ClickTimestamp - _lastRowClicked.ClickTimestamp;
             if (clickDuration > TimeSpan.FromMilliseconds(100) && clickDuration < TimeSpan.FromMilliseconds(500))
             {
-                RedirectToBlock(block);
+                await OnDoubleClicked(block);
             }
         }
 
