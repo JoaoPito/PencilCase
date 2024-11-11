@@ -28,7 +28,7 @@ public class BlocksApi : IBlocksApi
     public async Task AddBlock(BlockViewModel block)
     {
         var request = _blockMapper.MapViewModelToPostRequest(block);
-        var response = await _httpClient.PostAsJsonAsync<BlockPostRequest>($"", request);
+        var response = await _httpClient.PostAsJsonAsync<BlockPostRequest>($"", request!);
         if (!response.IsSuccessStatusCode)
             throw new HttpRequestException($"Error while adding block with name '{block.Name}'");
     }
