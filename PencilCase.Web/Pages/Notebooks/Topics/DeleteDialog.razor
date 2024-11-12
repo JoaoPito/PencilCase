@@ -3,15 +3,17 @@
 <MudDialog>
     <TitleContent>
         <MudText Typo="Typo.h5">
-            Delete '@Block.Name'?
+            Remove '@Block.Name'?
         </MudText>
     </TitleContent>
     <DialogContent>
-        Do you really wish to delete this @Block.Type.ToString().ToLower()?
+        <MudText Typo="Typo.body1">
+            You <b>cannot</b> undo this action.
+        </MudText>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Error" OnClick="Submit">Delete</MudButton>
+        <MudButton Color="Color.Error" OnClick="Submit">Remove this item.</MudButton>
     </DialogActions>
 </MudDialog>
 

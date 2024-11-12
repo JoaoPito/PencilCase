@@ -52,7 +52,8 @@
                                    Class="pa-1" OnClick="@(() => OnDeleteClicked(button))" Disabled="@button.ButtonDisabled" />
                 </EditButtonContent>
                 <NoRecordsContent>
-                    <MudText>It's empty here...</MudText>
+                    <MudText Typo="Typo.h5" Class="pt-10">It's empty here...</MudText>
+                    <MudText Typo="Typo.body1" Class="pb-10">You can add items using the button below.</MudText>
                 </NoRecordsContent>
             </MudTable>
         </MudItem>
