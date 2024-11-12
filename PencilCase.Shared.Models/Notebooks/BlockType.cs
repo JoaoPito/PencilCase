@@ -6,5 +6,6 @@ public enum BlockType
 {
     Topic = 0,
     Notebook = 1,
-    Cell = 2
+    Cell = 2,
+    Source = 3
 }
