@@ -1,0 +1,33 @@
+@using PencilCase.Web.Pages.Notebooks.Models
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h5">
+            Delete '@Block.Name'?
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        Do you really wish to delete this @Block.Type.ToString().ToLower()?
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Error" OnClick="Submit">Delete</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = null!;
+
+    [Parameter] public BlockViewModel Block { get; set; } = null!;
+
+    [Parameter] public Func<Guid, Task> OnAcceptAsync { get; set; } = null!;
+    
+    private async Task Submit()
+    {
+        await OnAcceptAsync(Block.Id!);
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}
+
