@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using MudBlazorFix;
+using PencilCase.Shared.Models.Notebooks;
 using PencilCase.Web.Pages.Notebooks.Models;
 using PencilCase.Web.Services;
-
-
 
 namespace PencilCase.Web.Pages.Notebooks.Topics;
 
@@ -146,6 +145,31 @@ public partial class TopicView : ComponentBase
         
         await BlocksApi.DeleteBlock(id);
         
+        await _blocksTable.ReloadServerData();
+    }
+
+    // Add
+    private async Task OnAddNotebookClicked()
+    {
+        Snackbar.Add("Sorry! Adding Notebooks ources are not supported yet!");
+    }
+
+    private async Task OnAddSourceClicked()
+    {
+        Snackbar.Add("Sorry! Adding sources are not supported yet!");
+    }
+
+    private async Task OnAddTopicClicked()
+    {
+        var newTopic = new BlockViewModel()
+        {
+            Name = $"Untitled - {DateTime.Now.ToLocalTime():f}",
+            ParentId = Block!.Id,
+            ChildrenIds = new List<Guid>(),
+            Type = BlockType.Topic
+        };
+        
+        await BlocksApi.AddBlock(newTopic);
         await _blocksTable.ReloadServerData();
     }
 }

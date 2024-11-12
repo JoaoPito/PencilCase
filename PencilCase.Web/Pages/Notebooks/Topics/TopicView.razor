@@ -1,5 +1,6 @@
 @using PencilCase.Web.Pages.Notebooks.Models
 @inject IDialogService DialogService
+@inject ISnackbar Snackbar
 
 @if (Block is not null)
 {
@@ -18,9 +19,12 @@
                     <MudText Typo="Typo.h3" Class="mx-4">@Block.Name</MudText>
                     <MudText Typo="Typo.body2" Class="mx-4">@Block.ChildrenIds.Count() item(s)</MudText>
                     <MudSpacer />
-                    <MudIconButton Icon="@Icons.Material.Rounded.CloudUpload" Size="Size.Medium"></MudIconButton>
-                    <MudIconButton Icon="@Icons.Material.Rounded.NoteAdd" Size="Size.Medium"></MudIconButton>
-                    <MudIconButton Icon="@Icons.Material.Rounded.CreateNewFolder" Size="Size.Medium"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Material.Rounded.CloudUpload" Size="Size.Medium"
+                                   OnClick="OnAddSourceClicked"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Material.Rounded.NoteAdd" Size="Size.Medium"
+                                   OnClick="OnAddNotebookClicked"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Material.Rounded.CreateNewFolder" Size="Size.Medium"
+                                   OnClick="OnAddTopicClicked"></MudIconButton>
                 </ToolBarContent>
                 <HeaderContent>
                     <MudTh> </MudTh>
