@@ -29,14 +29,7 @@
 
 @code {
     [Parameter] public string? BlockId { get; set; } = string.Empty;
-    BlockViewModel? _block = null;
-    TopicView _topicView;
-    
-    // protected override async Task OnParametersSetAsync()
-    // {
-    //     await LoadBlock();
-    //     await base.OnParametersSetAsync();
-    // }
+    private BlockViewModel? _block;
     
     protected override async Task OnInitializedAsync()
     {
@@ -51,6 +44,6 @@
 
     private void RedirectTo(BlockViewModel block)
     {
-        NavigationManager.NavigateTo($"/block/{block.Id}", true);
+        NavigationManager.NavigateTo($"/block/{block.Id}", false);
     }
 }

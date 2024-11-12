@@ -58,7 +58,9 @@ public partial class TopicView : ComponentBase
     
     private async Task OnDoubleClicked(BlockViewModel block)
     {
-        await RedirectToBlock.InvokeAsync(block);
+        Block = block;
+        await ReloadCurrentBlock();
+        await _blocksTable.ReloadServerData();
     }
 
     private async Task RowClickEvent(TableRowClickEventArgs<BlockViewModel> tableRowClickEventArgs)
@@ -96,7 +98,8 @@ public partial class TopicView : ComponentBase
             return string.Empty;
         }
     }
-
+    
+    // Editing blocks
     private void BackupItemBeforeEditing(Object obj)
     {
         var blockViewModel = (BlockViewModel)obj;
