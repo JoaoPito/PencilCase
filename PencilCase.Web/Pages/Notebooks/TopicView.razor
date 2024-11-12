@@ -1,6 +1,7 @@
 @using MudBlazorFix
 @using PencilCase.Web.Pages.Notebooks.Models
-
+@using PencilCase.Web.Pages.Notebooks.Topics
+@inject IDialogService DialogService
 
 @if (Block is not null)
 {
@@ -45,8 +46,10 @@
                     <MudTd DataLabel="Date"><MudText Typo="Typo.body2">@context.Properties.LastModified.ToLocalTime()</MudText></MudTd>
                 </RowEditingTemplate>
                 <EditButtonContent Context="button">
-                    <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Rounded.Edit" Class="pa-1" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
-                    <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Rounded.Delete" Color="Color.Error" Class="pa-1" OnClick="@(() => OnDeleteClicked(button))" Disabled="@button.ButtonDisabled" />
+                    <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Rounded.Edit" 
+                                   Class="pa-1" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
+                    <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Rounded.Delete" Color="Color.Error" 
+                                   Class="pa-1" OnClick="@(() => OnDeleteClicked(button))" Disabled="@button.ButtonDisabled" />
                 </EditButtonContent>
                 <NoRecordsContent>
                     <MudText>It's empty here...</MudText>
@@ -68,9 +71,8 @@ else
     MudTable<BlockViewModel> _blocksTable = null!;
 
     BlockViewModel _rowBeforeEditing = new();
-
+    
     record RowClickRecord(DateTime ClickTimestamp, BlockViewModel? RowClicked);
-
     RowClickRecord? _lastRowClicked = null;
 
     private async Task<TableData<BlockViewModel>> ServerReload(TableState state, CancellationToken token)
@@ -173,9 +175,27 @@ else
         var block = (BlockViewModel?)context.Item;
         if (block is not null)
         {
-            await DeleteBlock(block.Id);
-            await _blocksTable.ReloadServerData();
+            await ShowDeleteDialog(block, DeleteBlock);
+            
+            //await DeleteBlock(block.Id);
+            
         }
+    }
+
+    private async Task ShowDeleteDialog(BlockViewModel block, Func<Guid,Task> onAccept)
+    {
+        var options = new DialogOptions()
+        {
+            Position = DialogPosition.TopCenter
+        };
+        
+        var parameters = new DialogParameters<DeleteDialog>
+        {
+            { x => x.OnAcceptAsync, onAccept },
+            { x => x.Block, block }
+        };
+
+        await DialogService.ShowAsync<DeleteDialog>($"Delete topic", parameters, options);
     }
 
     private async Task DeleteBlock(Guid id)
@@ -183,10 +203,9 @@ else
         var childrenList = Block?.ChildrenIds.ToList();
         childrenList!.Remove(id);
         Block!.ChildrenIds = childrenList;
+        
         await BlocksApi.DeleteBlock(id);
-        foreach (var Id in Block?.ChildrenIds!)
-        {
-            Console.WriteLine(Id);
-        }
+        
+        await _blocksTable.ReloadServerData();
     }
 }

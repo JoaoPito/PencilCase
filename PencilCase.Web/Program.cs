@@ -17,13 +17,14 @@ builder.Services.AddHttpClient("API", client =>
     client.BaseAddress = new Uri(builder.Configuration["APIServer:url"]!);
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
-builder.Services.AddTransient<FragmentApi>();
 
 builder.Services.AddHttpClient("BlocksAPI", client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["BlocksAPI:url"]!);
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
+
+builder.Services.AddTransient<FragmentApi>();
 builder.Services.AddTransient<IBlocksApi, BlocksApi>();
 builder.Services.AddTransient<BlockMapper>();
 
