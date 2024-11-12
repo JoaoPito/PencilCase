@@ -58,7 +58,7 @@ public partial class TopicView : ComponentBase
     
     private async Task OnDoubleClicked(BlockViewModel block)
     {
-        if (block.Type == BlockType.Topic || block.Type == BlockType.Cell)
+        if (block.Type == BlockType.Topic || block.Type == BlockType.Source)
         {
             Block = block;
             await ReloadCurrentBlock();
@@ -188,7 +188,7 @@ public partial class TopicView : ComponentBase
     private async Task AddNewBlockAndReload(BlockViewModel block)
     {
         var createdBlock = await BlocksApi.AddBlock(block);
-        if (block.Type == BlockType.Topic)
+        if (block.Type == BlockType.Topic || block.Type == BlockType.Source)
         {
             await ReloadCurrentBlock();
             await _blocksTable.ReloadServerData();
