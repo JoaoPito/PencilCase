@@ -8,7 +8,7 @@
         <MudItem xs="12" md="10">
             <MudTable ServerData="ServerReload" Hover="true" T="BlockViewModel" @ref="_blocksTable"
                       OnRowClick="RowClickEvent" RowClass="cursor-pointer"
-                      SortLabel="Sort By" 
+                      SortLabel="Sort By" AllowUnsorted="false"
                       EditTrigger="TableEditTrigger.EditButton" 
                       ApplyButtonPosition="TableApplyButtonPosition.End" EditButtonPosition="TableEditButtonPosition.End"
                       CanCancelEdit="true" RowEditPreview="BackupItemBeforeEditing"
@@ -22,9 +22,9 @@
                 </ToolBarContent>
                 <HeaderContent>
                     <MudTh> </MudTh>
-                    <MudTh><MudTableSortLabel SortBy="new Func<BlockViewModel, object>(x=>x.Name)">Name</MudTableSortLabel></MudTh>
-                    <MudTh><MudTableSortLabel SortBy="new Func<BlockViewModel, object>(x=>x.Type)">Type</MudTableSortLabel></MudTh>
-                    <MudTh><MudTableSortLabel SortBy="new Func<BlockViewModel, object>(x=>x.Properties.LastModified)" InitialDirection="SortDirection.Descending">Date</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="name" T="BlockViewModel">Name</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="type" T="BlockViewModel">Type</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="modified-at" T="BlockViewModel" InitialDirection="SortDirection.Descending">Date</MudTableSortLabel></MudTh>
                 </HeaderContent>
                 <RowTemplate>
                     <MudTd DataLabel=" " Style="text-align:center">
@@ -39,7 +39,7 @@
                         <BlockIcon Block="context" Size="Size.Medium" />
                     </MudTd>
                     <MudTd DataLabel="Name">
-                        <MudTextField @bind-Value="context.Name" Required></MudTextField>
+                        <MudTextField @bind-Value="context.Name" Required MaxLength="50"></MudTextField>
                     </MudTd>
                     <MudTd DataLabel="Type"><MudText Typo="Typo.body2">@context.Type</MudText></MudTd>
                     <MudTd DataLabel="Date"><MudText Typo="Typo.body2">@context.Properties.LastModified.ToLocalTime()</MudText></MudTd>
@@ -78,20 +78,37 @@ else
         if (Block is not null)
         {
             _blockChildren = await BlocksApi.LoadAllAsync(Block.ChildrenIds);
-            var blockViewModels = _blockChildren
-                .ToList()
-                .OrderByDescending(b => b.Properties.LastModified);
+            var blockViewModels = _blockChildren.ToList();
             var totalItems = blockViewModels.Count();
+            blockViewModels = SortData(state, blockViewModels);
             return new TableData<BlockViewModel>() { TotalItems = totalItems, Items = blockViewModels };
         }
 
         return new TableData<BlockViewModel>() { TotalItems = 0, Items = new List<BlockViewModel>() };
     }
+
+    private List<BlockViewModel> SortData(TableState state, List<BlockViewModel> data)
+    {
+        switch (state.SortLabel)
+        {
+            case "name":
+                data = data.OrderByDirection(state.SortDirection, o => o.Name).ToList();
+                break;
+            case "type":
+                data = data.OrderByDirection(state.SortDirection, o => o.Type).ToList();
+                break;
+            case "modified-at":
+                data = data.OrderByDirection(state.SortDirection, o => o.Properties.LastModified).ToList();
+                break;
+        }
+
+        return data;
+    }
     
     private async Task OnDoubleClicked(BlockViewModel block)
     {
         await RedirectToBlock.InvokeAsync(block);
-        await _blocksTable.ReloadServerData();
+        //await _blocksTable.ReloadServerData();
     }
 
     private async Task RowClickEvent(TableRowClickEventArgs<BlockViewModel> tableRowClickEventArgs)
