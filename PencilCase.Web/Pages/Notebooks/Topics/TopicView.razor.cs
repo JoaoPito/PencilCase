@@ -180,9 +180,17 @@ public partial class TopicView : ComponentBase
     // Add blocks
     private async Task AddNewBlockAndReload(BlockViewModel block)
     {
-        await BlocksApi.AddBlock(block);
-        await ReloadCurrentBlock();
-        await _blocksTable.ReloadServerData();
+        var createdBlock = await BlocksApi.AddBlock(block);
+        if (block.Type == BlockType.Topic)
+        {
+            await ReloadCurrentBlock();
+            await _blocksTable.ReloadServerData();
+        }
+        else
+        {
+            await RedirectToBlock.InvokeAsync(createdBlock);
+        }
+        
     }
     
     private async Task OnAddNotebookClicked()

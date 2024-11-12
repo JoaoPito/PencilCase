@@ -44,6 +44,7 @@
 
     private void RedirectTo(BlockViewModel block)
     {
-        NavigationManager.NavigateTo($"/block/{block.Id}", false);
+        NavigationManager.NavigateTo($"/block/{block.Id}", true);
+        StateHasChanged();
     }
 }
