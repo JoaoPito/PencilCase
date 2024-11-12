@@ -178,6 +178,13 @@ public partial class TopicView : ComponentBase
     }
 
     // Add blocks
+    private async Task AddNewBlockAndReload(BlockViewModel block)
+    {
+        await BlocksApi.AddBlock(block);
+        await ReloadCurrentBlock();
+        await _blocksTable.ReloadServerData();
+    }
+    
     private async Task OnAddNotebookClicked()
     {
         Snackbar.Add("Sorry! Adding Notebooks are not supported yet!", Severity.Error);
@@ -198,8 +205,6 @@ public partial class TopicView : ComponentBase
             Type = BlockType.Topic
         };
         
-        await BlocksApi.AddBlock(newTopic);
-        await ReloadCurrentBlock();
-        await _blocksTable.ReloadServerData();
+        await AddNewBlockAndReload(newTopic);
     }
 }
