@@ -151,25 +151,26 @@ public partial class TopicView : ComponentBase
     // Add
     private async Task OnAddNotebookClicked()
     {
-        Snackbar.Add("Sorry! Adding Notebooks ources are not supported yet!");
+        Snackbar.Add("Sorry! Adding Notebooks are not supported yet!", Severity.Error);
     }
 
     private async Task OnAddSourceClicked()
     {
-        Snackbar.Add("Sorry! Adding sources are not supported yet!");
+        Snackbar.Add("Sorry! Adding Sources are not supported yet!", Severity.Error);
     }
 
     private async Task OnAddTopicClicked()
     {
         var newTopic = new BlockViewModel()
         {
-            Name = $"Untitled - {DateTime.Now.ToLocalTime():f}",
+            Name = $"Untitled - {DateTime.Now.ToLocalTime():g}",
             ParentId = Block!.Id,
             ChildrenIds = new List<Guid>(),
             Type = BlockType.Topic
         };
         
         await BlocksApi.AddBlock(newTopic);
+        
         await _blocksTable.ReloadServerData();
     }
 }
