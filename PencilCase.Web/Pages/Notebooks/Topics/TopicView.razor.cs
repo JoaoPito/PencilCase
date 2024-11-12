@@ -187,7 +187,15 @@ public partial class TopicView : ComponentBase
     
     private async Task OnAddNotebookClicked()
     {
-        Snackbar.Add("Sorry! Adding Notebooks are not supported yet!", Severity.Error);
+        var newNotebook = new BlockViewModel()
+        {
+            Name = $"Untitled - {DateTime.Now.ToLocalTime():g}",
+            ParentId = Block!.Id,
+            ChildrenIds = new List<Guid>(),
+            Type = BlockType.Notebook
+        };
+
+        await AddNewBlockAndReload(newNotebook);
     }
 
     private async Task OnAddSourceClicked()
