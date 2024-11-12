@@ -25,12 +25,13 @@ public class BlocksApi : IBlocksApi
         return _blockMapper.MapResponseToViewModel(blockResponse);
     }
 
-    public async Task AddBlock(BlockViewModel block)
+    public async Task<BlockViewModel?> AddBlock(BlockViewModel block)
     {
         var request = _blockMapper.MapViewModelToPostRequest(block);
         var response = await _httpClient.PostAsJsonAsync<BlockPostRequest>($"", request!);
         if (!response.IsSuccessStatusCode)
             throw new HttpRequestException($"Error while adding block with name '{block.Name}'");
+        return await response.Content.ReadFromJsonAsync<BlockViewModel>();
     }
 
     public Task<BlockViewModel?> GetLastUsedBlock()
