@@ -2,12 +2,24 @@
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
+<style>
+    .selected {
+        background-color: var(--mud-palette-primary, #1E88E5) !important;
+    }
+    .selected > td {
+        color: white !important;
+    }
+    .selected > td .mud-input {
+        color: white !important;
+    }
+</style>
+
 @if (Block is not null)
 {
     <MudGrid Justify="Justify.Center" Class="my-4">
         <MudItem xs="12" md="10">
             <MudTable ServerData="ServerReload" Hover="true" T="BlockViewModel" @ref="_blocksTable"
-                      OnRowClick="RowClickEvent" RowClass="cursor-pointer"
+                      OnRowClick="RowClickEvent" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc"
                       SortLabel="Sort By" AllowUnsorted="false"
                       EditTrigger="TableEditTrigger.EditButton" 
                       ApplyButtonPosition="TableApplyButtonPosition.End" EditButtonPosition="TableEditButtonPosition.End"

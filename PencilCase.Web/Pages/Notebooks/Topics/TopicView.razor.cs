@@ -72,6 +72,27 @@ public partial class TopicView : ComponentBase
         _lastRowClicked = clickRecord;
     }
 
+    
+    
+    private int _selectedRowNumber = -1;
+    private string SelectedRowClassFunc(BlockViewModel block, int rowNumber)
+    {
+        if (_selectedRowNumber == rowNumber)
+        {
+            _selectedRowNumber = -1;
+            return string.Empty;
+        }
+        else if (_blocksTable.SelectedItem != null && _blocksTable.SelectedItem.Equals(block))
+        {
+            _selectedRowNumber = rowNumber;
+            return "selected";
+        }
+        else
+        {
+            return string.Empty;
+        }
+    }
+
     private void BackupItemBeforeEditing(Object obj)
     {
         var blockViewModel = (BlockViewModel)obj;
