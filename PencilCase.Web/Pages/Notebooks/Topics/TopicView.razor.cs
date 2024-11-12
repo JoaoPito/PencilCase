@@ -32,7 +32,7 @@ public partial class TopicView : ComponentBase
 
     private async Task LoadChildren()
     {
-        if (Block is not null && !(_blockChildren.Any() && _blockChildren.First().Id == Block.Id))
+        if (Block is not null)
         {
             _blockChildren = await BlocksApi.LoadAllAsync(Block.ChildrenIds);
         }
