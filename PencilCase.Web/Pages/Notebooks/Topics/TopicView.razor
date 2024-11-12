@@ -68,25 +68,34 @@ else
     [Parameter] public BlockViewModel? Block { get; set; } = null;
     [Parameter] public IBlocksApi BlocksApi { get; set; } = null!;
     [Parameter] public EventCallback<BlockViewModel> RedirectToBlock { get; set; }
-    MudTable<BlockViewModel> _blocksTable = null!;
+    MudTable<BlockViewModel> _blocksTable = new();
 
     BlockViewModel _rowBeforeEditing = new();
     
     record RowClickRecord(DateTime ClickTimestamp, BlockViewModel? RowClicked);
     RowClickRecord? _lastRowClicked = null;
+    
+    protected override async Task OnParametersSetAsync()
+    {
+        await _blocksTable.ReloadServerData();
+        await base.OnParametersSetAsync();
+    }
 
     private async Task<TableData<BlockViewModel>> ServerReload(TableState state, CancellationToken token)
     {
-        if (Block is not null)
+        await LoadChildren();
+        var blockViewModels = _blockChildren.ToList();
+        var totalItems = blockViewModels.Count();
+        blockViewModels = SortData(state, blockViewModels);
+        return new TableData<BlockViewModel>() { TotalItems = totalItems, Items = blockViewModels };
+    }
+
+    private async Task LoadChildren()
+    {
+        if (Block is not null && !(_blockChildren.Any() && _blockChildren.First().Id == Block.Id))
         {
             _blockChildren = await BlocksApi.LoadAllAsync(Block.ChildrenIds);
-            var blockViewModels = _blockChildren.ToList();
-            var totalItems = blockViewModels.Count();
-            blockViewModels = SortData(state, blockViewModels);
-            return new TableData<BlockViewModel>() { TotalItems = totalItems, Items = blockViewModels };
         }
-
-        return new TableData<BlockViewModel>() { TotalItems = 0, Items = new List<BlockViewModel>() };
     }
 
     private List<BlockViewModel> SortData(TableState state, List<BlockViewModel> data)
@@ -103,14 +112,12 @@ else
                 data = data.OrderByDirection(state.SortDirection, o => o.Properties.LastModified).ToList();
                 break;
         }
-
         return data;
     }
     
     private async Task OnDoubleClicked(BlockViewModel block)
     {
         await RedirectToBlock.InvokeAsync(block);
-        //await _blocksTable.ReloadServerData();
     }
 
     private async Task RowClickEvent(TableRowClickEventArgs<BlockViewModel> tableRowClickEventArgs)
@@ -176,9 +183,6 @@ else
         if (block is not null)
         {
             await ShowDeleteDialog(block, DeleteBlock);
-            
-            //await DeleteBlock(block.Id);
-            
         }
     }
 
