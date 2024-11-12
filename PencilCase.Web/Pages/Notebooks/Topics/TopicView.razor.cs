@@ -38,6 +38,12 @@ public partial class TopicView : ComponentBase
         }
     }
 
+    private async Task ReloadCurrentBlock()
+    {
+        if(Block is not null)
+            Block = await BlocksApi.GetBlock(Block.Id);
+    }
+
     private List<BlockViewModel> SortData(TableState state, List<BlockViewModel> data)
     {
         data = state.SortLabel switch
@@ -71,8 +77,6 @@ public partial class TopicView : ComponentBase
 
         _lastRowClicked = clickRecord;
     }
-
-    
     
     private int _selectedRowNumber = -1;
     private string SelectedRowClassFunc(BlockViewModel block, int rowNumber)
@@ -133,6 +137,7 @@ public partial class TopicView : ComponentBase
         BlocksApi.UpdateBlock(blockViewModel);
     }
 
+    // Delete blocks
     private async Task OnDeleteClicked(EditButtonContext context)
     {
         var block = (BlockViewModel?)context.Item;
@@ -169,7 +174,7 @@ public partial class TopicView : ComponentBase
         await _blocksTable.ReloadServerData();
     }
 
-    // Add
+    // Add blocks
     private async Task OnAddNotebookClicked()
     {
         Snackbar.Add("Sorry! Adding Notebooks are not supported yet!", Severity.Error);
@@ -191,7 +196,7 @@ public partial class TopicView : ComponentBase
         };
         
         await BlocksApi.AddBlock(newTopic);
-        
+        await ReloadCurrentBlock();
         await _blocksTable.ReloadServerData();
     }
 }
