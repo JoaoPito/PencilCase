@@ -2,7 +2,13 @@
 
 <MudThemeProvider  @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" Theme="_customTheme" />
 <MudPopoverProvider/>
-<MudDialogProvider/>
+<MudDialogProvider
+    CloseButton="false"
+    BackdropClick="false"
+    MaxWidth="MaxWidth.ExtraLarge"
+    Position="DialogPosition.Center"
+    CloseOnEscapeKey="true"
+    BackgroundClass="dialog-backdrop"/>
 <MudSnackbarProvider/>
 
 <MudLayout>
@@ -13,7 +19,7 @@
         <MudSpacer/>    
         <MudToggleIconButton
             Icon="@Icons.Material.Rounded.DarkMode"
-            ToggledIcon="@Icons.Material.Filled.WbSunny"
+            ToggledIcon="@Icons.Material.Rounded.WbSunny"
             Color="Color.Inherit" 
             @bind-Toggled="@_isDarkMode"></MudToggleIconButton>
     </MudAppBar>
