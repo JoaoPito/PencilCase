@@ -58,9 +58,16 @@ public partial class TopicView : ComponentBase
     
     private async Task OnDoubleClicked(BlockViewModel block)
     {
-        Block = block;
-        await ReloadCurrentBlock();
-        await _blocksTable.ReloadServerData();
+        if (block.Type == BlockType.Topic || block.Type == BlockType.Cell)
+        {
+            Block = block;
+            await ReloadCurrentBlock();
+            await _blocksTable.ReloadServerData();
+        }
+        else
+        {
+            await RedirectToBlock.InvokeAsync(block);
+        }
     }
 
     private async Task RowClickEvent(TableRowClickEventArgs<BlockViewModel> tableRowClickEventArgs)
