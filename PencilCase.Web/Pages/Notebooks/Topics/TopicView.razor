@@ -79,11 +79,11 @@ else
     record RowClickRecord(DateTime ClickTimestamp, BlockViewModel? RowClicked);
     RowClickRecord? _lastRowClicked = null;
     
-    protected override async Task OnParametersSetAsync()
-    {
-        await _blocksTable.ReloadServerData();
-        await base.OnParametersSetAsync();
-    }
+    // protected override async Task OnParametersSetAsync()
+    // {
+    //     await base.OnParametersSetAsync();
+    //     await _blocksTable.ReloadServerData();
+    // }
 
     private async Task<TableData<BlockViewModel>> ServerReload(TableState state, CancellationToken token)
     {
