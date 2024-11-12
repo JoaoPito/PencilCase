@@ -21,40 +21,50 @@
             <MudTable ServerData="ServerReload" Hover="true" T="BlockViewModel" @ref="_blocksTable"
                       OnRowClick="RowClickEvent" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc"
                       SortLabel="Sort By" AllowUnsorted="false"
-                      EditTrigger="TableEditTrigger.EditButton" 
+                      EditTrigger="TableEditTrigger.EditButton"
                       ApplyButtonPosition="TableApplyButtonPosition.End" EditButtonPosition="TableEditButtonPosition.End"
                       CanCancelEdit="true" RowEditPreview="BackupItemBeforeEditing"
                       RowEditCancel="ResetRowToOriginalValues" RowEditCommit="OnRowEditCommit"
-                      Elevation="16" LoadingProgressColor="Color.Secondary" >
+                      Elevation="16" LoadingProgressColor="Color.Secondary">
+                
                 <ToolBarContent>
-                    <BlockIcon Block="Block" Size="Size.Large" />
-                    <MudText Typo="Typo.h3" Class="mx-4">@Block.Name</MudText>
-                    <MudText Typo="Typo.body2" Class="mx-4">@Block.ChildrenIds.Count() item(s)</MudText>
-                    <MudSpacer />
-                    <MudIconButton Icon="@Icons.Material.Rounded.CloudUpload" Size="Size.Medium"
-                                   OnClick="OnAddSourceClicked"></MudIconButton>
-                    <MudIconButton Icon="@Icons.Material.Rounded.NoteAdd" Size="Size.Medium"
-                                   OnClick="OnAddNotebookClicked"></MudIconButton>
-                    <MudIconButton Icon="@Icons.Material.Rounded.CreateNewFolder" Size="Size.Medium"
-                                   OnClick="OnAddTopicClicked"></MudIconButton>
+                    <MudIconButton Size="Size.Large" Icon="@Icons.Material.Rounded.ArrowBack"></MudIconButton>
+                    <MudStack Spacing="0" Justify="Justify.FlexStart" AlignItems="AlignItems.Start" Class="d-flex flex-row flex-grow-1 mx-4">
+                        <MudStack Spacing="1" Row="true" Justify="Justify.FlexStart" AlignItems="AlignItems.Center">
+                            <BlockIcon Block="Block" Size="Size.Large"/>
+                            <MudText Typo="Typo.h3" Class="mx-4">@Block.Name</MudText>
+                        </MudStack>
+                        <MudText Typo="Typo.body2" Class="mx-4">@Block.ChildrenIds.Count() item(s)</MudText>
+                    </MudStack>
+                    <MudStack Row="true" Spacing="1">
+                        <MudIconButton Icon="@Icons.Material.Rounded.CloudUpload" Size="Size.Medium"
+                                       OnClick="OnAddSourceClicked" aria-label="add-source"></MudIconButton>
+                        <MudIconButton Icon="@Icons.Material.Rounded.NoteAdd" Size="Size.Medium"
+                                       OnClick="OnAddNotebookClicked" aria-label="add-notebook"></MudIconButton>
+                        <MudIconButton Icon="@Icons.Material.Rounded.CreateNewFolder" Size="Size.Medium"
+                                       OnClick="OnAddTopicClicked" aria-label="add-topic"></MudIconButton>
+                    </MudStack>
                 </ToolBarContent>
+                
                 <HeaderContent>
                     <MudTh> </MudTh>
                     <MudTh><MudTableSortLabel SortLabel="name" T="BlockViewModel">Name</MudTableSortLabel></MudTh>
                     <MudTh><MudTableSortLabel SortLabel="type" T="BlockViewModel">Type</MudTableSortLabel></MudTh>
                     <MudTh><MudTableSortLabel SortLabel="modified-at" T="BlockViewModel" InitialDirection="SortDirection.Descending">Date</MudTableSortLabel></MudTh>
                 </HeaderContent>
+                
                 <RowTemplate>
                     <MudTd DataLabel=" " Style="text-align:center">
-                        <BlockIcon Block="context" Size="Size.Medium" />
+                        <BlockIcon Block="context" Size="Size.Medium"/>
                     </MudTd>
                     <MudTd DataLabel="Name"><MudText><b>@context.Name</b></MudText></MudTd>
                     <MudTd DataLabel="Type"><MudText Typo="Typo.body2">@context.Type</MudText></MudTd>
                     <MudTd DataLabel="Date"><MudText Typo="Typo.body2">@context.Properties.LastModified.ToLocalTime()</MudText></MudTd>
                 </RowTemplate>
+                
                 <RowEditingTemplate>
                     <MudTd DataLabel=" " Style="text-align:center">
-                        <BlockIcon Block="context" Size="Size.Medium" />
+                        <BlockIcon Block="context" Size="Size.Medium"/>
                     </MudTd>
                     <MudTd DataLabel="Name">
                         <MudTextField @bind-Value="context.Name" Required MaxLength="50"></MudTextField>
@@ -62,16 +72,19 @@
                     <MudTd DataLabel="Type"><MudText Typo="Typo.body2">@context.Type</MudText></MudTd>
                     <MudTd DataLabel="Date"><MudText Typo="Typo.body2">@context.Properties.LastModified.ToLocalTime()</MudText></MudTd>
                 </RowEditingTemplate>
+                
                 <EditButtonContent Context="button">
-                    <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Rounded.Edit" 
-                                   Class="pa-1" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
-                    <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Rounded.Delete" Color="Color.Error" 
-                                   Class="pa-1" OnClick="@(() => OnDeleteClicked(button))" Disabled="@button.ButtonDisabled" />
+                    <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Rounded.Edit"
+                                   Class="pa-1" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled"/>
+                    <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Rounded.Delete" Color="Color.Error"
+                                   Class="pa-1" OnClick="@(() => OnDeleteClicked(button))" Disabled="@button.ButtonDisabled"/>
                 </EditButtonContent>
+                
                 <NoRecordsContent>
                     <MudText Typo="Typo.h5" Class="pt-10">It's empty here...</MudText>
                     <MudText Typo="Typo.body1" Class="pb-10">You can add items using the buttons above.</MudText>
                 </NoRecordsContent>
+                
             </MudTable>
         </MudItem>
     </MudGrid>
