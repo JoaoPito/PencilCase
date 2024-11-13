@@ -16,6 +16,18 @@
 
 @if (Block is not null)
 {
+    <!-- Toolbar -->
+    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.FlexEnd"
+              Spacing="2"
+              Style="border: 2px red solid">
+        <MudIconButton Icon="@Icons.Material.Rounded.CloudUpload" Size="Size.Medium"
+                       OnClick="OnAddSourceClicked"></MudIconButton>
+        <MudIconButton Icon="@Icons.Material.Rounded.CreateNewFolder" Size="Size.Medium"
+                       OnClick="OnAddTopicClicked"></MudIconButton>
+        <MudIconButton Icon="@Icons.Material.Rounded.NoteAdd" Size="Size.Medium"
+                       OnClick="OnAddNotebookClicked"></MudIconButton>
+    </MudStack>
+    <!-- Table -->
     <MudTable Items="@_blockChildren" Hover="true" T="BlockViewModel" @ref="_blocksTable" Loading="@_isLoading"
               OnRowClick="RowClickEvent" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc"
               SortLabel="Sort By" AllowUnsorted="false"
