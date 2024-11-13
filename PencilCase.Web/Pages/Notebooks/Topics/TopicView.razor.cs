@@ -10,15 +10,12 @@ namespace PencilCase.Web.Pages.Notebooks.Topics;
 public partial class TopicView : ComponentBase
 {
     [CascadingParameter(Name = "block")] protected BlockViewModel? Block { get; set; }
+    [Parameter] public IBlocksApi BlocksApi { get; set; } = null!;
+    [Parameter] public Action<BlockViewModel> RedirectTo { get; set; } = null!;
     
     private IEnumerable<BlockViewModel> _blockChildren = new List<BlockViewModel>();
     
-    [Parameter] public IBlocksApi BlocksApi { get; set; } = null!;
-    
     private bool _isLoading = false;
-    
-    [Parameter] public Action<BlockViewModel> RedirectTo { get; set; }
-    
     private MudTable<BlockViewModel> _blocksTable = new();
     private BlockViewModel _rowBeforeEditing = new();
     private record RowClickRecord(DateTime ClickTimestamp, BlockViewModel? RowClicked);
@@ -26,7 +23,6 @@ public partial class TopicView : ComponentBase
 
     protected override async Task OnParametersSetAsync()
     {
-        Console.WriteLine("OnParametersSetAsync");
         await LoadChildren();
         StateHasChanged();
         await base.OnParametersSetAsync();
@@ -46,25 +42,6 @@ public partial class TopicView : ComponentBase
     {
         if(Block is not null)
             Block = await BlocksApi.GetBlock(Block.Id);
-    }
-
-    public async Task LoadDataFor(BlockViewModel block)
-    {
-        Block = block;
-        await ReloadCurrentBlock();
-        await _blocksTable.ReloadServerData();
-    }
-
-    private List<BlockViewModel> SortData(TableState state, List<BlockViewModel> data)
-    {
-        data = state.SortLabel switch
-        {
-            "name" => data.OrderByDirection(state.SortDirection, o => o.Name).ToList(),
-            "type" => data.OrderByDirection(state.SortDirection, o => o.Type).ToList(),
-            "modified-at" => data.OrderByDirection(state.SortDirection, o => o.Properties.LastModified).ToList(),
-            _ => data
-        };
-        return data;
     }
     
     // Navigation
