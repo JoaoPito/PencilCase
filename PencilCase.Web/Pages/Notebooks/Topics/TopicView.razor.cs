@@ -9,17 +9,19 @@ namespace PencilCase.Web.Pages.Notebooks.Topics;
 
 public partial class TopicView : ComponentBase
 {
-    private bool _isLoading = false;
+    [CascadingParameter(Name = "block")] protected BlockViewModel? Block { get; set; }
+    
     private IEnumerable<BlockViewModel> _blockChildren = new List<BlockViewModel>();
-    [Parameter] public BlockViewModel? Block { get; set; }
+    
     [Parameter] public IBlocksApi BlocksApi { get; set; } = null!;
-    [Parameter] public EventCallback<BlockViewModel> RedirectToBlock { get; set; }
+    
+    private bool _isLoading = false;
+    
+    [Parameter] public Action<BlockViewModel> RedirectTo { get; set; }
+    
     private MudTable<BlockViewModel> _blocksTable = new();
-
     private BlockViewModel _rowBeforeEditing = new();
-
     private record RowClickRecord(DateTime ClickTimestamp, BlockViewModel? RowClicked);
-
     private RowClickRecord? _lastRowClicked = null;
 
     public async Task<TableData<BlockViewModel>> ServerReload(TableState state, CancellationToken token)
@@ -43,6 +45,13 @@ public partial class TopicView : ComponentBase
     {
         if(Block is not null)
             Block = await BlocksApi.GetBlock(Block.Id);
+    }
+
+    public async Task LoadDataFor(BlockViewModel block)
+    {
+        Block = block;
+        await ReloadCurrentBlock();
+        await _blocksTable.ReloadServerData();
     }
 
     private List<BlockViewModel> SortData(TableState state, List<BlockViewModel> data)
@@ -70,6 +79,9 @@ public partial class TopicView : ComponentBase
     
     private async Task OnDoubleClicked(BlockViewModel block)
     {
+        RedirectTo(block);
+        
+        /*
         if (block.Type == BlockType.Topic || block.Type == BlockType.Source)
         {
             Block = block;
@@ -79,7 +91,7 @@ public partial class TopicView : ComponentBase
         else
         {
             await RedirectToBlock.InvokeAsync(block);
-        }
+        }*/
     }
 
     private async Task RowClickEvent(TableRowClickEventArgs<BlockViewModel> tableRowClickEventArgs)
@@ -201,6 +213,9 @@ public partial class TopicView : ComponentBase
     private async Task AddNewBlockAndReload(BlockViewModel block)
     {
         var createdBlock = await BlocksApi.AddBlock(block);
+        RedirectTo(createdBlock);
+        
+        /*
         if (block.Type == BlockType.Topic || block.Type == BlockType.Source)
         {
             await ReloadCurrentBlock();
@@ -210,7 +225,7 @@ public partial class TopicView : ComponentBase
         {
             await RedirectToBlock.InvokeAsync(createdBlock);
         }
-        
+        */
     }
     
     private async Task OnAddNotebookClicked()

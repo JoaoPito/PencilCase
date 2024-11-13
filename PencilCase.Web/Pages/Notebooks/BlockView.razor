@@ -24,26 +24,29 @@
                                     <BlockIcon Block="_block" Size="Size.Large"/>
                                     <MudText Typo="Typo.h3" Class="mx-4">@_block.Name</MudText>
                                 </MudStack>
-                                <MudText Typo="Typo.body2" Class="mx-4" Align="Align.Left" 
-                                         Class="px-0">@_block.ChildrenIds.Count() item(s)</MudText>
+                                <MudText Typo="Typo.body2" Align="Align.Left">
+                                    @_block.ChildrenIds.Count() item(s)
+                                </MudText>
                             </MudStack>
                         </MudStack>
                         
-                        @switch (_block.Type)
-                        {
-                            case BlockType.Topic:
-                                <TopicView Block="_block" BlocksApi=@BlocksApi RedirectToBlock="RedirectTo"/>
-                                break;
-                            case BlockType.Notebook:
-                                <MudText Typo="Typo.h5">Notebook placeholder</MudText>
-                                break;
-                            case BlockType.Cell:
-                                <MudText Typo="Typo.h5">Cell placeholder</MudText>
-                                break;
-                            default:
-                                <MudText Typo="Typo.h4">Ooops... Seems like something wrong happened :(</MudText>
-                                break;
-                        }
+                        <CascadingValue Value="@_block" Name="block">
+                            @switch (_block.Type)
+                            {
+                                case BlockType.Topic:
+                                    <TopicView BlocksApi=@BlocksApi RedirectTo="RedirectTo" />
+                                    break;
+                                case BlockType.Notebook:
+                                    <MudText Typo="Typo.h5">Notebook placeholder</MudText>
+                                    break;
+                                case BlockType.Cell:
+                                    <MudText Typo="Typo.h5">Cell placeholder</MudText>
+                                    break;
+                                default:
+                                    <MudText Typo="Typo.h4">Ooops... Seems like something wrong happened :(</MudText>
+                                    break;
+                            }
+                        </CascadingValue>
                     </MudStack>
                 }
             </MudPaper>
@@ -54,11 +57,12 @@
 @code {
     [Parameter] public string? BlockId { get; set; } = string.Empty;
     private BlockViewModel? _block;
-    
-    protected override async Task OnInitializedAsync()
+
+    protected override async Task OnParametersSetAsync()
     {
         await LoadBlock();
-        await base.OnInitializedAsync();
+        StateHasChanged();
+        await base.OnParametersSetAsync();
     }
 
     private async Task LoadBlock()
@@ -68,7 +72,8 @@
 
     private void RedirectTo(BlockViewModel block)
     {
-        NavigationManager.NavigateTo($"/block/{block.Id}", true);
+        _block = block;
+        NavigationManager.NavigateTo($"/block/{block.Id}", false);
         StateHasChanged();
     }
 }
