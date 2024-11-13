@@ -37,11 +37,11 @@
                         <MudText Typo="Typo.body2" Class="mx-4">@Block.ChildrenIds.Count() item(s)</MudText>
                     </MudStack>
                     <MudStack Row="true" Spacing="1">
-                        <MudIconButton Icon="@Icons.Material.Rounded.CloudUpload" Size="Size.Medium"
+                        <MudIconButton Icon="@Icons.Material.Rounded.CloudUpload" Size="Size.Medium" Disabled="@_isLoading"
                                        OnClick="OnAddSourceClicked" aria-label="add-source"></MudIconButton>
-                        <MudIconButton Icon="@Icons.Material.Rounded.NoteAdd" Size="Size.Medium"
+                        <MudIconButton Icon="@Icons.Material.Rounded.NoteAdd" Size="Size.Medium" Disabled="@_isLoading"
                                        OnClick="OnAddNotebookClicked" aria-label="add-notebook"></MudIconButton>
-                        <MudIconButton Icon="@Icons.Material.Rounded.CreateNewFolder" Size="Size.Medium"
+                        <MudIconButton Icon="@Icons.Material.Rounded.CreateNewFolder" Size="Size.Medium" Disabled="@_isLoading"
                                        OnClick="OnAddTopicClicked" aria-label="add-topic"></MudIconButton>
                     </MudStack>
                 </ToolBarContent>
@@ -75,9 +75,9 @@
                 
                 <EditButtonContent Context="button">
                     <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Rounded.Edit"
-                                   Class="pa-1" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled"/>
+                                   Class="pa-1" OnClick="@button.ButtonAction" Disabled="@(button.ButtonDisabled || _isLoading)"/>
                     <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Rounded.Delete" Color="Color.Error"
-                                   Class="pa-1" OnClick="@(() => OnDeleteClicked(button))" Disabled="@button.ButtonDisabled"/>
+                                   Class="pa-1" OnClick="@(() => OnDeleteClicked(button))" Disabled="@(button.ButtonDisabled || _isLoading)"/>
                 </EditButtonContent>
                 
                 <NoRecordsContent>

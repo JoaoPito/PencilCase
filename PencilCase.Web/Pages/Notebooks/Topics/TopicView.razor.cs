@@ -9,6 +9,7 @@ namespace PencilCase.Web.Pages.Notebooks.Topics;
 
 public partial class TopicView : ComponentBase
 {
+    private bool _isLoading = false;
     private IEnumerable<BlockViewModel> _blockChildren = new List<BlockViewModel>();
     [Parameter] public BlockViewModel? Block { get; set; }
     [Parameter] public IBlocksApi BlocksApi { get; set; } = null!;
@@ -202,6 +203,7 @@ public partial class TopicView : ComponentBase
     
     private async Task OnAddNotebookClicked()
     {
+        _isLoading = true;
         var newNotebook = new BlockViewModel()
         {
             Name = $"Untitled - {DateTime.Now.ToLocalTime():g}",
@@ -211,15 +213,19 @@ public partial class TopicView : ComponentBase
         };
 
         await AddNewBlockAndReload(newNotebook);
+        _isLoading = false;
     }
 
     private async Task OnAddSourceClicked()
     {
+        _isLoading = true;
         Snackbar.Add("Sorry! Adding Sources are not supported yet!", Severity.Error);
+        _isLoading = false;
     }
 
     private async Task OnAddTopicClicked()
     {
+        _isLoading = true;
         var newTopic = new BlockViewModel()
         {
             Name = $"Untitled - {DateTime.Now.ToLocalTime():g}",
@@ -229,5 +235,6 @@ public partial class TopicView : ComponentBase
         };
         
         await AddNewBlockAndReload(newTopic);
+        _isLoading = false;
     }
 }
