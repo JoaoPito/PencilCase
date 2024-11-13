@@ -16,16 +16,6 @@
 
 @if (Block is not null)
 {
-    <!-- Toolbar -->
-    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.FlexEnd"
-              Spacing="2">
-        <MudIconButton Icon="@Icons.Material.Rounded.CloudUpload" Size="Size.Medium"
-                       OnClick="OnAddSourceClicked"></MudIconButton>
-        <MudIconButton Icon="@Icons.Material.Rounded.CreateNewFolder" Size="Size.Medium"
-                       OnClick="OnAddTopicClicked"></MudIconButton>
-        <MudIconButton Icon="@Icons.Material.Rounded.NoteAdd" Size="Size.Medium"
-                       OnClick="OnAddNotebookClicked"></MudIconButton>
-    </MudStack>
     <!-- Table -->
     <MudTable Items="@_blockChildren" Hover="true" T="BlockViewModel" @ref="_blocksTable" Loading="@_isLoading"
               OnRowClick="RowClickEvent" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc"
@@ -113,6 +103,30 @@
         </NoRecordsContent>
 
     </MudTable>
+    
+    <!-- Floating button -->
+    <div class="floating-button">
+        <MudMenu>
+            <ActivatorContent>
+                <MudFab Color="Color.Secondary" Size="Size.Large" 
+                        StartIcon="@Icons.Material.Rounded.Add" Class="floating-button"/>
+            </ActivatorContent>
+            <ChildContent>
+                <MudMenuItem OnClick="OnAddTopicClicked" 
+                             Icon="@Icons.Material.Rounded.CreateNewFolder" IconSize="Size.Medium">
+                    Add new <b>Topic</b>
+                </MudMenuItem>
+            <MudMenuItem OnClick="OnAddNotebookClicked" 
+                             Icon="@Icons.Material.Rounded.NoteAdd" IconSize="Size.Medium">
+                    Add new <b>Notebook</b>
+                </MudMenuItem>
+            <MudMenuItem OnClick="OnAddSourceClicked" 
+                             Icon="@Icons.Material.Rounded.CloudUpload" IconSize="Size.Medium">
+                    Upload <b>Source</b>
+                </MudMenuItem>
+            </ChildContent>
+        </MudMenu>
+    </div>
 }
 else
 {
