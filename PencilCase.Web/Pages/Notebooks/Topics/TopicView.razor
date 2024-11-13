@@ -28,13 +28,23 @@
         <HeaderContent>
             <MudTh> </MudTh>
             <MudTh>
-                <MudTableSortLabel SortLabel="name" T="BlockViewModel">Name</MudTableSortLabel>
+                <MudTableSortLabel SortBy="new Func<BlockViewModel, object>(x => x.Name)"
+                                   T="BlockViewModel">
+                    Name
+                </MudTableSortLabel>
             </MudTh>
             <MudTh>
-                <MudTableSortLabel SortLabel="type" T="BlockViewModel">Type</MudTableSortLabel>
+                <MudTableSortLabel SortBy="new Func<BlockViewModel, object>(x => x.Type)"
+                                   T="BlockViewModel">
+                    Type
+                </MudTableSortLabel>
             </MudTh>
             <MudTh>
-                <MudTableSortLabel SortLabel="modified-at" T="BlockViewModel" InitialDirection="SortDirection.Descending">Date</MudTableSortLabel>
+                <MudTableSortLabel SortBy="new Func<BlockViewModel, object>(x => x.Properties.LastModified)"
+                                   T="BlockViewModel"
+                                   InitialDirection="SortDirection.Descending">
+                    Date
+                </MudTableSortLabel>
             </MudTh>
         </HeaderContent>
 
