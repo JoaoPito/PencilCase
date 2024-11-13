@@ -36,6 +36,13 @@
               RowEditCancel="ResetRowToOriginalValues" RowEditCommit="OnRowEditCommit"
               Elevation="0" LoadingProgressColor="Color.Secondary">
 
+        <ColGroup>
+            <col style="width: 60px;" />
+            <col style="width: 60%;" />
+            <col style="width: 10%;" />
+            <col style="width: 10%;" />
+        </ColGroup>
+        
         <HeaderContent>
             <MudTh> </MudTh>
             <MudTh>
@@ -99,8 +106,10 @@
         </EditButtonContent>
 
         <NoRecordsContent>
-            <MudText Typo="Typo.h5" Class="pt-10">It's empty here...</MudText>
-            <MudText Typo="Typo.body1" Class="pb-10">You can add items using the buttons above.</MudText>
+            <MudStack Row="true" Wrap="Wrap.NoWrap" AlignItems="AlignItems.End">
+                <MudText Typo="Typo.h5" Class="pt-10">It's empty here...</MudText>
+                <MudText Typo="Typo.body1" Class="pb-10">You can add items using the buttons above.</MudText>
+            </MudStack>
         </NoRecordsContent>
 
     </MudTable>

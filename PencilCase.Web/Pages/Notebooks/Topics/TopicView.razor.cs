@@ -203,7 +203,7 @@ public partial class TopicView : ComponentBase
     private async Task OnAddSourceClicked()
     {
         _isLoading = true;
-        Snackbar.Add("Sorry! Adding Sources are not supported yet!", Severity.Error);
+        Snackbar.Add("Sorry! Adding Sources is not supported yet!", Severity.Error);
         _isLoading = false;
     }
 
