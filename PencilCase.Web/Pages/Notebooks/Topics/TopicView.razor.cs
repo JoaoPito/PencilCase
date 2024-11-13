@@ -26,9 +26,8 @@ public partial class TopicView : ComponentBase
     {
         if (_oldBlock != Block || _oldBlock == null)
         {
-            await LoadChildren();
+            await ReloadContent();
             _oldBlock = Block;
-            StateHasChanged();
         }
         await base.OnParametersSetAsync();
     }
@@ -43,10 +42,10 @@ public partial class TopicView : ComponentBase
         _isLoading = false;
     }
 
-    private async Task ReloadCurrentBlock()
+    private async Task ReloadContent()
     {
-        if(Block is not null)
-            Block = await BlocksApi.GetBlock(Block.Id);
+        await LoadChildren();
+        StateHasChanged();
     }
     
     // Navigation
@@ -167,8 +166,7 @@ public partial class TopicView : ComponentBase
         Block!.ChildrenIds = childrenList;
         
         await BlocksApi.DeleteBlock(id);
-        await LoadChildren();
-        StateHasChanged();
+        await ReloadContent();
     }
 
     // Add blocks
@@ -178,7 +176,7 @@ public partial class TopicView : ComponentBase
         
         if (block.Type == BlockType.Topic || block.Type == BlockType.Source)
         {
-            await ReloadCurrentBlock();
+            await ReloadContent();
         }
         else if(createdBlock is not null)
         {
