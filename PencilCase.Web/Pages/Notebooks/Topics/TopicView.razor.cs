@@ -24,9 +24,9 @@ public partial class TopicView : ComponentBase
 
     protected override async Task OnParametersSetAsync()
     {
-        if (_oldBlock != Block || _oldBlock == null)
+        if (_oldBlock != Block)
         {
-            await ReloadContent();
+            await LoadChildren();
             _oldBlock = Block;
         }
         await base.OnParametersSetAsync();

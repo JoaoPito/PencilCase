@@ -60,8 +60,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        await LoadBlock();
-        StateHasChanged();
+        if(_block is null) await LoadBlock();
         await base.OnParametersSetAsync();
     }
 
@@ -74,7 +73,6 @@
     {
         _block = block;
         NavigationManager.NavigateTo($"/block/{block.Id}", false);
-        StateHasChanged();
     }
     
     private async Task OnBackPageClick()
