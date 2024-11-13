@@ -10,6 +10,7 @@ namespace PencilCase.Web.Pages.Notebooks.Topics;
 public partial class TopicView : ComponentBase
 {
     [CascadingParameter(Name = "block")] protected BlockViewModel? Block { get; set; }
+    private BlockViewModel? _oldBlock;
     [Parameter] public IBlocksApi BlocksApi { get; set; } = null!;
     [Parameter] public Action<BlockViewModel> RedirectTo { get; set; } = null!;
     
@@ -23,8 +24,12 @@ public partial class TopicView : ComponentBase
 
     protected override async Task OnParametersSetAsync()
     {
-        await LoadChildren();
-        StateHasChanged();
+        if (_oldBlock != Block || _oldBlock == null)
+        {
+            await LoadChildren();
+            _oldBlock = Block;
+            StateHasChanged();
+        }
         await base.OnParametersSetAsync();
     }
 
@@ -179,7 +184,6 @@ public partial class TopicView : ComponentBase
         {
             RedirectTo(createdBlock);
         }
-        
     }
     
     private async Task OnAddNotebookClicked()
