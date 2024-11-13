@@ -46,15 +46,6 @@ public partial class TopicView : ComponentBase
     
     // Navigation
     
-    private async Task OnBackPageClick()
-    {
-        if (Block is not null && Block.ParentId is not null)
-        {
-            Block = await BlocksApi.GetBlock((Guid)Block.ParentId!);
-            await _blocksTable.ReloadServerData();
-        }
-    }
-    
     private async Task OnDoubleClicked(BlockViewModel block)
     {
         RedirectTo(block);

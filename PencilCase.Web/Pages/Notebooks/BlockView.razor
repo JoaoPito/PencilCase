@@ -16,7 +16,7 @@
                     <MudStack>
                         <MudStack Row="true" StretchItems="StretchItems.None" Justify="Justify.Center" AlignItems="AlignItems.Center">
                             <MudIconButton Size="Size.Large" Icon="@Icons.Material.Rounded.ArrowBack"
-                                           Disabled="@(_block.ParentId is null)">
+                                           OnClick="OnBackPageClick" Disabled="@(_block.ParentId is null)">
                             </MudIconButton>
                             <MudStack Spacing="1" AlignItems="AlignItems.Start" Class="d-flex flex-row flex-grow-1 mx-4" 
                                       StretchItems="StretchItems.None">
@@ -75,5 +75,15 @@
         _block = block;
         NavigationManager.NavigateTo($"/block/{block.Id}", false);
         StateHasChanged();
+    }
+    
+    private async Task OnBackPageClick()
+    {
+        if (_block?.ParentId != null)
+        {
+            var parentBlock = await BlocksApi.GetBlock((Guid)_block.ParentId!);
+            if(parentBlock is not null) RedirectTo(parentBlock);
+        }
+        
     }
 }
