@@ -24,6 +24,14 @@ public partial class TopicView : ComponentBase
     private record RowClickRecord(DateTime ClickTimestamp, BlockViewModel? RowClicked);
     private RowClickRecord? _lastRowClicked = null;
 
+    protected override async Task OnParametersSetAsync()
+    {
+        Console.WriteLine("OnParametersSetAsync");
+        await LoadChildren();
+        StateHasChanged();
+        await base.OnParametersSetAsync();
+    }
+
     public async Task<TableData<BlockViewModel>> ServerReload(TableState state, CancellationToken token)
     {
         await LoadChildren();
@@ -80,18 +88,6 @@ public partial class TopicView : ComponentBase
     private async Task OnDoubleClicked(BlockViewModel block)
     {
         RedirectTo(block);
-        
-        /*
-        if (block.Type == BlockType.Topic || block.Type == BlockType.Source)
-        {
-            Block = block;
-            await ReloadCurrentBlock();
-            await _blocksTable.ReloadServerData();
-        }
-        else
-        {
-            await RedirectToBlock.InvokeAsync(block);
-        }*/
     }
 
     private async Task RowClickEvent(TableRowClickEventArgs<BlockViewModel> tableRowClickEventArgs)
@@ -213,19 +209,16 @@ public partial class TopicView : ComponentBase
     private async Task AddNewBlockAndReload(BlockViewModel block)
     {
         var createdBlock = await BlocksApi.AddBlock(block);
-        RedirectTo(createdBlock);
         
-        /*
         if (block.Type == BlockType.Topic || block.Type == BlockType.Source)
         {
             await ReloadCurrentBlock();
-            await _blocksTable.ReloadServerData();
         }
-        else
+        else if(createdBlock is not null)
         {
-            await RedirectToBlock.InvokeAsync(createdBlock);
+            RedirectTo(createdBlock);
         }
-        */
+        
     }
     
     private async Task OnAddNotebookClicked()
