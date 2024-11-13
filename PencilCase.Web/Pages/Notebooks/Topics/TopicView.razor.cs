@@ -171,8 +171,8 @@ public partial class TopicView : ComponentBase
         Block!.ChildrenIds = childrenList;
         
         await BlocksApi.DeleteBlock(id);
-        
-        await _blocksTable.ReloadServerData();
+        await LoadChildren();
+        StateHasChanged();
     }
 
     // Add blocks
