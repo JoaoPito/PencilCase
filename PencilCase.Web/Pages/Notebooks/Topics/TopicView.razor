@@ -61,9 +61,10 @@
                 <BlockIcon Block="context" Size="Size.Medium"/>
             </MudTd>
             <MudTd DataLabel="Name">
-                <MudText>
+                <MudText Typo="Typo.h6">
                     <b>@context.Name</b>
                 </MudText>
+                <MudText Typo="Typo.subtitle2">@(context.ChildrenIds.Count()) item(s)</MudText>
             </MudTd>
             <MudTd DataLabel="Type">
                 <MudText Typo="Typo.body2">@context.Type</MudText>
