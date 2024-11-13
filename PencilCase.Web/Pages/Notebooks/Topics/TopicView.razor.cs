@@ -21,7 +21,7 @@ public partial class TopicView : ComponentBase
     private record RowClickRecord(DateTime ClickTimestamp, BlockViewModel? RowClicked);
 
     private RowClickRecord? _lastRowClicked = null;
-    
+
     public async Task<TableData<BlockViewModel>> ServerReload(TableState state, CancellationToken token)
     {
         await LoadChildren();
@@ -57,6 +57,18 @@ public partial class TopicView : ComponentBase
         return data;
     }
     
+    // Navigation
+    
+    private async Task OnBackPageClick()
+    {
+        if (Block is not null && Block.ParentId is not null)
+        {
+            Block = await BlocksApi.GetBlock((Guid)Block.ParentId!);
+            await _blocksTable.ReloadServerData();
+        }
+    }
+    
+    
     private async Task OnDoubleClicked(BlockViewModel block)
     {
         if (block.Type == BlockType.Topic || block.Type == BlockType.Source)
@@ -89,6 +101,7 @@ public partial class TopicView : ComponentBase
     }
     
     private int _selectedRowNumber = -1;
+
     private string SelectedRowClassFunc(BlockViewModel block, int rowNumber)
     {
         if (_selectedRowNumber == rowNumber)

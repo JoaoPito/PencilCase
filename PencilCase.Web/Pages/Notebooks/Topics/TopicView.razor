@@ -28,7 +28,8 @@
                       Elevation="16" LoadingProgressColor="Color.Secondary">
                 
                 <ToolBarContent>
-                    <MudIconButton Size="Size.Large" Icon="@Icons.Material.Rounded.ArrowBack"></MudIconButton>
+                    <MudIconButton Size="Size.Large" Icon="@Icons.Material.Rounded.ArrowBack" 
+                                   OnClick="OnBackPageClick" Disabled="@(Block.ParentId is null)" ></MudIconButton>
                     <MudStack Spacing="0" Justify="Justify.FlexStart" AlignItems="AlignItems.Start" Class="d-flex flex-row flex-grow-1 mx-4">
                         <MudStack Spacing="1" Row="true" Justify="Justify.FlexStart" AlignItems="AlignItems.Center">
                             <BlockIcon Block="Block" Size="Size.Large"/>
