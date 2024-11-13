@@ -2,3 +2,9 @@
     background-image: radial-gradient(#444 1px, transparent 1px);
     background-size: 25px 25px;
 }
+
+.floating-button {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+}
