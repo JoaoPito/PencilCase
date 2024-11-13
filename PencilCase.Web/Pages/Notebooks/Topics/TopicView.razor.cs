@@ -174,9 +174,10 @@ public partial class TopicView : ComponentBase
     {
         var createdBlock = await BlocksApi.AddBlock(block);
         
-        if (block.Type == BlockType.Topic || block.Type == BlockType.Source)
+        
+        if (block.Type is BlockType.Topic or BlockType.Source)
         {
-            await ReloadContent();
+            _blockChildren = _blockChildren.Append(createdBlock);
         }
         else if(createdBlock is not null)
         {
