@@ -6,25 +6,49 @@
 @inject NavigationManager NavigationManager
 
 <PageTitle>@((_block == null) ? "pencilcase" : _block.Name)</PageTitle>
-<div class="pa-4">
-    @if (_block is not null)
-    {
-        @switch (_block.Type)
-        {
-            case BlockType.Topic:
-                <TopicView Block="_block" BlocksApi=@BlocksApi RedirectToBlock="RedirectTo"/>
-                break;
-            case BlockType.Notebook:
-                <MudText Typo="Typo.h5">Notebook placeholder</MudText>
-                break;
-            case BlockType.Cell:
-                <MudText Typo="Typo.h5">Cell placeholder</MudText>
-                break;
-            default:
-                <MudText Typo="Typo.h4">Ooops... Seems like something wrong happened :(</MudText>
-                break;
-        }
-    }
+
+<div>
+    <MudGrid Justify="Justify.Center" Class="my-4">
+        <MudItem md="10" xs="12">
+            <MudPaper Elevation="16" Class="pa-4">
+                @if (_block is not null)
+                {
+                    <MudStack>
+                        <MudStack Row="true" StretchItems="StretchItems.None" Justify="Justify.Center" AlignItems="AlignItems.Center">
+                            <MudIconButton Size="Size.Large" Icon="@Icons.Material.Rounded.ArrowBack"
+                                           Disabled="@(_block.ParentId is null)">
+                            </MudIconButton>
+                            <MudStack Spacing="1" AlignItems="AlignItems.Start" Class="d-flex flex-row flex-grow-1 mx-4" 
+                                      StretchItems="StretchItems.None">
+                                <MudStack Spacing="1" Row="true" Justify="Justify.FlexStart" AlignItems="AlignItems.Center">
+                                    <BlockIcon Block="_block" Size="Size.Large"/>
+                                    <MudText Typo="Typo.h3" Class="mx-4">@_block.Name</MudText>
+                                </MudStack>
+                                <MudText Typo="Typo.body2" Class="mx-4" Align="Align.Left" 
+                                         Class="px-0">@_block.ChildrenIds.Count() item(s)</MudText>
+                            </MudStack>
+                        </MudStack>
+                        
+                        @switch (_block.Type)
+                        {
+                            case BlockType.Topic:
+                                <TopicView Block="_block" BlocksApi=@BlocksApi RedirectToBlock="RedirectTo"/>
+                                break;
+                            case BlockType.Notebook:
+                                <MudText Typo="Typo.h5">Notebook placeholder</MudText>
+                                break;
+                            case BlockType.Cell:
+                                <MudText Typo="Typo.h5">Cell placeholder</MudText>
+                                break;
+                            default:
+                                <MudText Typo="Typo.h4">Ooops... Seems like something wrong happened :(</MudText>
+                                break;
+                        }
+                    </MudStack>
+                }
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
 </div>
 
 @code {

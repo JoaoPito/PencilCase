@@ -68,7 +68,6 @@ public partial class TopicView : ComponentBase
         }
     }
     
-    
     private async Task OnDoubleClicked(BlockViewModel block)
     {
         if (block.Type == BlockType.Topic || block.Type == BlockType.Source)
