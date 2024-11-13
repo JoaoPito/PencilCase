@@ -43,10 +43,12 @@ public partial class TopicView : ComponentBase
 
     private async Task LoadChildren()
     {
+        _isLoading = true;
         if (Block is not null)
         {
             _blockChildren = await BlocksApi.LoadAllAsync(Block.ChildrenIds);
         }
+        _isLoading = false;
     }
 
     private async Task ReloadCurrentBlock()

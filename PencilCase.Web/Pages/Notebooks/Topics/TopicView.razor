@@ -16,7 +16,7 @@
 
 @if (Block is not null)
 {
-    <MudTable Items="@_blockChildren" Hover="true" T="BlockViewModel" @ref="_blocksTable"
+    <MudTable Items="@_blockChildren" Hover="true" T="BlockViewModel" @ref="_blocksTable" Loading="@_isLoading"
               OnRowClick="RowClickEvent" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc"
               SortLabel="Sort By" AllowUnsorted="false"
               EditTrigger="TableEditTrigger.EditButton"
