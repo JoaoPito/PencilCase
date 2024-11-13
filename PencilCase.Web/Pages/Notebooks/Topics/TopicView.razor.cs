@@ -32,15 +32,6 @@ public partial class TopicView : ComponentBase
         await base.OnParametersSetAsync();
     }
 
-    public async Task<TableData<BlockViewModel>> ServerReload(TableState state, CancellationToken token)
-    {
-        await LoadChildren();
-        var blockViewModels = _blockChildren.ToList();
-        var totalItems = blockViewModels.Count();
-        blockViewModels = SortData(state, blockViewModels);
-        return new TableData<BlockViewModel>() { TotalItems = totalItems, Items = blockViewModels };
-    }
-
     private async Task LoadChildren()
     {
         _isLoading = true;
