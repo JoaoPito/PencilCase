@@ -2,6 +2,7 @@
 @using PencilCase.Shared.Models.Notebooks
 @using PencilCase.Web.Pages.Notebooks.Models
 @using PencilCase.Web.Pages.Notebooks.Topics
+@using PencilCase.Web.Pages.Notebooks.Notebooks
 @inject IBlocksApi BlocksApi
 @inject NavigationManager NavigationManager
 
@@ -37,7 +38,7 @@
                                     <TopicView BlocksApi=@BlocksApi RedirectTo="RedirectTo" />
                                     break;
                                 case BlockType.Notebook:
-                                    <MudText Typo="Typo.h5">Notebook placeholder</MudText>
+                                    <NotebookView BlocksApi=@BlocksApi />
                                     break;
                                 case BlockType.Cell:
                                     <MudText Typo="Typo.h5">Cell placeholder</MudText>
