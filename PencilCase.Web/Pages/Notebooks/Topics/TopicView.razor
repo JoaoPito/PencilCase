@@ -98,8 +98,16 @@
 
         <NoRecordsContent>
             <MudStack>
-                <MudText Typo="Typo.h5" Class="pt-10">It's empty here...</MudText>
-                <MudText Typo="Typo.body1" Class="pb-10">Start adding items using the button below.</MudText>
+                <MudText Typo="Typo.h3" Class="pt-10">It's empty here...</MudText>
+                <MudText Typo="Typo.h6">You can add a knowledge source or a new notebook and start exploring!</MudText>
+                <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center" Spacing="6" Class="ma-4 pb-10">
+                    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Rounded.CloudUpload" OnClick="OnAddSourceClicked">
+                        Upload a source
+                    </MudButton>
+                    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Rounded.NoteAdd" OnClick="OnAddNotebookClicked">
+                        Add a notebook
+                    </MudButton>
+                </MudStack>
             </MudStack>
         </NoRecordsContent>
 
