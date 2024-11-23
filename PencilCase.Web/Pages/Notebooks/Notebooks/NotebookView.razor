@@ -32,6 +32,6 @@
     protected override async Task OnInitializedAsync()
     {
         if(Block is not null)
-            _children = await BlocksApi.LoadAllAsync(Block.ChildrenIds);
+            _children = await BlocksApi.GetChildren(Block.Id);
     }
 }
