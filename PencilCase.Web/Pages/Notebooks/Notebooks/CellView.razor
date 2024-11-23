@@ -1,4 +1,5 @@
 @using MudBlazor.Extensions
+@using PencilCase.Shared.Models.Notebooks
 @using PencilCase.Web.Pages.Notebooks.Models
 
 <MudCard Outlined="false" Elevation="4">
@@ -13,7 +14,7 @@
                           OnKeyDown="OnKeyDown" @ref="_inputTextField"
                           DebounceInterval="2500" MaxLength="250" Disabled="@_isLoading"
                           Typo="Typo.h6" Variant="Variant.Outlined" 
-                          ValueChanged="OnInputValueChanged" Value="@Block.Name">
+                          ValueChanged="OnInputValueChanged" Value="@Block!.Name">
             </MudTextField>
         </CardHeaderContent>
         <CardHeaderActions>
@@ -43,7 +44,7 @@
     <MudCardActions>
         <MudIconButton Icon="@Icons.Material.Rounded.ArrowBack"></MudIconButton>
         <MudIconButton Icon="@Icons.Material.Rounded.ArrowForward"></MudIconButton>
-        <MudIconButton Icon="@Icons.Material.Rounded.Delete"></MudIconButton>
+        <MudIconButton Icon="@Icons.Material.Rounded.Delete" Color="Color.Error"></MudIconButton>
     </MudCardActions>
 </MudCard>
 
@@ -89,14 +90,22 @@
     
     async Task GenerateOutputIfPossible()
     {
-        _isLoading = true;
-        StateHasChanged();
+        if (IsGenerator())
+        {
+            _isLoading = true;
+            StateHasChanged();
         
-        Console.WriteLine($"Generating output...");
-        await Task.Delay(1500);
+            Console.WriteLine($"Generating output...");
+            await Task.Delay(1500);
         
-        _isLoading = false;
-        StateHasChanged();
+            _isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    bool IsGenerator()
+    {
+        return Block?.Properties.CellType is CellType.Question;
     }
 
     async Task UpdateChangesTo(BlockViewModel block)
