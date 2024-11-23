@@ -18,4 +18,5 @@ public class BlockPropertiesViewModel
     public int Order { get; set; }
     public DateTime CreatedOn { get; set; }
     public DateTime LastModified { get; set; }
+    public CellType CellType { get; set; }
 }

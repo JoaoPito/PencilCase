@@ -31,6 +31,7 @@ public class BlockMapper
             CreatedOn = response.CreatedOn,
             LastModified = response.LastModified,
             Order = response.Order,
+            CellType = response.CellType
         };
     }
 
@@ -52,7 +53,8 @@ public class BlockMapper
     {
         return new BlockPropertiesRequest(
             LastModified: properties.LastModified,
-            Order: properties.Order
+            Order: properties.Order,
+            CellType: properties.CellType
         );
     }
 
