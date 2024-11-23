@@ -56,8 +56,17 @@
     [Parameter] public IBlocksApi BlocksApi { get; set; } = null!;
     [Parameter] public EventCallback? OnNewCellShortcut { get; set; }
 
+    IEnumerable<BlockViewModel> _loadedChildren = new List<BlockViewModel>();
+    BlockViewModel? _shownChild;
+
     MudTextField<string> _inputTextField = null!;
-    
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadChildren();
+        await base.OnInitializedAsync();
+    }
+
     async Task OnInputValueChanged(string newValue)
     {
         if (Block is not null)
@@ -86,6 +95,17 @@
     {
         await _inputTextField.BlurAsync();
         await GenerateOutputIfPossible();
+    }
+
+    async Task LoadChildren()
+    {
+        if (Block is not null && Block.ChildrenIds.Any())
+        {
+            _loadedChildren = await BlocksApi.LoadAllAsync(Block.ChildrenIds);
+            _shownChild = _loadedChildren
+                .OrderBy(c => c.Properties.Order)
+                .First();
+        }
     }
     
     async Task GenerateOutputIfPossible()
