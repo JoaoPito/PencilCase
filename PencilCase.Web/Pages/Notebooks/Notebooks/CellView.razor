@@ -1,4 +1,39 @@
 
+<MudCard Outlined="false" Elevation="4">
+    <MudCardHeader Class="mud-background-gray">
+        <CardHeaderAvatar>
+            <MudStack Justify="Justify.FlexStart">
+                <MudIcon Icon="@Icons.Material.Rounded.QuestionAnswer" Size="Size.Large"></MudIcon>
+            </MudStack>
+        </CardHeaderAvatar>
+        <CardHeaderContent>
+            <MudTextField T="string" Text="What is ASCII?" Class="ma-0"
+                          AutoGrow="true" Margin="Margin.Dense"
+                          Typo="Typo.h6" Variant="Variant.Outlined"></MudTextField>
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <MudFab StartIcon="@Icons.Material.Rounded.PlayArrow" Size="Size.Large"
+                    Color="Color.Secondary"
+                    Class="ma-4">
+            </MudFab>
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudStack Spacing="4">
+            <MudPaper Height="150" Outlined="false" Elevation="0" Class="pa-4">
+                <MudText>ASCII, short for American Standard Code for Information Interchange, is a character encoding standard used to represent text in computers and other devices that handle text.
+                    <br/>
+                    It was developed in the 1960s and became widely adopted as a standard for communication between different systems.</MudText>
+            </MudPaper>
+        </MudStack>
+    </MudCardContent>
+    <MudCardActions>
+        <MudIconButton Icon="@Icons.Material.Rounded.ArrowBack"></MudIconButton>
+        <MudIconButton Icon="@Icons.Material.Rounded.ArrowForward"></MudIconButton>
+        <MudIconButton Icon="@Icons.Material.Rounded.Delete"></MudIconButton>
+    </MudCardActions>
+</MudCard>
+
 @code {
     
 }
