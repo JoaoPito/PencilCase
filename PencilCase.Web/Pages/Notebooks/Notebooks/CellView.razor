@@ -40,20 +40,26 @@
     bool _isLoading = false;
     bool _hasChildren = false;
     
+    [Parameter] public BlockViewModel? Block { get; set; }
+    [Parameter] public IBlocksApi BlocksApi { get; set; } = null!;
     [Parameter] public EventCallback? OnNewCellShortcut { get; set; }
 
     MudTextField<string> _inputTextField = null!;
     string _inputValue = String.Empty;
     private string InputValue
     {
-        get => _inputValue;
+        get => (Block is null) ? String.Empty : Block.Name;
         set => OnInputValueChanged(value);
     }
     
-    void OnInputValueChanged(string value)
+    async Task OnInputValueChanged(string value)
     {
         _inputValue = value;
-        Console.WriteLine($"input: {_inputValue}");
+        if (Block is not null)
+        {
+            Block.Name = _inputValue;
+            await UpdateChangesTo(Block);
+        }
     }
 
     async Task OnKeyDown(KeyboardEventArgs args)
@@ -76,4 +82,8 @@
         Console.WriteLine($"Generating output...");
     }
 
+    async Task UpdateChangesTo(BlockViewModel block)
+    {
+        await BlocksApi.UpdateBlock(block);
+    }
 }
