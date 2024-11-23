@@ -33,13 +33,20 @@
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
-        <MudStack Spacing="4">
+        @if (_shownChild is not null && !_isLoading)
+        {
             <MudPaper Height="150" Outlined="false" Elevation="0" Class="pa-4">
-                <MudText>ASCII, short for American Standard Code for Information Interchange, is a character encoding standard used to represent text in computers and other devices that handle text.
-                    <br/>
-                    It was developed in the 1960s and became widely adopted as a standard for communication between different systems.</MudText>
+                <MudText>@_shownChild.Name</MudText>
             </MudPaper>
-        </MudStack>
+        }
+        else if (_isLoading)
+        {
+            <MudStack Spacing="1" StretchItems="StretchItems.None">
+                <MudSkeleton Width="20%" Animation="Animation.Wave" />
+                <MudSkeleton Width="100%" Animation="Animation.Wave" />
+                <MudSkeleton Width="60%" Animation="Animation.Wave" />
+            </MudStack>
+        }
     </MudCardContent>
     <MudCardActions>
         <MudIconButton Icon="@Icons.Material.Rounded.ArrowBack"></MudIconButton>
@@ -50,7 +57,6 @@
 
 @code {
     bool _isLoading = false;
-    bool _hasChildren = false;
     
     [Parameter] public BlockViewModel? Block { get; set; }
     [Parameter] public IBlocksApi BlocksApi { get; set; } = null!;
@@ -114,9 +120,21 @@
         {
             _isLoading = true;
             StateHasChanged();
-        
-            Console.WriteLine($"Generating output...");
-            await Task.Delay(1500);
+
+            var exampleGeneration = new BlockViewModel()
+            {
+                Id = new Guid(),
+                Name = "ASCII, short for American Standard Code for Information Interchange, is a character encoding standard used to represent text in computers and other devices that handle text.\nIt was developed in the 1960s and became widely adopted as a standard for communication between different systems.",
+                ParentId = Guid.Parse("808d779b-c6a5-4a8b-aa4d-ea1b4a7f6ae1"),
+                Properties = new BlockPropertiesViewModel()
+                {
+                    CellType = CellType.Text,
+                    Order = 0
+                }
+            };
+            Block!.ChildrenIds = Block!.ChildrenIds.Append(exampleGeneration.Id);
+            _shownChild = exampleGeneration;
+            await Task.Delay(2000);
         
             _isLoading = false;
             StateHasChanged();
