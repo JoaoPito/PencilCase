@@ -38,6 +38,22 @@ public static class BlocksExtensions
             Description = "Returns information about selected block using its ID."
         });
 
+        group.MapGet("{id}/children", (Guid id, [FromServices] DAL<Block> dal) =>
+            {
+                var blockList = dal.GetAllBy(b => b.ParentId == id).ToList();
+                if(!blockList.Any())
+                    return Results.NotFound();
+                
+                return Results.Ok(MapEntityListToResponseList(blockList));
+
+            })
+        .WithName("GetAllChildren")
+        .WithOpenApi(x => new OpenApiOperation(x)
+        {
+            Summary = "Get all children of Parent",
+            Description = "Given the parent's Id, returns information about every children of it."
+        });
+
         group.MapPost("", async ([FromServices] DAL<Block> dal, [FromBody] BlockPostRequest request) => 
         {
             var newBlock = new Block();
