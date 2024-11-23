@@ -37,7 +37,7 @@ public partial class TopicView : ComponentBase
         _isLoading = true;
         if (Block is not null)
         {
-            _blockChildren = await BlocksApi.LoadAllAsync(Block.ChildrenIds);
+            _blockChildren = await BlocksApi.GetChildren(Block.Id);
         }
         _isLoading = false;
     }
