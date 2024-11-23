@@ -7,9 +7,11 @@
             </MudStack>
         </CardHeaderAvatar>
         <CardHeaderContent>
-            <MudTextField T="string" Text="What is ASCII?" Class="ma-0"
-                          AutoGrow="true" Margin="Margin.Dense"
-                          Typo="Typo.h6" Variant="Variant.Outlined"></MudTextField>
+            <MudTextField T="string" Class="ma-0" AutoGrow="true" Margin="Margin.Dense"
+                          @bind-Value="InputValue" OnKeyDown="OnKeyDown" @ref="_inputTextField"
+                          DebounceInterval="2500" MaxLength="250"
+                          Typo="Typo.h6" Variant="Variant.Outlined">
+            </MudTextField>
         </CardHeaderContent>
         <CardHeaderActions>
             <MudFab StartIcon="@Icons.Material.Rounded.PlayArrow" Size="Size.Large"
@@ -35,5 +37,35 @@
 </MudCard>
 
 @code {
+    bool _isLoading = false;
+    bool _hasChildren = false;
+
+    MudTextField<string> _inputTextField = null!;
+    string _inputValue = String.Empty;
+    private string InputValue
+    {
+        get => _inputValue;
+        set => OnInputValueChanged(value);
+    }
     
+    void OnInputValueChanged(string value)
+    {
+        _inputValue = value;
+        Console.WriteLine($"input: {_inputValue}");
+    }
+
+    async Task OnKeyDown(KeyboardEventArgs args)
+    {
+        if (args.CtrlKey && args.Key=="Enter")
+        {
+            await _inputTextField.BlurAsync();
+            GenerateOutputIfPossible();
+        }
+    }
+    
+    void GenerateOutputIfPossible()
+    {
+        Console.WriteLine($"Generating output...");
+    }
+
 }
