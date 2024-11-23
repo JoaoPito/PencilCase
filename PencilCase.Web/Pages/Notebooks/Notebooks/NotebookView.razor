@@ -1,5 +1,62 @@
-<h3>NotebookView</h3>
-Placeholder for notebooks.
+<MudPaper Outlined="true">
+    <MudPaper Class="mud-background-gray blueprint-dots pa-4">
+        <MudStack Spacing="4">
+            <!-- Cell -->
+            <MudPaper Class="pa-4">
+                <MudStack Row="true" AlignItems="AlignItems.Center">
+                    <MudText Typo="Typo.caption">in:</MudText>
+                    <MudText>What does the author say about assembly programming?</MudText>
+                </MudStack>
+                <MudStack Row="true" AlignItems="AlignItems.Center">
+                    <MudText Typo="Typo.caption">out:</MudText>
+                    <MudSkeleton Height="50" Class="d-flex flex-grow-1"></MudSkeleton>
+                    <MudIconButton Icon="@Icons.Material.Rounded.Autorenew"></MudIconButton>
+                </MudStack>
+            </MudPaper>
+
+            <!-- Cell -->
+            <MudPaper Class="pa-4">
+                <MudStack Row="true" AlignItems="AlignItems.Center">
+                    <MudText Typo="Typo.caption">João:</MudText>
+                    
+                </MudStack>
+                <MudStack Row="true" AlignItems="AlignItems.Center">
+                    <MudText Typo="Typo.caption">answer:</MudText>
+                    <MudSkeleton Height="50" Class="d-flex flex-grow-1"></MudSkeleton>
+                    <MudIconButton Icon="@Icons.Material.Rounded.Autorenew"></MudIconButton>
+                </MudStack>
+            </MudPaper>
+
+            <!-- Cell -->
+            <MudCard Outlined="true">
+                <MudCardHeader>
+                    <MudText><b>What does the author say about assembly programming?</b></MudText>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudStack Row="true" AlignItems="AlignItems.Center">
+                        <MudText Typo="Typo.caption">answer:</MudText>
+                        <MudSkeleton Height="50" Class="d-flex flex-grow-1"></MudSkeleton>
+                        <MudIconButton Icon="@Icons.Material.Rounded.Autorenew"></MudIconButton>
+                    </MudStack>
+                </MudCardContent>
+            </MudCard>
+
+            <!-- Add new -->
+            <MudStack Row="true"
+                      AlignItems="AlignItems.Center" Justify="Justify.Center">
+                <MudButtonGroup Color="Color.Secondary" Variant="Variant.Filled">
+                    <MudIconButton Icon="@Icons.Material.Rounded.Add" Size="Size.Large"/>
+                    <MudMenu Icon="@Icons.Material.Filled.ArrowDropDown" Style="align-self: auto;">
+                        <MudMenuItem>Cell</MudMenuItem>
+                        <MudMenuItem>Source</MudMenuItem>
+                    </MudMenu>
+                </MudButtonGroup>
+            </MudStack>
+            
+            
+        </MudStack>
+    </MudPaper>
+</MudPaper>
 
 @code {
 
