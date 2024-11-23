@@ -1,3 +1,5 @@
+@using MudBlazor.Extensions
+@using PencilCase.Web.Pages.Notebooks.Models
 
 <MudCard Outlined="false" Elevation="4">
     <MudCardHeader Class="mud-background-gray">
@@ -15,10 +17,17 @@
             </MudTextField>
         </CardHeaderContent>
         <CardHeaderActions>
-            <MudFab StartIcon="@Icons.Material.Rounded.PlayArrow" Size="Size.Large"
-                    Color="Color.Secondary"
-                    Class="ma-4">
-            </MudFab>
+            @if (_isLoading)
+            {
+                <MudProgressCircular Color="Color.Secondary" Indeterminate="true" Size="Size.Large" Class="pa-2"/>
+            }
+            else
+            {
+                <MudFab StartIcon="@Icons.Material.Rounded.PlayArrow" Size="Size.Large"
+                        Color="Color.Secondary" OnClick="OnSubmitClick"
+                        Class="ma-4">
+                </MudFab>
+            }
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
