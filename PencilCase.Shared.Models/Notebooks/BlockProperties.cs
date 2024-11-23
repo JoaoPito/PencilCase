@@ -10,5 +10,5 @@ public class BlockProperties
     public int Order { get; set; }
     public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
     public DateTime LastModified { get; set; } = DateTime.UtcNow;
-
+    public CellType CellType { get; set; } = CellType.Text;
 }
