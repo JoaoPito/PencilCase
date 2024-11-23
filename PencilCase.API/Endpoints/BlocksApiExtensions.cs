@@ -83,6 +83,7 @@ public static class BlocksExtensions
             block.ParentId = request.ParentId;
             properties.Order = request.Properties.Order;
             properties.LastModified = DateTime.UtcNow;
+            properties.CellType = request.Properties.CellType;
             block.Properties = properties;
             block.Children = dal.GetAllBy(b => request.ChildrenIds.Contains(b.Id)).ToList();
 
@@ -106,6 +107,7 @@ public static class BlocksExtensions
             if(request.Properties != null)
             {
                 properties.Order = request.Properties.Order ?? properties.Order;
+                properties.CellType = request.Properties.CellType ?? properties.CellType;
             }
             properties.LastModified = DateTime.UtcNow;
             block.Properties = properties;
@@ -154,12 +156,14 @@ public static class BlocksExtensions
         var properties = entity.Properties == null ? new BlockPropertiesResponse(
             Order: 0,
             CreatedOn: DateTime.UtcNow,
-            LastModified: DateTime.UtcNow
+            LastModified: DateTime.UtcNow,
+            CellType: CellType.Text
         ) :
         new BlockPropertiesResponse(
                 Order: entity.Properties!.Order ,
                 CreatedOn: entity.Properties!.CreatedOn,
-                LastModified: entity.Properties!.LastModified
+                LastModified: entity.Properties!.LastModified,
+                CellType: entity.Properties!.CellType
             );
 
         return new BlockResponse(
@@ -179,7 +183,8 @@ public static class BlocksExtensions
         var properties = new BlockProperties(){
             Parent = block,
             ParentId = block.Id,
-            Order = request.Properties.Order
+            Order = request.Properties.Order,
+            CellType = request.Properties.CellType
         };
 
         var parent = GetParent(request.ParentId, dal);
