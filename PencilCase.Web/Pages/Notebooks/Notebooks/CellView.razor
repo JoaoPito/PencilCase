@@ -80,7 +80,13 @@
         }
     }
     
-    void GenerateOutputIfPossible()
+    async Task OnSubmitClick()
+    {
+        await _inputTextField.BlurAsync();
+        await GenerateOutputIfPossible();
+    }
+    
+    async Task GenerateOutputIfPossible()
     {
         Console.WriteLine($"Generating output...");
     }
