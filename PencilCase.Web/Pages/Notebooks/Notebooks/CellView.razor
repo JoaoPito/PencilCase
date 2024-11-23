@@ -8,9 +8,10 @@
         </CardHeaderAvatar>
         <CardHeaderContent>
             <MudTextField T="string" Class="ma-0" AutoGrow="true" Margin="Margin.Dense"
-                          @bind-Value="InputValue" OnKeyDown="OnKeyDown" @ref="_inputTextField"
-                          DebounceInterval="2500" MaxLength="250"
-                          Typo="Typo.h6" Variant="Variant.Outlined">
+                          OnKeyDown="OnKeyDown" @ref="_inputTextField"
+                          DebounceInterval="2500" MaxLength="250" Disabled="@_isLoading"
+                          Typo="Typo.h6" Variant="Variant.Outlined" 
+                          ValueChanged="OnInputValueChanged" Value="@Block.Name">
             </MudTextField>
         </CardHeaderContent>
         <CardHeaderActions>
@@ -45,19 +46,12 @@
     [Parameter] public EventCallback? OnNewCellShortcut { get; set; }
 
     MudTextField<string> _inputTextField = null!;
-    string _inputValue = String.Empty;
-    private string InputValue
-    {
-        get => (Block is null) ? String.Empty : Block.Name;
-        set => OnInputValueChanged(value);
-    }
     
-    async Task OnInputValueChanged(string value)
+    async Task OnInputValueChanged(string newValue)
     {
-        _inputValue = value;
         if (Block is not null)
         {
-            Block.Name = _inputValue;
+            Block.Name = newValue.Trim();
             await UpdateChangesTo(Block);
         }
     }
