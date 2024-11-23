@@ -1,10 +1,14 @@
+@using PencilCase.Web.Pages.Notebooks.Models
 <MudPaper Outlined="true">
     <MudPaper Class="mud-background-gray blueprint-dots pa-4">
         <MudStack Spacing="4">
 
             <!-- Cell -->
-            <CellView />
-
+            @foreach (var child in _children)
+            {
+                <CellView BlocksApi="BlocksApi" Block="child" />
+            }
+            
             <!-- Add new -->
             <MudStack Row="true"
                       AlignItems="AlignItems.Center" Justify="Justify.Center">
@@ -16,13 +20,18 @@
                     </MudMenu>
                 </MudButtonGroup>
             </MudStack>
-            
-            
         </MudStack>
     </MudPaper>
 </MudPaper>
 
 @code {
-
+    [CascadingParameter(Name = "block")] protected BlockViewModel? Block { get; set; }
     [Parameter] public IBlocksApi BlocksApi { get; set; } = null!;
+    IEnumerable<BlockViewModel> _children = new List<BlockViewModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(Block is not null)
+            _children = await BlocksApi.LoadAllAsync(Block.ChildrenIds);
+    }
 }
