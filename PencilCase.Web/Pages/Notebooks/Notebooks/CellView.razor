@@ -39,6 +39,8 @@
 @code {
     bool _isLoading = false;
     bool _hasChildren = false;
+    
+    [Parameter] public EventCallback? OnNewCellShortcut { get; set; }
 
     MudTextField<string> _inputTextField = null!;
     string _inputValue = String.Empty;
@@ -60,6 +62,12 @@
         {
             await _inputTextField.BlurAsync();
             GenerateOutputIfPossible();
+        }
+
+        if (args.ShiftKey && args.Key == "Enter")
+        {
+            Console.WriteLine("Creating new cell");
+            if(OnNewCellShortcut is not null) await OnNewCellShortcut.As<EventCallback>().InvokeAsync();
         }
     }
     
