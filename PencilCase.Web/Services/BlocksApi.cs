@@ -25,6 +25,14 @@ public class BlocksApi : IBlocksApi
         return _blockMapper.MapResponseToViewModel(blockResponse);
     }
 
+    public async Task<List<BlockViewModel>> GetChildren(Guid parentId)
+    {
+        var blockResponse = await _httpClient.GetFromJsonAsync<List<BlockResponse>>($"{parentId}/children");
+        if (blockResponse == null)
+            throw new NullReferenceException("Response is null!");
+        return _blockMapper.MapViewModelsToList(blockResponse)!;
+    }
+
     public async Task<BlockViewModel?> AddBlock(BlockViewModel block)
     {
         var request = _blockMapper.MapViewModelToPostRequest(block);
