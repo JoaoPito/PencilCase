@@ -17,17 +17,18 @@
             </MudTextField>
         </CardHeaderContent>
         <CardHeaderActions>
-            @if (_isLoading)
-            {
-                <MudProgressCircular Color="Color.Secondary" Indeterminate="true" Size="Size.Large" Class="pa-2"/>
-            }
-            else
-            {
-                <MudFab StartIcon="@Icons.Material.Rounded.PlayArrow" Size="Size.Large"
-                        Color="Color.Secondary" OnClick="OnSubmitClick"
-                        Class="ma-4">
-                </MudFab>
-            }
+            <div class="mt-4 mx-4">
+                @if (_isLoading)
+                {
+                    <MudProgressCircular Color="Color.Secondary" Indeterminate="true" Size="Size.Large"/>
+                }
+                else
+                {
+                    <MudFab StartIcon="@Icons.Material.Rounded.PlayArrow" Size="Size.Large"
+                            Color="Color.Secondary" OnClick="OnSubmitClick">
+                    </MudFab>
+                }
+            </div>
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
@@ -70,7 +71,7 @@
         if (args.CtrlKey && args.Key=="Enter")
         {
             await _inputTextField.BlurAsync();
-            GenerateOutputIfPossible();
+            await GenerateOutputIfPossible();
         }
 
         if (args.ShiftKey && args.Key == "Enter")
@@ -88,7 +89,14 @@
     
     async Task GenerateOutputIfPossible()
     {
+        _isLoading = true;
+        StateHasChanged();
+        
         Console.WriteLine($"Generating output...");
+        await Task.Delay(1500);
+        
+        _isLoading = false;
+        StateHasChanged();
     }
 
     async Task UpdateChangesTo(BlockViewModel block)
