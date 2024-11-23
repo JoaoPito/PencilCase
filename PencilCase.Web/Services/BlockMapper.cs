@@ -70,4 +70,18 @@ public class BlockMapper
             ParentId: block.ParentId
         );
     }
+
+    public List<BlockViewModel>? MapViewModelsToList(List<BlockResponse>? blocks)
+    {
+        if(blocks == null)
+            return null;
+        
+        var blockList = new List<BlockViewModel>();
+
+        foreach (var block in blocks)
+        {
+            blockList.Add(MapResponseToViewModel(block)!);
+        }
+        return blockList;
+    }
 }
