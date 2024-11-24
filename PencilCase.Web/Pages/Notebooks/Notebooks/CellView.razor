@@ -49,9 +49,18 @@
         }
     </MudCardContent>
     <MudCardActions>
-        <MudIconButton Icon="@Icons.Material.Rounded.ArrowBack"></MudIconButton>
-        <MudIconButton Icon="@Icons.Material.Rounded.ArrowForward"></MudIconButton>
-        <MudIconButton Icon="@Icons.Material.Rounded.Delete" Color="Color.Error"></MudIconButton>
+        <MudIconButton Icon="@Icons.Material.Rounded.ArrowBack"
+                       Disabled="@(_shownChild == _loadedChildren.FirstOrDefault() || _isLoading)">
+            
+        </MudIconButton>
+        <MudIconButton Icon="@Icons.Material.Rounded.ArrowForward"
+                       Disabled="@(_shownChild == _loadedChildren.LastOrDefault() || _isLoading)">
+            
+        </MudIconButton>
+        <MudIconButton Icon="@Icons.Material.Rounded.Delete" Color="Color.Error"
+                       Disabled="@_isLoading">
+            
+        </MudIconButton>
     </MudCardActions>
 </MudCard>
 
@@ -133,6 +142,7 @@
                 }
             };
             Block!.ChildrenIds = Block!.ChildrenIds.Append(exampleGeneration.Id);
+            _loadedChildren = _loadedChildren.Append(exampleGeneration);
             _shownChild = exampleGeneration;
             await Task.Delay(2000);
         
