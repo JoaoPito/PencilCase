@@ -1,7 +1,10 @@
+using System.Net.Http.Headers;
 using Asp.Versioning;
 using Microsoft.EntityFrameworkCore;
 using PencilCase.API.Endpoints;
 using PencilCase.Shared.Data.Database;
+using PencilCase.Shared.LLM;
+using PencilCase.Shared.LLM.GeminiApi;
 using PencilCase.Shared.Models.Notebooks;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +29,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<DAL<Block>>();
+
+builder.Services.AddHttpClient("GeminiApi", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["GeminiApi:BaseUrl"]!);
+    client.DefaultRequestHeaders.Accept.Add(
+        new MediaTypeWithQualityHeaderValue("application/json"));
+});
+
+builder.Services.AddScoped<ILlmApiService, GeminiApiService>();
 
 var connectionString = builder.Configuration.GetConnectionString("ApiDatabase");
 
@@ -60,6 +72,7 @@ app.UseHttpsRedirection();
 // Blocks endpoints
 app.AddBlocksEndpointsV1();
 
-// BlockProperties endpoints
+// LLM endpoints
+app.AddLlmApiEndpoints();
 
 app.Run();
