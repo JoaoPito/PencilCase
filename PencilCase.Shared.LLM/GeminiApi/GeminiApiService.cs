@@ -17,13 +17,16 @@ public class GeminiApiService : ILlmApiService
                  ?? "gemini-1.5-flash";
         _apiKey = configuration["GeminiApi:ApiKey"] 
                   ?? throw new ArgumentNullException("Could not find Gemini API key in configuration.");
+        
         _httpClient = httpClientFactory.CreateClient("GeminiApi");
     }
 
     public async Task<List<Message>> GenerateContent(List<Message> userPrompt)
     {
         var request = MapMessageListToRequest(userPrompt);
-        var response = await _httpClient.PostAsJsonAsync<GeminiApiRequest>($"/{_model}:generateContent?key={_apiKey}", request);
+        var url = $"/v1beta/models/{_model}:generateContent?key={_apiKey}";
+        
+        var response = await _httpClient.PostAsJsonAsync<GeminiApiRequest>(url, request);
         if(!response.IsSuccessStatusCode)
             throw new HttpRequestException($"Error '{response.StatusCode}' while generating content with gemini model.");
 
