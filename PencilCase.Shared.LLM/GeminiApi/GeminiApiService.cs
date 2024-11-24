@@ -1,25 +1,29 @@
 using System.Dynamic;
 using System.Net.Http.Json;
+using Microsoft.Extensions.Configuration;
 using PencilCase.Shared.LLM.Models;
 
 namespace PencilCase.Shared.LLM.GeminiApi;
 
 public class GeminiApiService : ILlmApiService
 {
-    private const string GeminiApiUrl = "\"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=$GOOGLE_API_KEY\"";
-    private readonly string _model;
     private readonly HttpClient _httpClient;
+    private readonly string? _model;
+    private readonly string? _apiKey;
 
-    public GeminiApiService(IHttpClientFactory httpClientFactory, string model="gemini-1.5-flash")
+    public GeminiApiService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
     {
-        _model = model;
+        _model = configuration["GeminiApi:Model"] 
+                 ?? "gemini-1.5-flash";
+        _apiKey = configuration["GeminiApi:ApiKey"] 
+                  ?? throw new ArgumentNullException("Could not find Gemini API key in configuration.");
         _httpClient = httpClientFactory.CreateClient("GeminiApi");
     }
 
     public async Task<List<Message>> GenerateContent(List<Message> userPrompt)
     {
         var request = MapMessageListToRequest(userPrompt);
-        var response = await _httpClient.PostAsJsonAsync<GeminiApiRequest>($"/{_model}:generateContent?key=$GOOGLE_API_KEY", request);
+        var response = await _httpClient.PostAsJsonAsync<GeminiApiRequest>($"/{_model}:generateContent?key={_apiKey}", request);
         if(!response.IsSuccessStatusCode)
             throw new HttpRequestException($"Error '{response.StatusCode}' while generating content with gemini model.");
 

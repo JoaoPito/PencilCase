@@ -6,4 +6,13 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Reference Include="Microsoft.Extensions.Configuration.Abstractions">
+        <HintPath>..\..\..\..\..\..\..\..\..\home\joaopito\.nuget\packages\microsoft.extensions.configuration.abstractions\8.0.0\lib\net8.0\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.Extensions.Http">
+        <HintPath>..\..\..\..\..\..\..\..\..\home\joaopito\.nuget\packages\microsoft.extensions.http\8.0.0\lib\net8.0\Microsoft.Extensions.Http.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>
