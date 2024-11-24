@@ -112,16 +112,17 @@ public partial class CellView : ComponentBase
                 Properties = new BlockPropertiesViewModel()
                 {
                     CellType = CellType.Text,
+                    CreatedOn = DateTime.UtcNow,
+                    LastModified = DateTime.UtcNow,
                     Order = _shownChild is null ? 0 : _shownChild.Properties.Order + 1
                 }
             };
             Block!.ChildrenIds = Block!.ChildrenIds.Append(exampleGeneration.Id);
             _loadedChildren = _loadedChildren.Append(exampleGeneration);
-            _shownChild = exampleGeneration;
             await Task.Delay(2000);
         
+            SwapShownChildAndUpdate(exampleGeneration);
             _isLoading = false;
-            StateHasChanged();
         }
     }
 
