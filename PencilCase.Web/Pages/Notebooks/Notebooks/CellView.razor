@@ -122,7 +122,9 @@
                 .First();
         }
     }
-    
+
+
+    int _exampleCounter = 0;
     async Task GenerateOutputIfPossible()
     {
         if (IsGenerator())
@@ -133,12 +135,12 @@
             var exampleGeneration = new BlockViewModel()
             {
                 Id = new Guid(),
-                Name = "ASCII, short for American Standard Code for Information Interchange, is a character encoding standard used to represent text in computers and other devices that handle text.\nIt was developed in the 1960s and became widely adopted as a standard for communication between different systems.",
+                Name = $"{_exampleCounter++} - ASCII, short for American Standard Code for Information Interchange, is a character encoding standard used to represent text in computers and other devices that handle text.\nIt was developed in the 1960s and became widely adopted as a standard for communication between different systems.",
                 ParentId = Guid.Parse("808d779b-c6a5-4a8b-aa4d-ea1b4a7f6ae1"),
                 Properties = new BlockPropertiesViewModel()
                 {
                     CellType = CellType.Text,
-                    Order = 0
+                    Order = _shownChild is null ? 0 : _shownChild.Properties.Order + 1
                 }
             };
             Block!.ChildrenIds = Block!.ChildrenIds.Append(exampleGeneration.Id);
