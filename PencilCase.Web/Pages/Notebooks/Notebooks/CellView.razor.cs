@@ -59,12 +59,23 @@ public partial class CellView : ComponentBase
 
     void OnArrowLeftClick()
     {
-        
+        if (_shownChild is not null)
+        {
+            var nextChild = _loadedChildren
+                .LastOrDefault(c => c.Properties.CreatedOn < _shownChild.Properties.CreatedOn);
+            SwapShownChildAndUpdate(nextChild);
+        }
     }
 
     void OnArrowRightClick()
     {
-        
+        if (_shownChild is not null)
+        {
+            var nextChild = _loadedChildren
+                .FirstOrDefault(c => c.Properties.CreatedOn > _shownChild.Properties.CreatedOn);
+            SwapShownChildAndUpdate(nextChild);
+        }
+            
     }
 
     void OnDeleteClick()
@@ -77,6 +88,7 @@ public partial class CellView : ComponentBase
         if (Block is not null && Block.ChildrenIds.Any())
         {
             _loadedChildren = await BlocksApi.GetChildren(Block.Id);
+            _loadedChildren = _loadedChildren.OrderBy(c => c.Properties.CreatedOn);
             _shownChild = _loadedChildren
                 .OrderBy(c => c.Properties.Order)
                 .First();
@@ -121,5 +133,11 @@ public partial class CellView : ComponentBase
     async Task UpdateChangesTo(BlockViewModel block)
     {
         await BlocksApi.UpdateBlock(block);
+    }
+
+    void SwapShownChildAndUpdate(BlockViewModel? nextChild)
+    {
+        if(nextChild is not null) _shownChild = nextChild;
+        StateHasChanged();
     }
 }
