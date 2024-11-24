@@ -56,6 +56,16 @@ public partial class CellView : ComponentBase
         await _inputTextField.BlurAsync();
         await GenerateOutputIfPossible();
     }
+
+    void OnArrowLeftClick()
+    {
+        
+    }
+
+    void OnArrowRightClick()
+    {
+        
+    }
     
     async Task LoadChildren()
     {

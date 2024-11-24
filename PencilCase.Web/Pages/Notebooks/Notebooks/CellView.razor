@@ -50,11 +50,13 @@
     </MudCardContent>
     <MudCardActions>
         <MudIconButton Icon="@Icons.Material.Rounded.ArrowBack"
-                       Disabled="@(_shownChild == _loadedChildren.FirstOrDefault() || _isLoading)">
+                       Disabled="@(_shownChild == _loadedChildren.FirstOrDefault() || _isLoading)"
+                       OnClick="OnArrowLeftClick">
             
         </MudIconButton>
         <MudIconButton Icon="@Icons.Material.Rounded.ArrowForward"
-                       Disabled="@(_shownChild == _loadedChildren.LastOrDefault() || _isLoading)">
+                       Disabled="@(_shownChild == _loadedChildren.LastOrDefault() || _isLoading)"
+                       OnClick="OnArrowRightClick">
             
         </MudIconButton>
         <MudIconButton Icon="@Icons.Material.Rounded.Delete" Color="Color.Error"
