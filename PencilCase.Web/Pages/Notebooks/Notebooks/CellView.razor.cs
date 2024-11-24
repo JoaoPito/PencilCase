@@ -66,6 +66,11 @@ public partial class CellView : ComponentBase
     {
         
     }
+
+    void OnDeleteClick()
+    {
+        
+    }
     
     async Task LoadChildren()
     {
