@@ -4,7 +4,6 @@ namespace PencilCase.Shared.Models.Notebooks;
 
 public class BlockProperties
 {
-    public Guid Id { get; set; } = new Guid();
     public virtual Block Parent { get; set; } = null!;
     public Guid ParentId { get; set; } = new Guid();
     public int Order { get; set; }

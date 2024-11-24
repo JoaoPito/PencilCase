@@ -21,6 +21,9 @@ public class BlocksDbContext : DbContext
             .HasForeignKey(b => b.ParentId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<BlockProperties>()
+            .HasKey(p => p.ParentId);
+
         modelBuilder.Entity<Block>()
             .HasOne(b => b.Properties)
             .WithOne(p => p.Parent)
