@@ -1,5 +1,6 @@
-using System.Reflection.Metadata;
+
 using Microsoft.Extensions.Configuration;
+using PencilCase.LLM.RAG.Models;
 using Pinecone;
 
 namespace PencilCase.LLM.RAG.Providers.Pinecone;
@@ -25,7 +26,10 @@ public class PineconeService : IRagService
 
     public Task AddDocs(List<Document> docs)
     {
-        throw new NotImplementedException();
+        var data = docs.Select(i => new EmbedRequestInputsItem()
+        {
+            Text = i.Content,
+        });
     }
 
     public Task DeleteDocs(List<Guid> docIds)
