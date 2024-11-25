@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Text.Json.Serialization;
 
-namespace PencilCase.Shared.LLM.GeminiApi;
+namespace PencilCase.LLM.Agents.GeminiApi;
 
 public class GeminiApiRequest
 {

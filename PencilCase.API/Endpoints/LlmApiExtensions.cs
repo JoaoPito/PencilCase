@@ -1,8 +1,8 @@
 using Asp.Versioning;
 using Asp.Versioning.Builder;
 using Microsoft.AspNetCore.Mvc;
-using PencilCase.Shared.LLM;
-using PencilCase.Shared.LLM.Models;
+using PencilCase.LLM.Agents;
+using PencilCase.LLM.Agents.Models;
 
 namespace PencilCase.API.Endpoints;
 

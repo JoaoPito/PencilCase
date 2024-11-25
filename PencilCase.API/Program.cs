@@ -3,8 +3,8 @@ using Asp.Versioning;
 using Microsoft.EntityFrameworkCore;
 using PencilCase.API.Endpoints;
 using PencilCase.Shared.Data.Database;
-using PencilCase.Shared.LLM;
-using PencilCase.Shared.LLM.GeminiApi;
+using PencilCase.LLM.Agents;
+using PencilCase.LLM.Agents.GeminiApi;
 using PencilCase.Shared.Models.Notebooks;
 
 var builder = WebApplication.CreateBuilder(args);

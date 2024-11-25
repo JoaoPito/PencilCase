@@ -1,4 +1,4 @@
-namespace PencilCase.Shared.LLM.Models;
+namespace PencilCase.LLM.Agents.Models;
 
 public class Message
 {
