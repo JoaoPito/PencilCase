@@ -7,7 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Providers\Pinecone\" />
+      <Reference Include="Microsoft.Extensions.Configuration.Abstractions">
+        <HintPath>..\..\..\..\..\..\..\..\..\home\joaopito\.nuget\packages\microsoft.extensions.configuration.abstractions\8.0.0\lib\net8.0\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Pinecone.Client" Version="2.0.0" />
     </ItemGroup>
 
 </Project>
