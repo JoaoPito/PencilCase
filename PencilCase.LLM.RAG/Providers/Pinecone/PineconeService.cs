@@ -105,7 +105,22 @@ public class PineconeService : IRagService
 
     public Task UpdateDocs(List<Document> docs)
     {
-        throw new NotImplementedException();
+        var index = _client.Index(_defaultIndex);
+        
+        var queryEmbedding = await EmbedDocuments(new List<Document> { doc });
+
+        var docVector = queryEmbedding.Data.Select((e) => 
+            e.Values?.Select(Convert.ToSingle).ToArray()).FirstOrDefault();
+
+        var updateResponse = await index.UpdateAsync(new UpdateRequest {
+            Id = doc.Id.ToString(),
+            Namespace = _defaultNamespace,
+            Values = docVector,
+            SetMetadata = new Metadata {
+                [ParentIdMetadataKey] = new( doc.ParentId.ToString() ),
+                [TextMetadataKey] = new ( doc.Content )
+            }
+        });
     }
 
     private async Task<EmbeddingsList> EmbedDocuments(List<Document> docs)
