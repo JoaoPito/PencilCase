@@ -82,9 +82,22 @@ public class PineconeService : IRagService
         });
     }
 
-    public Task DeleteDocs(List<Guid> docIds)
+    public async Task DeleteSingleDoc(Guid id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var index = _client.Index(_defaultIndex);
+
+            await index.DeleteAsync(new DeleteRequest {
+                Ids = new List<string> { id.ToString() },
+                Namespace = _defaultNamespace,
+            });
+        }
+        catch (PineconeApiException ex)
+        {
+            throw new ArgumentException(ex.Message);
+        }
+        
     }
 
     public Task UpdateDocs(List<Document> docs)
