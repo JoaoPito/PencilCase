@@ -12,6 +12,9 @@ public class PineconeService : IRagService
     private readonly PineconeClient _client;
     private readonly string _defaultIndex;
 
+    private const string ParentIdMetadataKey = "parent_id"; 
+    private const string TextMetadataKey = "text"; 
+
     public PineconeService(IConfiguration configuration)
     {
         var apiKey = configuration["Pinecone:ApiKey"];
@@ -21,9 +24,48 @@ public class PineconeService : IRagService
         _defaultNamespace = configuration["Pinecone:DefaultNamespace"] ?? "";
     }
     
-    public List<Document> GetDocsByQuery(string query, List<Guid> parentIds, int nResults = 3)
+    public async Task<List<Document>?> GetDocsByQuery(string query, List<Guid> parentIds, uint nResults = 3)
     {
-        throw new NotImplementedException();
+        var queryEmbedding = await _client.Inference.EmbedAsync(new EmbedRequest()
+        {
+            Model = _embedModel,
+            Inputs = new List<EmbedRequestInputsItem>()
+            {
+                new() { Text = query }
+            },
+            Parameters = new EmbedRequestParameters()
+            {
+                InputType = "passage",
+                Truncate = "END"
+            }
+        });
+
+        var queryVector = queryEmbedding.Data.Select((e) => 
+            e.Values?.Select(Convert.ToSingle).ToArray()).FirstOrDefault();
+        
+        var index = _client.Index(_defaultIndex);
+        
+        var queryResults = await index.QueryAsync(new QueryRequest()
+        {
+            Vector = new ReadOnlyMemory<float>(queryVector),
+            Namespace = _defaultNamespace,
+            TopK = nResults,
+            IncludeMetadata = true,
+            IncludeValues = false,
+            Filter = new Metadata()
+            {
+                [ParentIdMetadataKey] = new Metadata()
+                {
+                    ["$in"] = parentIds.Select(x => x.ToString()).ToArray()
+                }
+            }
+        });
+
+        var resultDocs = queryResults
+            .Matches?
+            .Select(MapMatchToDocument)
+            .ToList();
+        return resultDocs;
     }
 
     public async Task AddDocs(List<Document> docs)
@@ -49,7 +91,8 @@ public class PineconeService : IRagService
             Values = new ReadOnlyMemory<float>(e.Values?.Select(Convert.ToSingle).ToArray()),
             Metadata = new Metadata()
             {
-                ["parent_id"] = docs[idx].ParentId.ToString()
+                [ParentIdMetadataKey] = docs[idx].ParentId.ToString(),
+                [TextMetadataKey] = docs[idx].Content,
             }
         }).ToList();
 
@@ -68,5 +111,18 @@ public class PineconeService : IRagService
     public Task UpdateDocs(List<Document> docs)
     {
         throw new NotImplementedException();
+    }
+
+    private Document MapMatchToDocument(ScoredVector match)
+    {
+        var id = Guid.Parse(match.Id);
+        var parentId = Guid.Parse(match.Metadata?[ParentIdMetadataKey]?.Value.ToString() ?? string.Empty);
+        var text = match.Metadata?[TextMetadataKey]?.Value.ToString() ?? string.Empty;
+        return new Document()
+        {
+            Id = id,
+            ParentId = parentId,
+            Content = text
+        };
     }
 }
