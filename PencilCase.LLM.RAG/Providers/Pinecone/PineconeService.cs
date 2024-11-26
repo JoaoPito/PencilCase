@@ -95,7 +95,10 @@ public class PineconeService : IRagService
         }
         catch (PineconeApiException ex)
         {
-            throw new ArgumentException(ex.Message);
+            if(ex.Message.Contains("Error with gRPC status code 5"))
+                throw new ArgumentException(ex.Message);
+            else
+                throw;
         }
         
     }
