@@ -103,7 +103,7 @@ public class PineconeService : IRagService
         
     }
 
-    public Task UpdateDocs(List<Document> docs)
+    public async Task UpdateDoc(Document doc)
     {
         var index = _client.Index(_defaultIndex);
         
