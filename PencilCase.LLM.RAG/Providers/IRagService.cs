@@ -6,6 +6,6 @@ public interface IRagService
 {
      public Task<List<Document>?> GetDocsByQuery(String query, List<Guid> parentIds, uint nResults = 3);
      public Task AddDocs(List<Document> docs);
-     public Task DeleteDocs(List<Guid> docIds);
+     public Task DeleteSingleDoc(Guid id);
      public Task UpdateDocs(List<Document> docs);
 }
