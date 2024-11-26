@@ -19,11 +19,6 @@ public static class LlmApiExtensions
         var llmGroup = app.MapGroup("api/v{version:apiVersion}/llm")
             .WithApiVersionSet(apiVersionSet)
             .WithTags("LLM");
-
-        group.MapPost("invoke", async ([FromServices] ILlmApiService llmApiService, [FromBody] List<Message> messages) =>
-        {
-            return await llmApiService.GenerateContent(messages);
-        });
         
         var agentGroup = llmGroup.MapGroup("agent")
             .WithTags(["LLM", "Agent"]);;
