@@ -19,7 +19,7 @@ public class GeminiApiService : ILlmApiService
         _apiKey = configuration["GeminiApi:ApiKey"] 
                   ?? throw new ArgumentNullException("Could not find Gemini API key in configuration.");
 
-        _defaultSystemPrompt = configuration["GeminiApi:ApiKey"];
+        _defaultSystemPrompt = configuration["GeminiApi:DefaultSystemPrompt"];
         
         _httpClient = httpClientFactory.CreateClient("GeminiApi");
     }
