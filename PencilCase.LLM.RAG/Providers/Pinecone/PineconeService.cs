@@ -26,19 +26,7 @@ public class PineconeService : IRagService
     
     public async Task<List<Document>?> GetDocsByQuery(string query, List<Guid> parentIds, uint nResults = 3)
     {
-        var queryEmbedding = await _client.Inference.EmbedAsync(new EmbedRequest()
-        {
-            Model = _embedModel,
-            Inputs = new List<EmbedRequestInputsItem>()
-            {
-                new() { Text = query }
-            },
-            Parameters = new EmbedRequestParameters()
-            {
-                InputType = "passage",
-                Truncate = "END"
-            }
-        });
+        var queryEmbedding = await EmbedDocuments(new List<Document> { new(){ Content = query } });
 
         var queryVector = queryEmbedding.Data.Select((e) => 
             e.Values?.Select(Convert.ToSingle).ToArray()).FirstOrDefault();
@@ -70,16 +58,7 @@ public class PineconeService : IRagService
 
     public async Task AddDocs(List<Document> docs)
     {
-        var embeddings = await _client.Inference.EmbedAsync(new EmbedRequest()
-        {
-            Model = _embedModel,
-            Inputs = docs.Select(i => new EmbedRequestInputsItem() { Text = i.Content }),
-            Parameters = new EmbedRequestParameters()
-            {
-                InputType = "passage",
-                Truncate = "END"
-            }
-        });
+        var embeddings = await EmbedDocuments(docs);
 
         var embeddingsData = embeddings.Data;
 
@@ -111,6 +90,20 @@ public class PineconeService : IRagService
     public Task UpdateDocs(List<Document> docs)
     {
         throw new NotImplementedException();
+    }
+
+    private async Task<EmbeddingsList> EmbedDocuments(List<Document> docs)
+    {
+        return await _client.Inference.EmbedAsync(new EmbedRequest()
+        {
+            Model = _embedModel,
+            Inputs = docs.Select(i => new EmbedRequestInputsItem() { Text = i.Content }),
+            Parameters = new EmbedRequestParameters()
+            {
+                InputType = "passage",
+                Truncate = "END"
+            }
+        });
     }
 
     private Document MapMatchToDocument(ScoredVector match)
