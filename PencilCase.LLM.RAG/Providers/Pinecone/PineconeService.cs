@@ -14,6 +14,7 @@ public class PineconeService : IRagService
 
     private const string ParentIdMetadataKey = "parent_id"; 
     private const string TextMetadataKey = "text"; 
+    private const char IdSeparator = ':';
 
     public PineconeService(IConfiguration configuration)
     {
@@ -66,7 +67,7 @@ public class PineconeService : IRagService
 
         List<Vector> records = embeddingsData.Select((e, idx) => new Vector()
         {
-            Id = docs[idx].Id.ToString(),
+            Id = GetDocumentId(docs[idx]),
             Values = new ReadOnlyMemory<float>(e.Values?.Select(Convert.ToSingle).ToArray()),
             Metadata = new Metadata()
             {
@@ -82,14 +83,14 @@ public class PineconeService : IRagService
         });
     }
 
-    public async Task DeleteSingleDoc(Guid id)
+    public async Task DeleteSingleDoc(Document doc)
     {
         try
         {
             var index = _client.Index(_defaultIndex);
 
             await index.DeleteAsync(new DeleteRequest {
-                Ids = new List<string> { id.ToString() },
+                Ids = new List<string> { GetDocumentId(doc) },
                 Namespace = _defaultNamespace,
             });
         }
@@ -112,8 +113,8 @@ public class PineconeService : IRagService
         var docVector = queryEmbedding.Data.Select((e) => 
             e.Values?.Select(Convert.ToSingle).ToArray()).FirstOrDefault();
 
-        var updateResponse = await index.UpdateAsync(new UpdateRequest {
-            Id = doc.Id.ToString(),
+        await index.UpdateAsync(new UpdateRequest {
+            Id = GetDocumentId(doc),
             Namespace = _defaultNamespace,
             Values = docVector,
             SetMetadata = new Metadata {
@@ -139,7 +140,7 @@ public class PineconeService : IRagService
 
     private Document MapMatchToDocument(ScoredVector match)
     {
-        var id = Guid.Parse(match.Id);
+        var id = Guid.Parse(match.Id.Split(IdSeparator).LastOrDefault() ?? "");
         var parentId = Guid.Parse(match.Metadata?[ParentIdMetadataKey]?.Value.ToString() ?? string.Empty);
         var text = match.Metadata?[TextMetadataKey]?.Value.ToString() ?? string.Empty;
         return new Document()
@@ -148,5 +149,10 @@ public class PineconeService : IRagService
             ParentId = parentId,
             Content = text
         };
+    }
+
+    private String GetDocumentId(Document doc)
+    {
+        return $"{doc.ParentId}{IdSeparator}{doc.Id}";
     }
 }
