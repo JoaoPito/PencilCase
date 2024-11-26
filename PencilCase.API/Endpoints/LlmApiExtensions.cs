@@ -69,13 +69,16 @@ public static class LlmApiExtensions
                 Description = "Adds documents to an index in the RAG system. Returns information about the created documents.", 
             });
 
-        ragGroup.MapDelete("{id}", async (
+        ragGroup.MapDelete("{parentId}/{id}", async (
                 [FromServices] IRagService ragService, 
+                Guid parentId,
                 Guid id) =>
             {
+                var doc = new Document() { Id = id, ParentId = parentId };
+                
                 try
                 {
-                    await ragService.DeleteSingleDoc(id);
+                    await ragService.DeleteSingleDoc(doc);
                 }
                 catch (ArgumentException)
                 {
