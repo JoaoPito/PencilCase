@@ -10,6 +10,7 @@ public class GeminiApiService : ILlmApiService
     private readonly HttpClient _httpClient;
     private readonly string? _model;
     private readonly string? _apiKey;
+    private readonly string? _defaultSystemPrompt;
 
     public GeminiApiService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
     {
@@ -17,13 +18,18 @@ public class GeminiApiService : ILlmApiService
                  ?? "gemini-1.5-flash";
         _apiKey = configuration["GeminiApi:ApiKey"] 
                   ?? throw new ArgumentNullException("Could not find Gemini API key in configuration.");
+
+        _defaultSystemPrompt = configuration["GeminiApi:ApiKey"];
         
         _httpClient = httpClientFactory.CreateClient("GeminiApi");
     }
 
     public async Task<List<Message>> GenerateContent(List<Message> userPrompt, Message? systemPrompt = null)
     {
-        var request = MapMessageListToRequest(userPrompt);
+        if (systemPrompt is null)
+            systemPrompt = new Message() { Content = _defaultSystemPrompt ?? "", Role = "system" };
+        
+        var request = MapMessageListToRequest(userPrompt, systemPrompt);
         var url = $"/v1beta/models/{_model}:generateContent?key={_apiKey}";
         
         var response = await _httpClient.PostAsJsonAsync<GeminiApiRequest>(url, request);
