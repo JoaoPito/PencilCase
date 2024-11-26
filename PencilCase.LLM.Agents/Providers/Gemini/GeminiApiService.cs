@@ -21,7 +21,7 @@ public class GeminiApiService : ILlmApiService
         _httpClient = httpClientFactory.CreateClient("GeminiApi");
     }
 
-    public async Task<List<Message>> GenerateContent(List<Message> userPrompt)
+    public async Task<List<Message>> GenerateContent(List<Message> userPrompt, Message? systemPrompt = null)
     {
         var request = MapMessageListToRequest(userPrompt);
         var url = $"/v1beta/models/{_model}:generateContent?key={_apiKey}";
@@ -37,13 +37,25 @@ public class GeminiApiService : ILlmApiService
         return MapResponseToMessageList(responseContents);
     }
 
-    private GeminiApiRequest MapMessageListToRequest(List<Message> userPrompt)
+    private GeminiApiRequest MapMessageListToRequest(List<Message> userPrompt, Message? systemPrompt = null)
     {
         var request = new GeminiApiRequest();
         foreach (var prompt in userPrompt)
         {
             request.Contents = request.Contents.Append(MapMessageToRequestContent(prompt));
         }
+
+        if (systemPrompt != null)
+        {
+            request.SystemInstruction = new SystemInstruction()
+            {
+                Parts = new GeminiApiRequestPart()
+                {
+                    Text = systemPrompt.Content,
+                }
+            };
+        }
+        
         return request;
     }
     

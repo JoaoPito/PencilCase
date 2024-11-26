@@ -5,6 +5,8 @@ namespace PencilCase.LLM.Agents.GeminiApi;
 
 public class GeminiApiRequest
 {
+    [JsonPropertyName("system_instruction")]
+    public SystemInstruction? SystemInstruction { get; set; }
     [JsonPropertyName("contents")]
     public IEnumerable<GeminiApiRequestContent> Contents { get; set; } = new List<GeminiApiRequestContent>();
 }
@@ -21,4 +23,10 @@ public class GeminiApiRequestPart
 {
     [JsonPropertyName("text")]
     public string? Text { get; set; }
+}
+
+public class SystemInstruction
+{
+    [JsonPropertyName("parts")]
+    public GeminiApiRequestPart? Parts { get; set; }
 }
