@@ -46,7 +46,14 @@ public static class LlmApiExtensions
                 [FromServices] IRagService ragService, 
                 [FromBody] QueryRequest request) =>
             {
-                return await ragService.GetDocsByQuery(request.Query, request.ParentIds, request.NResults ?? 3);
+                if(request.NResults <= 0)
+                    return Results.BadRequest();
+                
+                var docs = await ragService.GetDocsByQuery(
+                    request.Query, 
+                    request.ParentIds, 
+                    request.NResults ?? 3);
+                return Results.Ok(docs);
             })
             .WithName("QueryDocuments")
             .WithOpenApi(x => new OpenApiOperation(x)
