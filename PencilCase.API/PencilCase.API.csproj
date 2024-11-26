@@ -15,10 +15,12 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Primitives" Version="8.0.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PencilCase.LLM.RAG\PencilCase.LLM.RAG.csproj" />
     <ProjectReference Include="..\PencilCase.Shared.Data\PencilCase.Shared.Data.csproj" />
     <ProjectReference Include="..\PencilCase.Shared.DTOs\PencilCase.Shared.DTOs.csproj" />
     <ProjectReference Include="..\PencilCase.LLM.Agents\PencilCase.LLM.Agents.csproj" />

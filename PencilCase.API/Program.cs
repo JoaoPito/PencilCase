@@ -5,6 +5,8 @@ using PencilCase.API.Endpoints;
 using PencilCase.Shared.Data.Database;
 using PencilCase.LLM.Agents;
 using PencilCase.LLM.Agents.GeminiApi;
+using PencilCase.LLM.RAG.Providers;
+using PencilCase.LLM.RAG.Providers.Pinecone;
 using PencilCase.Shared.Models.Notebooks;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,6 +40,7 @@ builder.Services.AddHttpClient("GeminiApi", client =>
 });
 
 builder.Services.AddScoped<ILlmApiService, GeminiApiService>();
+builder.Services.AddScoped<IRagService, PineconeService>();
 
 var connectionString = builder.Configuration.GetConnectionString("ApiDatabase");
 

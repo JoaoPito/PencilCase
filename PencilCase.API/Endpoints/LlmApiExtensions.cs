@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using PencilCase.LLM.Agents;
 using PencilCase.LLM.Agents.Models;
+using PencilCase.LLM.RAG.Models;
+using PencilCase.LLM.RAG.Providers;
+using PencilCase.LLM.RAG.Requests;
 
 namespace PencilCase.API.Endpoints;
 
@@ -34,5 +37,64 @@ public static class LlmApiExtensions
                 Description = "Given a prompt, invokes the appropriate LLM agent with it and returns the answer.", 
             });
         
+        var ragGroup = llmGroup.MapGroup("rag")
+            .WithTags(["LLM", "RAG"]);;
+        
+        ragGroup.MapPost("search", async ([FromServices] IRagService ragService, [FromBody] QueryRequest request) =>
+            {
+                return await ragService.GetDocsByQuery(request.Query, request.ParentIds, request.NResults ?? 3);
+            })
+            .WithName("QueryDocuments")
+            .WithOpenApi(x => new OpenApiOperation(x)
+            {
+                Summary = "Searches for and returns documents given a query.",
+                Description = "Given a query, embeds it, then searches in the vector store for similar documents, returns them.", 
+            });
+        
+        ragGroup.MapPost("", async ([FromServices] IRagService ragService, [FromBody] List<Document> documents) =>
+            {
+                await ragService.AddDocs(documents);
+                return Results.Created();
+            })
+            .WithName("AddDocuments")
+            .WithOpenApi(x => new OpenApiOperation(x)
+            {
+                Summary = "Adds documents to the RAG vector store",
+                Description = "Adds documents to an index in the RAG system. Returns information about the created documents.", 
+            });
+
+        ragGroup.MapDelete("{id}", async (
+                [FromServices] IRagService ragService, 
+                Guid id) =>
+            {
+                try
+                {
+                    await ragService.DeleteSingleDoc(id);
+                }
+                catch (ArgumentException)
+                {
+                    return Results.NotFound();
+                }
+
+                return Results.NoContent();
+            })
+            .WithName("DeleteDocuments")
+            .WithOpenApi(x => new OpenApiOperation(x)
+            {
+                Summary = "Erases documents from the RAG vector store.",
+                Description = "Deletes the document with the specified ID from the RAG system. If it does not exist, responds with Not Found.", 
+            });
+        
+        ragGroup.MapPut("", async ([FromServices] IRagService ragService, [FromBody] Document doc) =>
+            {
+                await ragService.UpdateDoc(doc);
+                return Results.Ok();
+            })
+            .WithName("UpdateDocuments")
+            .WithOpenApi(x => new OpenApiOperation(x)
+            {
+                Summary = "Updates documents from the RAG vector store.",
+                Description = "Given a document with an already existing Id, updates all content of it.", 
+            });
     }
 }
