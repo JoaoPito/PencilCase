@@ -26,7 +26,9 @@ public static class LlmApiExtensions
         var agentGroup = llmGroup.MapGroup("agent")
             .WithTags(["LLM", "Agent"]);;
 
-        agentGroup.MapPost("invoke", async ([FromServices] ILlmApiService llmApiService, [FromBody] List<Message> messages) =>
+        agentGroup.MapPost("invoke", async (
+                [FromServices] ILlmApiService llmApiService, 
+                [FromBody] List<Message> messages) =>
             {
                 return await llmApiService.GenerateContent(messages);
             })
@@ -40,7 +42,9 @@ public static class LlmApiExtensions
         var ragGroup = llmGroup.MapGroup("rag")
             .WithTags(["LLM", "RAG"]);;
         
-        ragGroup.MapPost("search", async ([FromServices] IRagService ragService, [FromBody] QueryRequest request) =>
+        ragGroup.MapPost("search", async (
+                [FromServices] IRagService ragService, 
+                [FromBody] QueryRequest request) =>
             {
                 return await ragService.GetDocsByQuery(request.Query, request.ParentIds, request.NResults ?? 3);
             })
@@ -51,7 +55,9 @@ public static class LlmApiExtensions
                 Description = "Given a query, embeds it, then searches in the vector store for similar documents, returns them.", 
             });
         
-        ragGroup.MapPost("", async ([FromServices] IRagService ragService, [FromBody] List<Document> documents) =>
+        ragGroup.MapPost("", async (
+                [FromServices] IRagService ragService, 
+                [FromBody] List<Document> documents) =>
             {
                 await ragService.AddDocs(documents);
                 return Results.Created();
@@ -85,7 +91,9 @@ public static class LlmApiExtensions
                 Description = "Deletes the document with the specified ID from the RAG system. If it does not exist, responds with Not Found.", 
             });
         
-        ragGroup.MapPut("", async ([FromServices] IRagService ragService, [FromBody] Document doc) =>
+        ragGroup.MapPut("", async (
+                [FromServices] IRagService ragService, 
+                [FromBody] Document doc) =>
             {
                 await ragService.UpdateDoc(doc);
                 return Results.Ok();
