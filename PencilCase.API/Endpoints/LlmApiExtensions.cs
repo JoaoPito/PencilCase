@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using Asp.Versioning.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Models;
 using PencilCase.LLM.Agents;
 using PencilCase.LLM.Agents.Models;
 
@@ -15,7 +16,7 @@ public static class LlmApiExtensions
             .ReportApiVersions()
             .Build();
 
-        var group = app.MapGroup("api/v{version:apiVersion}/llm")
+        var llmGroup = app.MapGroup("api/v{version:apiVersion}/llm")
             .WithApiVersionSet(apiVersionSet)
             .WithTags("LLM");
 
@@ -23,5 +24,20 @@ public static class LlmApiExtensions
         {
             return await llmApiService.GenerateContent(messages);
         });
+        
+        var agentGroup = llmGroup.MapGroup("agent")
+            .WithTags(["LLM", "Agent"]);;
+
+        agentGroup.MapPost("invoke", async ([FromServices] ILlmApiService llmApiService, [FromBody] List<Message> messages) =>
+            {
+                return await llmApiService.GenerateContent(messages);
+            })
+            .WithName("InvokeAgent")
+            .WithOpenApi(x => new OpenApiOperation(x)
+            {
+                Summary = "Invokes the appropriate LLM agent.",
+                Description = "Given a prompt, invokes the appropriate LLM agent with it and returns the answer.", 
+            });
+        
     }
 }
