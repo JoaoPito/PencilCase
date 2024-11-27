@@ -6,6 +6,7 @@ using PencilCase.Shared.Data.Database;
 using PencilCase.LLM.Agents;
 using PencilCase.LLM.Agents.Providers;
 using PencilCase.LLM.Agents.Providers.Gemini;
+using PencilCase.LLM.RAG;
 using PencilCase.LLM.RAG.Providers;
 using PencilCase.LLM.RAG.Providers.Pinecone;
 using PencilCase.Shared.Models.Notebooks;
