@@ -32,6 +32,8 @@ public static class LlmApiExtensions
                 [FromServices] ILlmApiService llmApiService, 
                 [FromBody] List<LlmMessage> messages) =>
             {
+                if(messages.Count < 1)
+                    return Results.BadRequest();
                 return Results.Ok(await llmApiService.GenerateContent(messages));
             })
             .WithName("InvokeAgent")
