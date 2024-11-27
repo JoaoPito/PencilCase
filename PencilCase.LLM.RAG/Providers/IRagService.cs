@@ -1,4 +1,4 @@
-using PencilCase.LLM.RAG.Models;
+using PencilCase.Shared.Models.LLM.RAG;
 
 namespace PencilCase.LLM.RAG.Providers;
 

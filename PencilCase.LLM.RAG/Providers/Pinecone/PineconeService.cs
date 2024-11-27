@@ -1,6 +1,6 @@
 
 using Microsoft.Extensions.Configuration;
-using PencilCase.LLM.RAG.Models;
+using PencilCase.Shared.Models.LLM.RAG;
 using Pinecone;
 
 namespace PencilCase.LLM.RAG.Providers.Pinecone;

@@ -1,4 +1,4 @@
-namespace PencilCase.LLM.RAG.Models;
+namespace PencilCase.Shared.Models.LLM.RAG;
 
 public class RagDocument
 {
