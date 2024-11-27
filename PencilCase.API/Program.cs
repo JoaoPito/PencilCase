@@ -42,10 +42,10 @@ builder.Services.AddHttpClient("GeminiApi", client =>
 builder.Services.AddScoped<ILlmApiService, GeminiApiService>();
 builder.Services.AddScoped<IRagService, PineconeService>();
 
-var connectionString = builder.Configuration.GetConnectionString("ApiDatabase");
+var blocksDbConnectionString = builder.Configuration.GetConnectionString("ApiDatabase");
 
 builder.Services.AddDbContext<BlocksDbContext>(options => {
-    options.UseNpgsql(connectionString)
+    options.UseNpgsql(blocksDbConnectionString)
         .UseLazyLoadingProxies();
 });
 
