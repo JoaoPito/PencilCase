@@ -53,6 +53,9 @@ public static class LlmApiExtensions
                 if(request.NResults <= 0)
                     return Results.BadRequest();
                 
+                if(request.Query == string.Empty)
+                    return Results.BadRequest();
+                
                 var docs = await ragService.GetDocsByQuery(
                     request.Query, 
                     request.ParentIds, 
@@ -70,6 +73,9 @@ public static class LlmApiExtensions
                 [FromServices] IRagService ragService, 
                 [FromBody] List<RagDocument> documents) =>
             {
+                if(documents.Count is < 1 or > 250)
+                    return Results.BadRequest();
+                
                 await ragService.AddDocs(documents);
                 return Results.Created();
             })
@@ -77,7 +83,7 @@ public static class LlmApiExtensions
             .WithOpenApi(x => new OpenApiOperation(x)
             {
                 Summary = "Adds documents to the RAG vector store",
-                Description = "Adds documents to an index in the RAG system. Returns information about the created documents.", 
+                Description = "Adds documents to an index in the RAG system. Returns information about the created documents. Number of documents must be between 1 and 250", 
             });
 
         ragGroup.MapDelete("{parentId}/{id}", async (
@@ -109,6 +115,9 @@ public static class LlmApiExtensions
                 [FromServices] IRagService ragService, 
                 [FromBody] RagDocument doc) =>
             {
+                if(doc.Content == string.Empty)
+                    return Results.BadRequest();
+                
                 await ragService.UpdateDoc(doc);
                 return Results.Ok();
             })
