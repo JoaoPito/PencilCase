@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PencilCase.Shared.Models.Telemetry.LLM.Agents;
 
-namespace PencilCase.Shared.Data.Database;
+namespace PencilCase.Telemetry.Data.Database;
 
 public class TelemetryDbContext : DbContext
 {

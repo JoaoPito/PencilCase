@@ -7,7 +7,21 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Database\" />
+      <Reference Include="Microsoft.EntityFrameworkCore">
+        <HintPath>..\..\..\..\..\..\..\..\..\home\joaopito\.nuget\packages\microsoft.entityframeworkcore\8.0.10\lib\net8.0\Microsoft.EntityFrameworkCore.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\PencilCase.Shared.Models\PencilCase.Shared.Models.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.1" />
     </ItemGroup>
 
 </Project>
