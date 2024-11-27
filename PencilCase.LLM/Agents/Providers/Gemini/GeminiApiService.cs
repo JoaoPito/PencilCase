@@ -1,18 +1,25 @@
 using System.Net.Http.Json;
 using Microsoft.Extensions.Configuration;
 using PencilCase.Shared.Models.LLM.Agents;
+using PencilCase.Shared.Models.Telemetry.LLM.Agents;
+using PencilCase.Telemetry.Data.Database;
 
 namespace PencilCase.LLM.Agents.Providers.Gemini;
 
 public class GeminiApiService : ILlmApiService
 {
+    private readonly DAL<GenerationResultEntry> _generationResultTelemetry;
     private readonly HttpClient _httpClient;
     private readonly string? _model;
     private readonly string? _apiKey;
     private readonly string? _defaultSystemPrompt;
 
-    public GeminiApiService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+    public GeminiApiService(
+        IHttpClientFactory httpClientFactory, 
+        IConfiguration configuration,
+        DAL<GenerationResultEntry> generationResultTelemetry)
     {
+        _generationResultTelemetry = generationResultTelemetry;
         _model = configuration["GeminiApi:Model"] 
                  ?? "gemini-1.5-flash";
         _apiKey = configuration["GeminiApi:ApiKey"] 
@@ -37,7 +44,10 @@ public class GeminiApiService : ILlmApiService
 
         var responseContents = await response.Content.ReadFromJsonAsync<GeminiApiResponse>();
         if(responseContents is null)
-            throw new ArgumentException($"Reponse from Gemini API is empty!");
+            throw new ArgumentException($"Response from Gemini API is empty!");
+
+        var telemetryEntry = GeminiTelemetryEntryHelpers.BuildGenerationTelemetryEntry(responseContents);
+        await TryAddEntryToTelemetry(telemetryEntry);
         
         return MapResponseToMessageList(responseContents);
     }
@@ -102,5 +112,17 @@ public class GeminiApiService : ILlmApiService
         }
 
         return messages;
+    }
+
+    private async Task TryAddEntryToTelemetry(GenerationResultEntry entry)
+    {
+        try
+        {
+            await _generationResultTelemetry.Add(entry);
+        }
+        catch (Exception)
+        {
+            return;
+        }
     }
 }

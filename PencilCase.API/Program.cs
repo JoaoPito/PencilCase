@@ -8,6 +8,7 @@ using PencilCase.LLM.Agents.Providers.Gemini;
 using PencilCase.LLM.RAG;
 using PencilCase.LLM.RAG.Providers.Pinecone;
 using PencilCase.Shared.Models.Notebooks;
+using PencilCase.Shared.Models.Telemetry.LLM.Agents;
 using PencilCase.Shared.Models.Telemetry.LLM.RAG;
 using PencilCase.Telemetry.Data.Database;
 
@@ -42,6 +43,7 @@ builder.Services.AddDbContext<BlocksDbContext>(options => {
 });
 
 builder.Services.AddScoped<PencilCase.Telemetry.Data.Database.DAL<RagOperationEntry>>();
+builder.Services.AddScoped<PencilCase.Telemetry.Data.Database.DAL<GenerationResultEntry>>();
 
 var telemetryDbConnectionString = builder.Configuration.GetConnectionString("TelemetryDb");
 
