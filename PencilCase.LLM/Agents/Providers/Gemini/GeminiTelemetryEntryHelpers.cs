@@ -19,7 +19,8 @@ public static class GeminiTelemetryEntryHelpers
             PromptTokenCount = geminiResponse.UsageMetadata?.PromptTokenCount ?? 0,
             GenerationTokenCount = geminiResponse.UsageMetadata?.CandidatesTokenCount ?? 0,
             FinishReason = finishReason,
-            GenerationCharCount = generationCharCount
+            GenerationCharCount = generationCharCount,
+            Model = geminiResponse.ModelVersion
         };
     }
 }
