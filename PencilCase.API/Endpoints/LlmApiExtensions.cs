@@ -30,7 +30,7 @@ public static class LlmApiExtensions
                 [FromServices] ILlmApiService llmApiService, 
                 [FromBody] List<LlmMessage> messages) =>
             {
-                return await llmApiService.GenerateContent(messages);
+                return Results.Ok(await llmApiService.GenerateContent(messages));
             })
             .WithName("InvokeAgent")
             .WithOpenApi(x => new OpenApiOperation(x)
