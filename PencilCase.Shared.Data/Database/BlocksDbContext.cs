@@ -8,7 +8,7 @@ public class BlocksDbContext : DbContext
     public List<Block> Blocks { get; set; } = new List<Block>();
     public List<BlockProperties> BlockProperties { get; set; } = new List<BlockProperties>();
 
-    public BlocksDbContext(DbContextOptions options) : base(options)
+    public BlocksDbContext(DbContextOptions<BlocksDbContext> options) : base(options)
     {
         
     }

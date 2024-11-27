@@ -9,7 +9,7 @@ public class TelemetryDbContext : DbContext
     public virtual DbSet<GenerationResultEntry> GenerationResultEntries { get; set; }
     public virtual DbSet<RagOperationEntry> RagOperationEntries { get; set; }
 
-    public TelemetryDbContext(DbContextOptions options) : base(options)
+    public TelemetryDbContext(DbContextOptions<TelemetryDbContext> options) : base(options)
     {
         
     }
