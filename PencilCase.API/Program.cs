@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using PencilCase.API.Endpoints;
 using PencilCase.Shared.Data.Database;
 using PencilCase.LLM.Agents;
-using PencilCase.LLM.Providers;
-using PencilCase.LLM.Providers.Pinecone;
 using PencilCase.LLM.Agents.Providers;
 using PencilCase.LLM.Agents.Providers.Gemini;
+using PencilCase.LLM.RAG.Providers;
+using PencilCase.LLM.RAG.Providers.Pinecone;
 using PencilCase.Shared.Models.Notebooks;
 
 var builder = WebApplication.CreateBuilder(args);

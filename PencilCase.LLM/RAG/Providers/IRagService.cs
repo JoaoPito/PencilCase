@@ -1,6 +1,6 @@
 using PencilCase.Shared.Models.LLM.RAG;
 
-namespace PencilCase.LLM.Providers;
+namespace PencilCase.LLM.RAG.Providers;
 
 public interface IRagService
 {

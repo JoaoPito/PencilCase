@@ -23,7 +23,6 @@
     <ProjectReference Include="..\PencilCase.LLM\PencilCase.LLM.csproj" />
     <ProjectReference Include="..\PencilCase.Shared.Data\PencilCase.Shared.Data.csproj" />
     <ProjectReference Include="..\PencilCase.Shared.DTOs\PencilCase.Shared.DTOs.csproj" />
-    <ProjectReference Include="..\PencilCase.LLM.Agents\PencilCase.LLM.Agents.csproj" />
     <ProjectReference Include="..\PencilCase.Shared.Models\PencilCase.Shared.Models.csproj" />
   </ItemGroup>
 
