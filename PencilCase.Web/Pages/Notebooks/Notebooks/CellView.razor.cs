@@ -11,6 +11,7 @@ namespace PencilCase.Web.Pages.Notebooks.Notebooks;
 public partial class CellView : ComponentBase
 {
     bool _isLoading = false;
+    bool _childError = false;
     
     [Parameter] public BlockViewModel? Block { get; set; }
     [Parameter] public IBlocksApi BlocksApi { get; set; } = null!;
@@ -101,27 +102,35 @@ public partial class CellView : ComponentBase
         if (IsGenerator())
         {
             _isLoading = true;
+            _childError = false;
             StateHasChanged();
 
-            // Example generation for testing
-            var exampleGeneration = new BlockViewModel()
+            try
             {
-                Id = new Guid(),
-                Name = $"{_exampleCounter++} - ASCII, short for American Standard Code for Information Interchange, is a character encoding standard used to represent text in computers and other devices that handle text.\nIt was developed in the 1960s and became widely adopted as a standard for communication between different systems.",
-                ParentId = Guid.Parse("808d779b-c6a5-4a8b-aa4d-ea1b4a7f6ae1"),
-                Properties = new BlockPropertiesViewModel()
+                // Example generation for testing
+                var exampleGeneration = new BlockViewModel()
                 {
-                    CellType = CellType.Text,
-                    CreatedOn = DateTime.UtcNow,
-                    LastModified = DateTime.UtcNow,
-                    Order = _shownChild is null ? 0 : _shownChild.Properties.Order + 1
-                }
-            };
-            Block!.ChildrenIds = Block!.ChildrenIds.Append(exampleGeneration.Id);
-            _loadedChildren = _loadedChildren.Append(exampleGeneration);
-            await Task.Delay(2000);
-        
-            SwapShownChildAndUpdate(exampleGeneration);
+                    Id = new Guid(),
+                    Name = $"{_exampleCounter++} - ASCII, short for American Standard Code for Information Interchange, is a character encoding standard used to represent text in computers and other devices that handle text.\nIt was developed in the 1960s and became widely adopted as a standard for communication between different systems.",
+                    ParentId = Guid.Parse("808d779b-c6a5-4a8b-aa4d-ea1b4a7f6ae1"),
+                    Properties = new BlockPropertiesViewModel()
+                    {
+                        CellType = CellType.Text,
+                        CreatedOn = DateTime.UtcNow,
+                        LastModified = DateTime.UtcNow,
+                        Order = _shownChild is null ? 0 : _shownChild.Properties.Order + 1
+                    }
+                };
+                Block!.ChildrenIds = Block!.ChildrenIds.Append(exampleGeneration.Id);
+                _loadedChildren = _loadedChildren.Append(exampleGeneration);
+                await Task.Delay(2000);
+                
+                SwapShownChildAndUpdate(exampleGeneration);
+            }
+            catch (Exception e)
+            {
+                _childError = true;
+            }
             _isLoading = false;
         }
     }

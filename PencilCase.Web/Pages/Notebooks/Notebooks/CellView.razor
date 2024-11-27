@@ -33,7 +33,7 @@
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
-        @if (_shownChild is not null && !_isLoading)
+        @if (_shownChild is not null && !_isLoading && !_childError)
         {
             <MudPaper Height="150" Outlined="false" Elevation="0" Class="pa-4">
                 <MudText>@_shownChild.Name</MudText>
@@ -45,6 +45,13 @@
                 <MudSkeleton Width="20%" Animation="Animation.Wave" />
                 <MudSkeleton Width="100%" Animation="Animation.Wave" />
                 <MudSkeleton Width="60%" Animation="Animation.Wave" />
+            </MudStack>
+        }
+        else if (_childError)
+        {
+            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center">
+                <MudIcon Size="Size.Medium" Icon="@Icons.Material.Rounded.Warning" Color="Color.Warning"></MudIcon>
+                <MudText Color="Color.Warning">An error has occured. Try reloading this cell in a couple of minutes.</MudText>
             </MudStack>
         }
     </MudCardContent>
