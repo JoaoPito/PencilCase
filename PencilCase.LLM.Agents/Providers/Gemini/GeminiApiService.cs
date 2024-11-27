@@ -24,10 +24,10 @@ public class GeminiApiService : ILlmApiService
         _httpClient = httpClientFactory.CreateClient("GeminiApi");
     }
 
-    public async Task<List<Message>> GenerateContent(List<Message> userPrompt, Message? systemPrompt = null)
+    public async Task<List<LlmMessage>> GenerateContent(List<LlmMessage> userPrompt, LlmMessage? systemPrompt = null)
     {
         if (systemPrompt is null)
-            systemPrompt = new Message() { Content = _defaultSystemPrompt ?? "", Role = "system" };
+            systemPrompt = new LlmMessage() { Content = _defaultSystemPrompt ?? "", Role = "system" };
         
         var request = MapMessageListToRequest(userPrompt, systemPrompt);
         var url = $"/v1beta/models/{_model}:generateContent?key={_apiKey}";
@@ -43,7 +43,7 @@ public class GeminiApiService : ILlmApiService
         return MapResponseToMessageList(responseContents);
     }
 
-    private GeminiApiRequest MapMessageListToRequest(List<Message> userPrompt, Message? systemPrompt = null)
+    private GeminiApiRequest MapMessageListToRequest(List<LlmMessage> userPrompt, LlmMessage? systemPrompt = null)
     {
         var request = new GeminiApiRequest();
         foreach (var prompt in userPrompt)
@@ -65,7 +65,7 @@ public class GeminiApiService : ILlmApiService
         return request;
     }
     
-    private GeminiApiRequestContent MapMessageToRequestContent(Message msg)
+    private GeminiApiRequestContent MapMessageToRequestContent(LlmMessage msg)
     {
         var request = new GeminiApiRequestContent()
         {
@@ -81,9 +81,9 @@ public class GeminiApiService : ILlmApiService
         return request;
     }
 
-    private List<Message> MapResponseToMessageList(GeminiApiResponse geminiApiResponse)
+    private List<LlmMessage> MapResponseToMessageList(GeminiApiResponse geminiApiResponse)
     {
-        var messages = new List<Message>();
+        var messages = new List<LlmMessage>();
         foreach (var candidate in geminiApiResponse.Candidates)
         {
             if (candidate.Content == null)
@@ -95,7 +95,7 @@ public class GeminiApiService : ILlmApiService
                 candidateText = candidate.Content.Parts.First().Text;
             }
             
-            messages.Add(new Message()
+            messages.Add(new LlmMessage()
             {
                 Role = candidate.Content!.Role,
                 Content = candidateText

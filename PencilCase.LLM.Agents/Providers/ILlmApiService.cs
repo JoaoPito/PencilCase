@@ -4,5 +4,5 @@ namespace PencilCase.LLM.Agents;
 
 public interface ILlmApiService
 {
-    public Task<List<Message>> GenerateContent(List<Message> userPrompt, Message? systemPrompt = null);
+    public Task<List<LlmMessage>> GenerateContent(List<LlmMessage> userPrompt, LlmMessage? systemPrompt = null);
 }

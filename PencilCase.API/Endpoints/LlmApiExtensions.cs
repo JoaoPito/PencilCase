@@ -28,7 +28,7 @@ public static class LlmApiExtensions
 
         agentGroup.MapPost("invoke", async (
                 [FromServices] ILlmApiService llmApiService, 
-                [FromBody] List<Message> messages) =>
+                [FromBody] List<LlmMessage> messages) =>
             {
                 return await llmApiService.GenerateContent(messages);
             })
