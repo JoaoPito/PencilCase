@@ -1,3 +1,4 @@
+using System.Net.Http.Json;
 using PencilCase.Shared.Models.LLM.Agents;
 using PencilCase.Shared.Models.LLM.RAG;
 
@@ -9,12 +10,15 @@ public class LlmApi : ILlmApi
 
     public LlmApi(IHttpClientFactory httpClientFactory)
     {
-        _httpClient = httpClientFactory.CreateClient("LlmApi");
+        _httpClient = httpClientFactory.CreateClient("LlmAPI");
     }
     
-    public Task<LlmMessage> InvokeLlmAgentAsync(IEnumerable<LlmMessage> llmChat)
+    public async Task<LlmMessage> InvokeLlmAgentAsync(IEnumerable<LlmMessage> llmChat)
     {
-        throw new NotImplementedException();
+        var response = await _httpClient.PostAsJsonAsync<IEnumerable<LlmMessage>>("agent/invoke", llmChat);
+        response.EnsureSuccessStatusCode();
+        var responseContents = await response.Content.ReadFromJsonAsync<List<LlmMessage>>() ?? throw new NullReferenceException();
+        return responseContents.First();
     }
 
     public Task AddRagDocumentsAsync(IEnumerable<RagDocument> documents)
