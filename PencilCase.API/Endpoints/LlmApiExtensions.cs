@@ -64,7 +64,7 @@ public static class LlmApiExtensions
         
         ragGroup.MapPost("", async (
                 [FromServices] IRagService ragService, 
-                [FromBody] List<Document> documents) =>
+                [FromBody] List<RagDocument> documents) =>
             {
                 await ragService.AddDocs(documents);
                 return Results.Created();
@@ -81,7 +81,7 @@ public static class LlmApiExtensions
                 Guid parentId,
                 Guid id) =>
             {
-                var doc = new Document() { Id = id, ParentId = parentId };
+                var doc = new RagDocument() { Id = id, ParentId = parentId };
                 
                 try
                 {
@@ -103,7 +103,7 @@ public static class LlmApiExtensions
         
         ragGroup.MapPut("", async (
                 [FromServices] IRagService ragService, 
-                [FromBody] Document doc) =>
+                [FromBody] RagDocument doc) =>
             {
                 await ragService.UpdateDoc(doc);
                 return Results.Ok();

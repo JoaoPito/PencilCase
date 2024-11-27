@@ -25,9 +25,9 @@ public class PineconeService : IRagService
         _defaultNamespace = configuration["Pinecone:DefaultNamespace"] ?? "";
     }
     
-    public async Task<List<Document>?> GetDocsByQuery(string query, List<Guid> parentIds, uint nResults = 3)
+    public async Task<List<RagDocument>?> GetDocsByQuery(string query, List<Guid> parentIds, uint nResults = 3)
     {
-        var queryEmbedding = await EmbedDocuments(new List<Document> { new(){ Content = query } });
+        var queryEmbedding = await EmbedDocuments(new List<RagDocument> { new(){ Content = query } });
 
         var queryVector = queryEmbedding.Data.Select((e) => 
             e.Values?.Select(Convert.ToSingle).ToArray()).FirstOrDefault();
@@ -57,7 +57,7 @@ public class PineconeService : IRagService
         return resultDocs;
     }
 
-    public async Task AddDocs(List<Document> docs)
+    public async Task AddDocs(List<RagDocument> docs)
     {
         var embeddings = await EmbedDocuments(docs);
 
@@ -83,7 +83,7 @@ public class PineconeService : IRagService
         });
     }
 
-    public async Task DeleteSingleDoc(Document doc)
+    public async Task DeleteSingleDoc(RagDocument doc)
     {
         try
         {
@@ -104,11 +104,11 @@ public class PineconeService : IRagService
         
     }
 
-    public async Task UpdateDoc(Document doc)
+    public async Task UpdateDoc(RagDocument doc)
     {
         var index = _client.Index(_defaultIndex);
         
-        var queryEmbedding = await EmbedDocuments(new List<Document> { doc });
+        var queryEmbedding = await EmbedDocuments(new List<RagDocument> { doc });
 
         var docVector = queryEmbedding.Data.Select((e) => 
             e.Values?.Select(Convert.ToSingle).ToArray()).FirstOrDefault();
@@ -124,7 +124,7 @@ public class PineconeService : IRagService
         });
     }
 
-    private async Task<EmbeddingsList> EmbedDocuments(List<Document> docs)
+    private async Task<EmbeddingsList> EmbedDocuments(List<RagDocument> docs)
     {
         return await _client.Inference.EmbedAsync(new EmbedRequest()
         {
@@ -138,12 +138,12 @@ public class PineconeService : IRagService
         });
     }
 
-    private Document MapMatchToDocument(ScoredVector match)
+    private RagDocument MapMatchToDocument(ScoredVector match)
     {
         var id = Guid.Parse(match.Id.Split(IdSeparator).LastOrDefault() ?? "");
         var parentId = Guid.Parse(match.Metadata?[ParentIdMetadataKey]?.Value.ToString() ?? string.Empty);
         var text = match.Metadata?[TextMetadataKey]?.Value.ToString() ?? string.Empty;
-        return new Document()
+        return new RagDocument()
         {
             Id = id,
             ParentId = parentId,
@@ -151,7 +151,7 @@ public class PineconeService : IRagService
         };
     }
 
-    private String GetDocumentId(Document doc)
+    private String GetDocumentId(RagDocument doc)
     {
         return $"{doc.ParentId}{IdSeparator}{doc.Id}";
     }
