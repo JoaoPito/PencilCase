@@ -86,13 +86,21 @@ public partial class CellView : ComponentBase
     
     async Task LoadChildren()
     {
+        _childError = false;
         if (Block is not null && Block.ChildrenIds.Any())
         {
-            _loadedChildren = await BlocksApi.GetChildren(Block.Id);
-            _loadedChildren = _loadedChildren.OrderBy(c => c.Properties.CreatedOn);
-            _shownChild = _loadedChildren
-                .OrderBy(c => c.Properties.Order)
-                .First();
+            try
+            {
+                _loadedChildren = await BlocksApi.GetChildren(Block.Id);
+                _loadedChildren = _loadedChildren.OrderBy(c => c.Properties.CreatedOn);
+                _shownChild = _loadedChildren
+                    .OrderBy(c => c.Properties.Order)
+                    .First();
+            }
+            catch (Exception)
+            {
+                _childError = true;
+            }
         }
     }
     
