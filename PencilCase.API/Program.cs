@@ -33,16 +33,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<PencilCase.Shared.Data.Database.DAL<Block>>();
 
-builder.Services.AddHttpClient("GeminiApi", client =>
-{
-    client.BaseAddress = new Uri(builder.Configuration["GeminiApi:BaseUrl"]!);
-    client.DefaultRequestHeaders.Accept.Add(
-        new MediaTypeWithQualityHeaderValue("application/json"));
-});
-
-builder.Services.AddScoped<ILlmApiService, GeminiApiService>();
-builder.Services.AddScoped<IRagService, PineconeService>();
-
 var blocksDbConnectionString = builder.Configuration.GetConnectionString("ApiDatabase");
 
 builder.Services.AddDbContext<BlocksDbContext>(options => {
@@ -56,6 +46,16 @@ builder.Services.AddDbContext<TelemetryDbContext>(options =>
 {
     options.UseNpgsql(telemetryDbConnectionString);
 });
+
+builder.Services.AddHttpClient("GeminiApi", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["GeminiApi:BaseUrl"]!);
+    client.DefaultRequestHeaders.Accept.Add(
+        new MediaTypeWithQualityHeaderValue("application/json"));
+});
+
+builder.Services.AddScoped<ILlmApiService, GeminiApiService>();
+builder.Services.AddScoped<IRagService, PineconeService>();
 
 builder.Services.AddCors(
     options => options.AddPolicy(
