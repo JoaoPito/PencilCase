@@ -4,6 +4,7 @@ using MudBlazorFix;
 using PencilCase.Shared.Models.Notebooks;
 using PencilCase.Web.Pages.Notebooks.Models;
 using PencilCase.Web.Services;
+using PencilCase.Web.Services.Notebooks;
 
 namespace PencilCase.Web.Pages.Notebooks.Topics;
 

@@ -5,6 +5,7 @@ using PencilCase.Web;
 using MudBlazor.Services;
 using PencilCase.Web.Services;
 using PencilCase.Shared.Files.FileExporters;
+using PencilCase.Web.Services.Notebooks;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");

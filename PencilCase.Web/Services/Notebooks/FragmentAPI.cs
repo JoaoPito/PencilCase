@@ -5,7 +5,7 @@ using PencilCase.Shared.Models;
 using PencilCase.Web.Pages.StudyGuideGenerator.Models;
 using PencilCase.Web.Pages.StudyGuideGenerator.Models.Responses;
 
-namespace PencilCase.Web.Services;
+namespace PencilCase.Web.Services.Notebooks;
 
 public class FragmentApi
 {

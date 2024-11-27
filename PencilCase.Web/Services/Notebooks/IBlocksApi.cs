@@ -1,8 +1,6 @@
-using PencilCase.Shared.DTOs.Requests.Blocks;
-using PencilCase.Shared.DTOs.Responses.Blocks;
 using PencilCase.Web.Pages.Notebooks.Models;
 
-namespace PencilCase.Web.Services;
+namespace PencilCase.Web.Services.Notebooks;
 
 public interface IBlocksApi
 {
