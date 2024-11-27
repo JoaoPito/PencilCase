@@ -5,7 +5,7 @@ namespace PencilCase.Telemetry.Data.Database;
 
 public class TelemetryDbContext : DbContext
 {
-    public List<GenerationResultEntry> GenerationResultEntries { get; set; } = new();
+    public virtual DbSet<GenerationResultEntry> GenerationResultEntries { get; set; }
 
     public TelemetryDbContext(DbContextOptions options) : base(options)
     {
