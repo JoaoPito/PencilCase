@@ -1,7 +1,7 @@
 using System.Dynamic;
 using System.Net.Http.Json;
 using Microsoft.Extensions.Configuration;
-using PencilCase.LLM.Agents.Models;
+using PencilCase.Shared.Models.LLM.Agents;
 
 namespace PencilCase.LLM.Agents.GeminiApi;
 

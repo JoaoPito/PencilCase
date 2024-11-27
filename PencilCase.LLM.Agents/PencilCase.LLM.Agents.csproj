@@ -16,4 +16,12 @@
       </Reference>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Models\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\PencilCase.Shared.Models\PencilCase.Shared.Models.csproj" />
+    </ItemGroup>
+
 </Project>

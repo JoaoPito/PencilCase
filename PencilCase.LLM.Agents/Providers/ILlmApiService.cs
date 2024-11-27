@@ -1,4 +1,4 @@
-using PencilCase.LLM.Agents.Models;
+using PencilCase.Shared.Models.LLM.Agents;
 
 namespace PencilCase.LLM.Agents;
 
