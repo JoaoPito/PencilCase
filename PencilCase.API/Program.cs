@@ -3,13 +3,12 @@ using Asp.Versioning;
 using Microsoft.EntityFrameworkCore;
 using PencilCase.API.Endpoints;
 using PencilCase.Shared.Data.Database;
-using PencilCase.LLM.Agents;
 using PencilCase.LLM.Agents.Providers;
 using PencilCase.LLM.Agents.Providers.Gemini;
 using PencilCase.LLM.RAG;
-using PencilCase.LLM.RAG.Providers;
 using PencilCase.LLM.RAG.Providers.Pinecone;
 using PencilCase.Shared.Models.Notebooks;
+using PencilCase.Telemetry.Data.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +31,7 @@ builder.Services.AddApiVersioning(options => {
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<DAL<Block>>();
+builder.Services.AddScoped<PencilCase.Shared.Data.Database.DAL<Block>>();
 
 builder.Services.AddHttpClient("GeminiApi", client =>
 {
@@ -49,6 +48,13 @@ var blocksDbConnectionString = builder.Configuration.GetConnectionString("ApiDat
 builder.Services.AddDbContext<BlocksDbContext>(options => {
     options.UseNpgsql(blocksDbConnectionString)
         .UseLazyLoadingProxies();
+});
+
+var telemetryDbConnectionString = builder.Configuration.GetConnectionString("TelemetryDb");
+
+builder.Services.AddDbContext<TelemetryDbContext>(options =>
+{
+    options.UseNpgsql(telemetryDbConnectionString);
 });
 
 builder.Services.AddCors(
