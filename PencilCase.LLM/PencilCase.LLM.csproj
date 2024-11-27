@@ -19,6 +19,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\PencilCase.Shared.Models\PencilCase.Shared.Models.csproj" />
+      <ProjectReference Include="..\PencilCase.Telemetry.Data\PencilCase.Telemetry.Data.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -1,11 +1,15 @@
 using Microsoft.Extensions.Configuration;
 using PencilCase.Shared.Models.LLM.RAG;
+using PencilCase.Shared.Models.Telemetry.LLM.Agents;
+using PencilCase.Shared.Models.Telemetry.LLM.RAG;
+using PencilCase.Telemetry.Data.Database;
 using Pinecone;
 
 namespace PencilCase.LLM.RAG.Providers.Pinecone;
 
 public class PineconeService : IRagService
 {
+    private readonly DAL<RagOperationEntry> _ragOpTelemetry;
     private readonly string _embedModel;
     private readonly string _defaultNamespace;
     private readonly PineconeClient _client;
@@ -15,8 +19,10 @@ public class PineconeService : IRagService
     private const string TextMetadataKey = "text"; 
     private const char IdSeparator = ':';
 
-    public PineconeService(IConfiguration configuration)
+    public PineconeService(IConfiguration configuration, 
+        DAL<RagOperationEntry> ragOpTelemetry)
     {
+        _ragOpTelemetry = ragOpTelemetry;
         var apiKey = configuration["Pinecone:ApiKey"];
         _client = new PineconeClient(apiKey);
         _embedModel = configuration["Pinecone:EmbedModel"] ?? "multilingual-e5-large";
@@ -27,7 +33,7 @@ public class PineconeService : IRagService
     public async Task<List<RagDocument>?> GetDocsByQuery(string query, List<Guid> parentIds, uint nResults = 3)
     {
         var queryEmbedding = await EmbedDocuments(new List<RagDocument> { new(){ Content = query } });
-
+        
         var queryVector = queryEmbedding.Data.Select((e) => 
             e.Values?.Select(Convert.ToSingle).ToArray()).FirstOrDefault();
         
@@ -53,6 +59,11 @@ public class PineconeService : IRagService
             .Matches?
             .Select(MapMatchToDocument)
             .ToList();
+        
+        var telemetryEntry = PineconeTelemetryEntryHelpers
+            .BuildQueryTelemetryEntry(queryResults, queryEmbedding, resultDocs);
+        await TryAddEntryToTelemetry(telemetryEntry);
+        
         return resultDocs;
     }
 
@@ -80,6 +91,10 @@ public class PineconeService : IRagService
             Vectors = records,
             Namespace = _defaultNamespace
         });
+        
+        var telemetryEntry = PineconeTelemetryEntryHelpers
+            .BuildWriteTelemetryEntry(embeddings, docs);
+        await TryAddEntryToTelemetry(telemetryEntry);
     }
 
     public async Task DeleteSingleDoc(RagDocument doc)
@@ -100,7 +115,6 @@ public class PineconeService : IRagService
             else
                 throw;
         }
-        
     }
 
     public async Task UpdateDoc(RagDocument doc)
@@ -121,6 +135,10 @@ public class PineconeService : IRagService
                 [TextMetadataKey] = new ( doc.Content )
             }
         });
+        
+        var telemetryEntry = PineconeTelemetryEntryHelpers
+            .BuildUpdateTelemetryEntry(queryEmbedding, new List<RagDocument> { doc });
+        await TryAddEntryToTelemetry(telemetryEntry);
     }
 
     private async Task<EmbeddingsList> EmbedDocuments(List<RagDocument> docs)
@@ -153,5 +171,17 @@ public class PineconeService : IRagService
     private String GetDocumentId(RagDocument doc)
     {
         return $"{doc.ParentId}{IdSeparator}{doc.Id}";
+    }
+
+    private async Task TryAddEntryToTelemetry(RagOperationEntry entry)
+    {
+        try
+        {
+            await _ragOpTelemetry.Add(entry);
+        }
+        catch (Exception)
+        {
+            return;
+        }
     }
 }

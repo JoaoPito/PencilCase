@@ -8,6 +8,7 @@ using PencilCase.LLM.Agents.Providers.Gemini;
 using PencilCase.LLM.RAG;
 using PencilCase.LLM.RAG.Providers.Pinecone;
 using PencilCase.Shared.Models.Notebooks;
+using PencilCase.Shared.Models.Telemetry.LLM.RAG;
 using PencilCase.Telemetry.Data.Database;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,6 +40,8 @@ builder.Services.AddDbContext<BlocksDbContext>(options => {
     options.UseNpgsql(blocksDbConnectionString)
         .UseLazyLoadingProxies();
 });
+
+builder.Services.AddScoped<PencilCase.Telemetry.Data.Database.DAL<RagOperationEntry>>();
 
 var telemetryDbConnectionString = builder.Configuration.GetConnectionString("TelemetryDb");
 
