@@ -1,4 +1,4 @@
-namespace PencilCase.LLM.Requests;
+namespace PencilCase.LLM.DTOs;
 
 public class QueryRequest
 {
