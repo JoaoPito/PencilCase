@@ -13,12 +13,12 @@ public class LlmApi : ILlmApi
         _httpClient = httpClientFactory.CreateClient("LlmAPI");
     }
     
-    public async Task<LlmMessage> InvokeLlmAgentAsync(IEnumerable<LlmMessage> llmChat)
+    public async Task<IEnumerable<LlmMessage>>  InvokeLlmAgentAsync(IEnumerable<LlmMessage> llmChat)
     {
         var response = await _httpClient.PostAsJsonAsync<IEnumerable<LlmMessage>>("agent/invoke", llmChat);
         response.EnsureSuccessStatusCode();
-        var responseContents = await response.Content.ReadFromJsonAsync<List<LlmMessage>>() ?? throw new NullReferenceException();
-        return responseContents.First();
+        var responseContents = await response.Content.ReadFromJsonAsync<List<LlmMessage>>() ?? new List<LlmMessage>();
+        return responseContents;
     }
 
     public Task AddRagDocumentsAsync(IEnumerable<RagDocument> documents)
