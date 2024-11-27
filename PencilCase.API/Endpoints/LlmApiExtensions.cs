@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using PencilCase.LLM.Agents;
 using PencilCase.LLM.Providers;
+using PencilCase.LLM.Agents.Providers;
 using PencilCase.LLM.Requests;
 using PencilCase.Shared.Models.LLM.Agents;
 using PencilCase.Shared.Models.LLM.RAG;

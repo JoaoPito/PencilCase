@@ -1,6 +1,6 @@
 using PencilCase.Shared.Models.LLM.Agents;
 
-namespace PencilCase.LLM.Agents;
+namespace PencilCase.LLM.Agents.Providers;
 
 public interface ILlmApiService
 {
