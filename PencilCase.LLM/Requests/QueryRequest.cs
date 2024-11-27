@@ -1,4 +1,4 @@
-namespace PencilCase.LLM.RAG.Requests;
+namespace PencilCase.LLM.Requests;
 
 public class QueryRequest
 {

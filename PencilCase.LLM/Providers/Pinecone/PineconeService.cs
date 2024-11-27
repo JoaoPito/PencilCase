@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using PencilCase.Shared.Models.LLM.RAG;
 using Pinecone;
 
-namespace PencilCase.LLM.RAG.Providers.Pinecone;
+namespace PencilCase.LLM.Providers.Pinecone;
 
 public class PineconeService : IRagService
 {

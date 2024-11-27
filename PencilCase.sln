@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PencilCase.Shared.DTOs", "P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PencilCase.LLM.Agents", "PencilCase.LLM.Agents\PencilCase.LLM.Agents.csproj", "{1B88764D-B5EC-49A1-A85C-4BFA6F30624A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PencilCase.LLM.RAG", "PencilCase.LLM.RAG\PencilCase.LLM.RAG.csproj", "{67F89BB7-1479-478C-8351-2539CF0A7553}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PencilCase.LLM", "PencilCase.LLM\PencilCase.LLM.csproj", "{67F89BB7-1479-478C-8351-2539CF0A7553}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
