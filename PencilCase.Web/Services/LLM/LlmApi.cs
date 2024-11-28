@@ -22,9 +22,10 @@ public class LlmApi : ILlmApi
         return responseContents;
     }
 
-    public Task AddRagDocumentsAsync(IEnumerable<RagDocument> documents)
+    public async Task AddRagDocumentsAsync(IEnumerable<RagDocument> documents)
     {
-        throw new NotImplementedException();
+        var response = await _httpClient.PostAsJsonAsync("rag", documents);
+        response.EnsureSuccessStatusCode();
     }
 
     public Task<IEnumerable<RagDocument>> QueryRagDocumentsAsync(string llmId)
