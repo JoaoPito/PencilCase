@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using PencilCase.LLM.DTOs;
 using PencilCase.Shared.Models.LLM.Agents;
 using PencilCase.Shared.Models.LLM.RAG;
 
@@ -15,7 +16,7 @@ public class LlmApi : ILlmApi
     
     public async Task<IEnumerable<LlmMessage>>  InvokeLlmAgentAsync(IEnumerable<LlmMessage> llmChat)
     {
-        var response = await _httpClient.PostAsJsonAsync<IEnumerable<LlmMessage>>("agent/invoke", llmChat);
+        var response = await _httpClient.PostAsJsonAsync("agent/invoke", llmChat);
         response.EnsureSuccessStatusCode();
         var responseContents = await response.Content.ReadFromJsonAsync<List<LlmMessage>>() ?? new List<LlmMessage>();
         return responseContents;
