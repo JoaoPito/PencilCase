@@ -40,7 +40,7 @@ public class GeminiApiService : ILlmApiService
         
         var response = await _httpClient.PostAsJsonAsync<GeminiApiRequest>(url, request);
         if(!response.IsSuccessStatusCode)
-            throw new HttpRequestException($"Error '{response.StatusCode}' while generating content with gemini model.");
+            throw new HttpRequestException($"Error '{response.StatusCode}' while generating content with gemini model.\n Request: {System.Text.Json.JsonSerializer.Serialize(request)}\n Response: {response.Content}");
 
         var responseContents = await response.Content.ReadFromJsonAsync<GeminiApiResponse>();
         if(responseContents is null)
