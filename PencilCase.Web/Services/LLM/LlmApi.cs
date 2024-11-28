@@ -28,9 +28,19 @@ public class LlmApi : ILlmApi
         response.EnsureSuccessStatusCode();
     }
 
-    public Task<IEnumerable<RagDocument>> QueryRagDocumentsAsync(string llmId)
+    public async Task<IEnumerable<RagDocument>> QueryRagDocumentsAsync(string query, List<Guid> parentIds, uint? nResults=3)
     {
-        throw new NotImplementedException();
+        var request = new QueryRequest
+        {
+            Query = query,
+            ParentIds = parentIds,
+            NResults = nResults ?? 3
+        };
+        var response = await _httpClient.PostAsJsonAsync("rag/search", request);
+        
+        response.EnsureSuccessStatusCode();
+        var responseContents = await response.Content.ReadFromJsonAsync<List<RagDocument>>() ?? new List<RagDocument>();
+        return responseContents;
     }
 
     public Task DeleteRagDocumentsAsync(IEnumerable<RagDocument> documents)
