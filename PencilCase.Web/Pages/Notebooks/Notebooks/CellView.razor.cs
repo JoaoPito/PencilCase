@@ -1,9 +1,5 @@
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
-using MudBlazor.Extensions;
-using PencilCase.LLM.Agents.Providers.Gemini;
-using PencilCase.Shared.Models.LLM.Agents;
 using PencilCase.Shared.Models.LLM.RAG;
 using PencilCase.Shared.Models.Notebooks;
 using PencilCase.Web.Pages.Notebooks.Models;
@@ -17,76 +13,24 @@ public partial class CellView : ComponentBase
     bool _isLoading = false;
     bool _childError = false;
     
+    public Guid? TopicId { get; set; }
     [Parameter] public BlockViewModel? Block { get; set; }
     [Parameter] public IBlocksApi BlocksApi { get; set; } = null!;
+    [Parameter] public Func<BlockViewModel, Guid?, Task<List<RagDocument>>> SearchDocumentsAsync { get; set; } = null!;
+    [Parameter] public Func<BlockViewModel, List<RagDocument>, Task<List<BlockViewModel>>> InvokeLlmFor { get; set; } = null!;
     [Parameter] public EventCallback? OnNewCellShortcut { get; set; }
-    [Inject] public ILlmApi LlmApi { get; set; }
+    [Inject] public ILlmApi LlmApi { get; set; } = null!;
 
     IEnumerable<BlockViewModel> _loadedChildren = new List<BlockViewModel>();
     BlockViewModel? _shownChild;
 
     MudTextField<string> _inputTextField = null!;
+    private string? _cellMsg;
 
     protected override async Task OnInitializedAsync()
     {
         await LoadChildren();
         await base.OnInitializedAsync();
-    }
-
-    async Task OnInputValueChanged(string newValue)
-    {
-        if (Block is not null)
-        {
-            Block.Name = newValue.Trim();
-            await UpdateChangesTo(Block);
-        }
-    }
-
-    async Task OnKeyDown(KeyboardEventArgs args)
-    {
-        if (args.CtrlKey && args.Key=="Enter")
-        {
-            await _inputTextField.BlurAsync();
-            await GenerateOutputIfPossible();
-        }
-
-        if (args.ShiftKey && args.Key == "Enter")
-        {
-            Console.WriteLine("Creating new cell");
-            if(OnNewCellShortcut is not null) await OnNewCellShortcut.As<EventCallback>().InvokeAsync();
-        }
-    }
-
-    async Task OnSubmitClick()
-    {
-        await _inputTextField.BlurAsync();
-        await GenerateOutputIfPossible();
-    }
-
-    void OnArrowLeftClick()
-    {
-        if (_shownChild is not null)
-        {
-            var nextChild = _loadedChildren
-                .LastOrDefault(c => c.Properties.CreatedOn < _shownChild.Properties.CreatedOn);
-            SwapShownChildAndUpdate(nextChild);
-        }
-    }
-
-    void OnArrowRightClick()
-    {
-        if (_shownChild is not null)
-        {
-            var nextChild = _loadedChildren
-                .FirstOrDefault(c => c.Properties.CreatedOn > _shownChild.Properties.CreatedOn);
-            SwapShownChildAndUpdate(nextChild);
-        }
-            
-    }
-
-    void OnDeleteClick()
-    {
-        
     }
     
     async Task LoadChildren()
@@ -100,7 +44,7 @@ public partial class CellView : ComponentBase
                 _loadedChildren = _loadedChildren.OrderBy(c => c.Properties.CreatedOn);
                 _shownChild = _loadedChildren
                     .OrderBy(c => c.Properties.Order)
-                    .First();
+                    .Last();
             }
             catch (Exception)
             {
@@ -108,103 +52,60 @@ public partial class CellView : ComponentBase
             }
         }
     }
-    
-    int _exampleCounter = 0;
 
-    async Task GenerateOutputIfPossible()
+    async Task SubmitCell()
     {
         if (IsGenerator() && !string.IsNullOrWhiteSpace(Block!.Name))
         {
-            _isLoading = true;
-            _childError = false;
-            StateHasChanged();
-
-            try
-            {
-                var genResult = await GenerateAnswersTo(Block!.Name);
-                
-                foreach (var block in genResult)
-                {
-                    Block!.ChildrenIds = Block!.ChildrenIds.Append(block.Id);
-                    _loadedChildren = _loadedChildren.Append(block);
-                
-                    SwapShownChildAndUpdate(block);
-                }
-            }
-            catch (Exception)
-            {
-                _childError = true;
-                throw;
-            }
-            _isLoading = false;
+            var answers = await TryGenerateAnswersTo();
+            await AddNewAnswers(answers);
         }
     }
 
-    async Task<List<BlockViewModel>> GenerateAnswersTo(string query)
+    async Task<List<BlockViewModel>> TryGenerateAnswersTo()
+    {
+        _childError = false;
+        try
+        {
+            return await GenerateAnswersTo(Block!);
+        }
+        catch (Exception)
+        {
+            _childError = true;
+            throw;
+        }
+    }
+
+    async Task<List<BlockViewModel>> GenerateAnswersTo(BlockViewModel query)
     {
         if (Block!.ParentId is null)
             throw new ArgumentException("Cannot generate LLM result on root block!");
 
-        var parentBlock = await BlocksApi.GetBlock(Block!.ParentId ?? new Guid());
-        
-        if (parentBlock!.ParentId is null)
-            throw new ArgumentException("Cannot generate LLM result on root block!");
-        
-        var parentIds = new List<Guid> { parentBlock!.ParentId ?? new Guid() };
-        Console.WriteLine($"Sending query to RAG with query {query} and parentIds {parentIds.First()}");
-        
-        var ragResults = await LlmApi.QueryRagDocumentsAsync(query,parentIds);
-        Console.WriteLine($"Got {ragResults.Count()} results from RAG. ");
-        
-        var llmResults = await LlmApi.InvokeLlmAgentAsync(
-            BuildChatMessagesWithRag(Block!.Name, ragResults.ToList()));
-        
-        return llmResults.Select(r => new BlockViewModel()
-        {
-            Id = new Guid(),
-            Name = r.Content,
-            ParentId = Block!.Id,
-            Type = BlockType.Cell,
-            Properties = new BlockPropertiesViewModel()
-            {
-                CellType = CellType.Text,
-                CreatedOn = DateTime.UtcNow,
-                LastModified = DateTime.UtcNow,
-                Order = _shownChild is null ? 0 : _shownChild.Properties.Order + 1
-            }
-        }).ToList();
+        _cellMsg = "Searching for related information...";
+        var docs = await SearchDocumentsAsync(Block!, TopicId);
+        _cellMsg = "Generating answer...";
+        return await InvokeLlmFor(Block!, docs);
     }
 
-    List<LlmMessage> BuildChatMessagesWithRag(string prompt, List<RagDocument>? docs)
+    async Task AddNewAnswers(List<BlockViewModel> answers)
     {
-        var chatMessages = new List<LlmMessage>();
-        
-        // Append messages for other blocks in notebook
-        
-        if (docs is not null)
+        if (answers.Any())
         {
-            string docsMessage = "";
-        
-            for(int i = 0; i < docs!.Count(); i++)
+            foreach (var answer in answers)
             {
-                if(!string.IsNullOrWhiteSpace(docs[i].Content))
-                {
-                    docsMessage += $"# CHUNK {i+1}\n{docs[i].Content}\n";
-                    Console.WriteLine($"docsMessage: {docsMessage}");
-                }
+                Block!.ChildrenIds = Block!.ChildrenIds.Append(answer.Id);
+                await BlocksApi.AddBlock(answer);
             }
-            if(!string.IsNullOrWhiteSpace(docsMessage))
-                chatMessages = chatMessages.Append(new LlmMessage()
-                {
-                    Role = "user",
-                    Content = docsMessage,
-                }).ToList();
+            if (_shownChild != null)
+            {
+                _shownChild.Properties.Order = 0;
+                await BlocksApi.UpdateBlock(_shownChild);
+            }
+            var lastChild = answers.Last();
+            lastChild.Properties.Order = 1;
+            await BlocksApi.UpdateBlock(lastChild);
+            _shownChild = lastChild;
         }
-        return chatMessages.Append(new LlmMessage()
-        {
-            Role = "user",
-            Content = prompt,
-        }).ToList();
     }
     
     bool IsGenerator()

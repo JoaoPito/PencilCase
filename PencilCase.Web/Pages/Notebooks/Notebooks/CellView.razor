@@ -46,6 +46,8 @@
                 <MudSkeleton Width="100%" Animation="Animation.Wave" />
                 <MudSkeleton Width="60%" Animation="Animation.Wave" />
             </MudStack>
+            @if(_cellMsg != null)
+            <MudText Typo="Typo.h6" Align="Align.Left">@_cellMsg</MudText>
         }
         else if (_childError)
         {
@@ -74,4 +76,63 @@
 </MudCard>
 
 @code {
+    async Task OnInputValueChanged(string newValue)
+    {
+        if (Block is not null)
+        {
+            Block.Name = newValue.Trim();
+            await UpdateChangesTo(Block);
+        }
+    }
+
+    async Task OnKeyDown(KeyboardEventArgs args)
+    {
+        if (args.CtrlKey && args.Key=="Enter")
+        {
+            await _inputTextField.BlurAsync();
+            await TryGenerateAnswersTo();
+        }
+
+        if (args.ShiftKey && args.Key == "Enter")
+        {
+            Console.WriteLine("Creating new cell");
+            if(OnNewCellShortcut is not null) await OnNewCellShortcut.As<EventCallback>().InvokeAsync();
+        }
+    }
+
+    async Task OnSubmitClick()
+    {
+        await _inputTextField.BlurAsync();
+        _isLoading = true;
+        StateHasChanged();
+        await SubmitCell();
+        _isLoading = false;
+        StateHasChanged();
+    }
+
+    void OnArrowLeftClick()
+    {
+        if (_shownChild is not null)
+        {
+            var nextChild = _loadedChildren
+                .LastOrDefault(c => c.Properties.CreatedOn < _shownChild.Properties.CreatedOn);
+            SwapShownChildAndUpdate(nextChild);
+        }
+    }
+
+    void OnArrowRightClick()
+    {
+        if (_shownChild is not null)
+        {
+            var nextChild = _loadedChildren
+                .FirstOrDefault(c => c.Properties.CreatedOn > _shownChild.Properties.CreatedOn);
+            SwapShownChildAndUpdate(nextChild);
+        }
+            
+    }
+
+    void OnDeleteClick()
+    {
+        
+    }
 }
