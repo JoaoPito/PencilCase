@@ -90,7 +90,7 @@
         if (args.CtrlKey && args.Key=="Enter")
         {
             await _inputTextField.BlurAsync();
-            await TryGenerateAnswersTo();
+            await TrySearchAndGenerateAnswers();
         }
 
         if (args.ShiftKey && args.Key == "Enter")

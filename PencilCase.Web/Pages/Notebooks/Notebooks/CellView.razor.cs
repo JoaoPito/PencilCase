@@ -57,17 +57,17 @@ public partial class CellView : ComponentBase
     {
         if (IsGenerator() && !string.IsNullOrWhiteSpace(Block!.Name))
         {
-            var answers = await TryGenerateAnswersTo();
+            var answers = await TrySearchAndGenerateAnswers();
             await AddNewAnswers(answers);
         }
     }
 
-    async Task<List<BlockViewModel>> TryGenerateAnswersTo()
+    async Task<List<BlockViewModel>> TrySearchAndGenerateAnswers()
     {
         _childError = false;
         try
         {
-            return await GenerateAnswersTo(Block!);
+            return await SearchAndGenerateAnswersTo(Block!);
         }
         catch (Exception)
         {
@@ -76,7 +76,7 @@ public partial class CellView : ComponentBase
         }
     }
 
-    async Task<List<BlockViewModel>> GenerateAnswersTo(BlockViewModel query)
+    async Task<List<BlockViewModel>> SearchAndGenerateAnswersTo(BlockViewModel query)
     {
         if (Block!.ParentId is null)
             throw new ArgumentException("Cannot generate LLM result on root block!");
