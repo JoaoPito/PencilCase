@@ -23,6 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\PencilCase.API\PencilCase.API.csproj" />
       <ProjectReference Include="..\PencilCase.LLM\PencilCase.LLM.csproj" />
       <ProjectReference Include="..\PencilCase.Shared.Models\PencilCase.Shared.Models.csproj" />
     </ItemGroup>
