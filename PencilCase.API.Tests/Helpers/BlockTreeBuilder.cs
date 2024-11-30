@@ -17,29 +17,27 @@ public static class BlockTreeBuilder
         return topic;
     }
 
-    public static Block AddNotebook(this Block root, string name, List<Block> cells)
+    public static Block AddNotebook(this Block root, string name)
     {
         var notebook = new Block()
         {
             Name = name,
             Parent = root,
             ParentId = root.Id,
-            Type = BlockType.Notebook,
-            Children = cells
+            Type = BlockType.Notebook
         };
         root.Children.Add(notebook);
         return notebook;
     }
 
-    public static Block AddDocument(this Block root, string name, List<Block> cells)
+    public static Block AddDocument(this Block root, string name)
     {
         var document = new Block()
         {
             Name = name,
             Parent = root,
             ParentId = root.Id,
-            Type = BlockType.Source,
-            Children = cells
+            Type = BlockType.Source
         };
         root.Children.Add(document);
         return document;
@@ -78,6 +76,9 @@ public static class BlockTreeBuilder
     
     public static Block AddAnswer(this Block question, string contents, int order)
     {
+        if (question.Type != BlockType.Cell || question.Properties!.CellType != CellType.Question)
+            throw new ArgumentException("Invalid root block type");
+        
         var answer = new Block()
         {
             Name = contents,
@@ -92,5 +93,26 @@ public static class BlockTreeBuilder
         };
         question.Children.Add(answer);
         return answer;
+    }
+    
+    public static Block AddChunk(this Block document, string contents, int order)
+    {
+        if (document.Type != BlockType.Source)
+            throw new ArgumentException("Invalid root block type");
+        
+        var chunk = new Block()
+        {
+            Name = contents,
+            Parent = document,
+            ParentId = document.Id,
+            Type = BlockType.Cell,
+            Properties = new BlockProperties()
+            {
+                CellType = CellType.Text,
+                Order = order
+            }
+        };
+        document.Children.Add(chunk);
+        return chunk;
     }
 }
