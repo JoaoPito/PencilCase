@@ -104,6 +104,8 @@ public class LlmApiFunctionalTests
             algebraChunk1,
             psychChunk
         };
+        
+        // Under the hood pencilcase adds the information to its database
         await _apiHandler.AddChunksAsync(pdfs);
         
         _expectedRagChunks.Add(new RagDocument(){ Id = mathChunk1.Id, ParentId = (Guid)mathChunk1.ParentId!, Content = mathChunk1.Name });
@@ -145,7 +147,7 @@ public class LlmApiFunctionalTests
             "Expected parents for result chunks are different from actual result.");
         
         // Then, pencilcase sends the chunks to the LLM using the appropriate endpoint
-        var resultAnswer =  await _apiHandler.InvokeAgent(
+        var resultAnswer =  await _apiHandler.InvokeAgentAsync(
             BuildLlmChatFromBlocks(new List<Block>()
         {
             firstQuestion
