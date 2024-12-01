@@ -30,7 +30,7 @@ public class PineconeService : IRagService
         _defaultNamespace = configuration["Pinecone:DefaultNamespace"] ?? "";
     }
     
-    public async Task<List<RagDocument>?> GetDocsByQuery(string query, List<Guid> parentIds, uint nResults = 3)
+    public async Task<List<RagDocument>?> GetChunksForQuery(string query, List<Guid> filterIds, uint nResults = 3)
     {
         var queryEmbedding = await EmbedDocuments(new List<RagDocument> { new(){ Content = query } });
         
@@ -50,7 +50,7 @@ public class PineconeService : IRagService
             {
                 [ParentIdMetadataKey] = new Metadata()
                 {
-                    ["$in"] = parentIds.Select(x => x.ToString()).ToArray()
+                    ["$in"] = filterIds.Select(x => x.ToString()).ToArray()
                 }
             }
         });
@@ -67,7 +67,7 @@ public class PineconeService : IRagService
         return resultDocs;
     }
 
-    public async Task AddDocs(List<RagDocument> docs)
+    public async Task AddChunks(List<RagDocument> docs)
     {
         var embeddings = await EmbedDocuments(docs);
 
@@ -97,6 +97,14 @@ public class PineconeService : IRagService
         await TryAddEntryToTelemetry(telemetryEntry);
     }
 
+    public async Task DeleteChunks(List<RagDocument> chunks)
+    {
+        foreach (var chunk in chunks)
+        {
+            await DeleteSingleDoc(chunk);
+        }
+    }
+
     public async Task DeleteSingleDoc(RagDocument doc)
     {
         try
@@ -115,30 +123,6 @@ public class PineconeService : IRagService
             else
                 throw;
         }
-    }
-
-    public async Task UpdateDoc(RagDocument doc)
-    {
-        var index = _client.Index(_defaultIndex);
-        
-        var queryEmbedding = await EmbedDocuments(new List<RagDocument> { doc });
-
-        var docVector = queryEmbedding.Data.Select((e) => 
-            e.Values?.Select(Convert.ToSingle).ToArray()).FirstOrDefault();
-
-        await index.UpdateAsync(new UpdateRequest {
-            Id = GetDocumentId(doc),
-            Namespace = _defaultNamespace,
-            Values = docVector,
-            SetMetadata = new Metadata {
-                [ParentIdMetadataKey] = new( doc.ParentId.ToString() ),
-                [TextMetadataKey] = new ( doc.Content )
-            }
-        });
-        
-        var telemetryEntry = PineconeTelemetryEntryHelpers
-            .BuildUpdateTelemetryEntry(queryEmbedding, new List<RagDocument> { doc });
-        await TryAddEntryToTelemetry(telemetryEntry);
     }
 
     private async Task<EmbeddingsList> EmbedDocuments(List<RagDocument> docs)
