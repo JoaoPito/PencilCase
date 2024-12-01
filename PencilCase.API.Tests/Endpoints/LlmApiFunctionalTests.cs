@@ -182,7 +182,7 @@ public class LlmApiFunctionalTests
             "Answer list is null or empty.");
     }
 
-    private List<LlmMessage> BuildLlmChatFromBlocks(Block blocks)
+    private List<LlmMessage> BuildLlmChatFromBlocks(List<Block> blocks)
     {
         var result = new List<LlmMessage>();
         foreach (var block in blocks)
