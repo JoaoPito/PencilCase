@@ -7,27 +7,33 @@ namespace PencilCase.API.Handlers;
 
 public class LlmApiEndpointsHandler : ILlmApiEndpointsHandler
 {
+    private readonly IRagService _ragService;
+    private readonly ILlmApiService _llmApiService;
+
     public LlmApiEndpointsHandler(IRagService ragService, ILlmApiService llmApiService)
     {
-        
+        _ragService = ragService;
+        _llmApiService = llmApiService;
     }
 
-    public Task AddChunksAsync(IEnumerable<Block> chunks)
+    public Task<IResult> AddChunksAsync(IEnumerable<Block> chunks)
     {
         throw new NotImplementedException();
     }
 
-    public Task<List<Block>> SearchForChunksAsync(Block query)
+    public Task<IResult> SearchForChunksAsync(Block query)
     {
         throw new NotImplementedException();
     }
 
-    public Task<List<LlmMessage>> InvokeAgentAsync(List<LlmMessage> chat, List<Block>? docs)
+    public async Task<IResult> InvokeAgentAsync(List<LlmMessage> chat)
     {
-        throw new NotImplementedException();
+        if(chat.Count < 1)
+            return Results.BadRequest();
+        return Results.Ok(await _llmApiService.GenerateContent(chat));
     }
 
-    public Task DeleteChunksAsync(List<Block> chunks)
+    public Task<IResult> DeleteChunksAsync(List<Block> chunks)
     {
         throw new NotImplementedException();
     }
