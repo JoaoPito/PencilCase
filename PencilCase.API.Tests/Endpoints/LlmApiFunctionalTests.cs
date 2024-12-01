@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Moq;
 using PencilCase.API.Handlers;
 using PencilCase.API.Tests.Helpers;
@@ -106,14 +108,16 @@ public class LlmApiFunctionalTests
         };
         
         // Under the hood pencilcase adds the information to its database
-        await _apiHandler.AddChunksAsync(pdfs);
+        var response = await _apiHandler.AddChunksAsync(pdfs);
+        Assert.That(response, Is.InstanceOf<Ok>(), 
+            "Handler returned IResult different than Ok when it should.");
         
         _expectedRagChunks.Add(new RagDocument(){ Id = mathChunk1.Id, ParentId = (Guid)mathChunk1.ParentId!, Content = mathChunk1.Name });
         _expectedRagChunks.Add(new RagDocument(){ Id = mathChunk2.Id, ParentId = (Guid)mathChunk2.ParentId!, Content = mathChunk2.Name });
         _expectedRagChunks.Add(new RagDocument(){ Id = algebraChunk1.Id, ParentId = (Guid)algebraChunk1.ParentId!, Content = algebraChunk1.Name });
         
         Assert.That(_capturedRagChunks, 
-            Is.EqualTo(new List<RagDocument>() { }),
+            Is.EquivalentTo(_expectedRagChunks),
             "Handler did not properly add chunks to RAG API.");
         
         // He, then, creates a new notebook and starts adding cells to it
@@ -122,7 +126,16 @@ public class LlmApiFunctionalTests
             .AddQuestion("What is 1+1?", 0);
 
         // he submits a cell he was working on, pencilcase starts looking for useful pieces of text
-        var resultChunks = await _apiHandler.SearchForChunksAsync(firstQuestion);
+        response = await _apiHandler.SearchForChunksAsync(firstQuestion);
+        Assert.That(response, Is.InstanceOf<Ok<List<Block>>>(), 
+            "Handler did not return an OK response with a list of chunks.");
+
+        var responseOk = response as Ok<List<Block>>;
+        Assert.That(responseOk, Is.Not.Null, "Response cast to Ok was null.");
+        Assert.That(responseOk.Value, Is.Not.Null.Or.Empty, 
+            "Handler returned response with empty or null body.");
+        
+        var resultChunks = responseOk!.Value!.ToList();
         
         // After some time loading, pencilcase gets the relevant documents to the question and shows them to Carlos
         // He sees that the system returned the math pdfs he uploaded earlier
@@ -133,10 +146,11 @@ public class LlmApiFunctionalTests
             algebraChunk1,
         };
 
-        Assert.That(resultChunks, Is.Not.Empty, "Handler returned an empty list.");
+        Assert.That(resultChunks, Is.Not.Empty, 
+            "Handler returned an empty list.");
         
         Assert.That(
-            resultChunks.ToList(), 
+            resultChunks, 
             Is.EquivalentTo(expectedChunks),
             $"Chunks returned from Handler are different than expected.");
         
@@ -147,7 +161,7 @@ public class LlmApiFunctionalTests
             "Expected parents for result chunks are different from actual result.");
         
         // Then, pencilcase sends the chunks to the LLM using the appropriate endpoint
-        var resultAnswer =  await _apiHandler.InvokeAgentAsync(
+        var llmInvokeResponse =  await _apiHandler.InvokeAgentAsync(
             BuildLlmChatFromBlocks(new List<Block>()
         {
             firstQuestion
@@ -155,7 +169,17 @@ public class LlmApiFunctionalTests
             resultChunks);
         
         // It loads for a couple of seconds, but pencilcase finally shows him the answer to his question
-        Assert.That(resultAnswer, Is.Not.Null.And.Not.Empty, "Answer list is null or empty.");
+        Assert.That(llmInvokeResponse, Is.InstanceOf<Ok<List<LlmMessage>>>(), 
+            "Handler did not return an OK response with a list of chat messages.");
+        
+        var llmInvokeResponseOk = llmInvokeResponse as Ok<List<LlmMessage>>;
+        Assert.That(llmInvokeResponseOk, Is.Not.Null, "Response cast to Ok was null.");
+        Assert.That(llmInvokeResponseOk.Value, Is.Not.Null.Or.Empty, 
+            "Handler returned response with empty or null body.");
+        
+        var resultAnswer = llmInvokeResponseOk!.Value!.ToList();
+        Assert.That(resultAnswer, Is.Not.Null.And.Not.Empty, 
+            "Answer list is null or empty.");
     }
 
     private List<LlmMessage> BuildLlmChatFromBlocks(List<Block> blocks)
