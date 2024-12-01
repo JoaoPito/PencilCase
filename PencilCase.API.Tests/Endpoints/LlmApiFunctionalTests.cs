@@ -12,11 +12,13 @@ namespace PencilCase.API.Tests.Endpoints;
 [TestFixture]
 public class LlmApiFunctionalTests
 {
-    private ILlmApiEndpointsHandler _apiHandler = null!;
+    private ILlmApiEndpointsHandler _apiHandler;
     private Mock<IRagService> _ragServiceMock = null!;
     private Mock<ILlmApiService> _llmServiceMock = null!;
     
-    private List<RagDocument> _ragDocsToReturn = new List<RagDocument>();
+    private List<RagDocument> _capturedRagChunks = new();
+    private List<RagDocument> _expectedRagChunks = new();
+    private const string ExpectedAnswer = "Hmmm I'm almost sure that 1+1=3.";
 
     [SetUp]
     public void Setup()
@@ -34,9 +36,20 @@ public class LlmApiFunctionalTests
                 It.IsAny<String>(), 
                 It.IsAny<List<Guid>>(),
                 It.IsAny<uint>()))
-            .ReturnsAsync(_ragDocsToReturn);
+            .ReturnsAsync(_expectedRagChunks);
+
+        _ragServiceMock
+            .Setup<Task>(service => service.AddChunks(It.IsAny<List<RagDocument>>()))
+            .Callback<List<RagDocument>>(
+                chunkList => _capturedRagChunks.AddRange(chunkList))
+            .Returns(Task.CompletedTask);
+        
+        _ragServiceMock
+            .Setup(service => service.DeleteChunks(It.IsAny<List<RagDocument>>()))
+            .Callback<List<RagDocument>>(
+                docs => _capturedRagChunks.RemoveAll(docs.Contains));
     }
-    
+
     private void SetupLlmService()
     {
         _llmServiceMock = new Mock<ILlmApiService>();
@@ -48,16 +61,15 @@ public class LlmApiFunctionalTests
                 new LlmMessage()
                 {
                     Role = "model",
-                    Content = "Hmmm I'm almost sure that 1+1=3."
+                    Content = ExpectedAnswer
                 }
             });
     }
-    
+
     [Test]
-    public void UserGetsDocumentsFromRagAndUsesOnLlm()
+    public async Task UserGetsDocumentsFromRagAndUsesOnLlm()
     {
         // Carlos is studying mathematics and just started to use pencilcase, so he sets up his workspace
-        
         var rootTopic = new Block()
         {
             Name = "Carlos's workspace",
@@ -77,11 +89,12 @@ public class LlmApiFunctionalTests
             .AddChunk("The research combines foundations of mathematics, logic, philosophy, and social sciences...", 1);
         
         var algebraTopic = mathTopic.AddTopic("Arithmetic");
-        var algebraChunk1 = algebraTopic.AddDocument("arithmetic.pdf")
+        var algebraChunk1 = algebraTopic
+            .AddDocument("arithmetic.pdf")
             .AddChunk("This article does not aim to invalidate classical arithmetic...",0);
         
         var psychChunk = psychTopic
-            .AddDocument("FrogPsychology.txt")
+            .AddDocument("FrogPsychology.pdf")
             .AddChunk("Abstract: This study explores the behavioral and cognitive aspects of frogs...",0);
         
         var pdfs = new List<Block>()
@@ -91,25 +104,81 @@ public class LlmApiFunctionalTests
             algebraChunk1,
             psychChunk
         };
-        _apiHandler.AddChunksAsync(pdfs);
+        await _apiHandler.AddChunksAsync(pdfs);
+        
+        _expectedRagChunks.Add(new RagDocument(){ Id = mathChunk1.Id, ParentId = (Guid)mathChunk1.ParentId!, Content = mathChunk1.Name });
+        _expectedRagChunks.Add(new RagDocument(){ Id = mathChunk2.Id, ParentId = (Guid)mathChunk2.ParentId!, Content = mathChunk2.Name });
+        _expectedRagChunks.Add(new RagDocument(){ Id = algebraChunk1.Id, ParentId = (Guid)algebraChunk1.ParentId!, Content = algebraChunk1.Name });
+        
+        Assert.That(_capturedRagChunks, 
+            Is.EqualTo(new List<RagDocument>() { }),
+            "Handler did not properly add chunks to RAG API.");
         
         // He, then, creates a new notebook and starts adding cells to it
-
         var firstQuestion = mathTopic
             .AddNotebook("really hard maths")
             .AddQuestion("What is 1+1?", 0);
 
-        // he submits a cell he was working on
-        // After some time loading, pencilcase gets the relevant documents to the question and shows them to Carlos
-        _apiHandler.SearchForChunksAsync(firstQuestion);
+        // he submits a cell he was working on, pencilcase starts looking for useful pieces of text
+        var resultChunks = await _apiHandler.SearchForChunksAsync(firstQuestion);
         
-        // He sees that the sources it is using are not only from the same topic, but also from its subtopics,
-        // and not from its parent topics
-        // Then, pencilcase sends them to the LLM using the appropriate endpoint
+        // After some time loading, pencilcase gets the relevant documents to the question and shows them to Carlos
+        // He sees that the system returned the math pdfs he uploaded earlier
+        var expectedChunks = new List<Block>()
+        {
+            mathChunk1,
+            mathChunk2,
+            algebraChunk1,
+        };
+
+        Assert.That(resultChunks, Is.Not.Empty, "Handler returned an empty list.");
+        
+        Assert.That(
+            resultChunks.ToList(), 
+            Is.EquivalentTo(expectedChunks),
+            $"Chunks returned from Handler are different than expected.");
+        
+        // He sees that the sources it is using are not only from the same topic, but also from its subtopics
+        // and not from the topics above
+        Assert.That(resultChunks.Select(c => c.Parent).ToList(),
+            Is.EquivalentTo(expectedChunks.Select(c => c.Parent).ToList()),
+            "Expected parents for result chunks are different from actual result.");
+        
+        // Then, pencilcase sends the chunks to the LLM using the appropriate endpoint
+        var resultAnswer =  await _apiHandler.InvokeAgent(
+            BuildLlmChatFromBlocks(new List<Block>()
+        {
+            firstQuestion
+        }),
+            resultChunks);
+        
         // It loads for a couple of seconds, but pencilcase finally shows him the answer to his question
-        // He sees the answer block as a child of the question block
-        // He tries to change the question a little bit, since it wasn't helping much
-        // Again, he waits for the answer to his question a little bit. pencilcase shows him the answer.
-        // He then decides to delete this cell, since he felt the question wasn't really very useful to him
+        Assert.That(resultAnswer, Is.Not.Null.And.Not.Empty, "Answer list is null or empty.");
+    }
+
+    private List<LlmMessage> BuildLlmChatFromBlocks(List<Block> blocks)
+    {
+        var result = new List<LlmMessage>();
+        foreach (var block in blocks)
+        {
+            result.Add(new LlmMessage()
+            {
+                Role = "user",
+                Content = block.Name
+            });
+            if (block.Children.Count > 0)
+            {
+                var answer = block.Children
+                    .OrderByDescending(b => b.Properties!.Order)
+                    .First();
+                
+                result.Add(new LlmMessage()
+                {
+                    Role = "model",
+                    Content = answer.Name
+                });
+            }
+        }
+        return result;
     }
 }
