@@ -161,12 +161,12 @@ public class LlmApiFunctionalTests
             "Expected parents for result chunks are different from actual result.");
         
         // Then, pencilcase sends the chunks to the LLM using the appropriate endpoint
-        var llmInvokeResponse =  await _apiHandler.InvokeAgentAsync(
-            BuildLlmChatFromBlocks(new List<Block>()
+        var chatMessages = new List<LlmMessage>
         {
-            firstQuestion
-        }),
-            resultChunks);
+            BuildLlmMessageFromQuestionAndDocs(firstQuestion, resultChunks)
+        };
+
+        var llmInvokeResponse =  await _apiHandler.InvokeAgentAsync(chatMessages);
         
         // It loads for a couple of seconds, but pencilcase finally shows him the answer to his question
         Assert.That(llmInvokeResponse, Is.InstanceOf<Ok<List<LlmMessage>>>(), 
@@ -182,7 +182,7 @@ public class LlmApiFunctionalTests
             "Answer list is null or empty.");
     }
 
-    private List<LlmMessage> BuildLlmChatFromBlocks(List<Block> blocks)
+    private List<LlmMessage> BuildLlmChatFromBlocks(Block blocks)
     {
         var result = new List<LlmMessage>();
         foreach (var block in blocks)
@@ -206,5 +206,21 @@ public class LlmApiFunctionalTests
             }
         }
         return result;
+    }
+
+    private LlmMessage BuildLlmMessageFromQuestionAndDocs(Block question, List<Block> docs)
+    {
+        var docsText = string.Empty;
+        for (int i = 0; i < docs.Count; i++)
+        {
+            var doc = docs[i];
+            docsText += $"## CHUNK {i}\n{doc.Name}";
+        }
+        
+        return new LlmMessage()
+        {
+            Role = "user",
+            Content = docsText + $"\n## QUESTION\n{question.Name}"
+        };
     }
 }
