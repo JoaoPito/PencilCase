@@ -2,13 +2,9 @@ using Asp.Versioning;
 using Asp.Versioning.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
-using PencilCase.LLM.Agents;
-using PencilCase.LLM.Agents.Providers;
-using PencilCase.LLM.DTOs;
-using PencilCase.LLM.RAG;
-using PencilCase.LLM.RAG.Providers;
+using PencilCase.API.Handlers;
 using PencilCase.Shared.Models.LLM.Agents;
-using PencilCase.Shared.Models.LLM.RAG;
+using PencilCase.Shared.Models.Notebooks;
 
 namespace PencilCase.API.Endpoints;
 
@@ -29,13 +25,8 @@ public static class LlmApiExtensions
             .WithTags(["LLM", "Agent"]);;
 
         agentGroup.MapPost("invoke", async (
-                [FromServices] ILlmApiService llmApiService, 
-                [FromBody] List<LlmMessage> messages) =>
-            {
-                if(messages.Count < 1)
-                    return Results.BadRequest();
-                return Results.Ok(await llmApiService.GenerateContent(messages));
-            })
+                [FromServices] ILlmApiEndpointsHandler handler, 
+                [FromBody] List<LlmMessage> messages) => await handler.InvokeAgentAsync(messages))
             .WithName("InvokeAgent")
             .WithOpenApi(x => new OpenApiOperation(x)
             {
@@ -46,22 +37,9 @@ public static class LlmApiExtensions
         var ragGroup = llmGroup.MapGroup("rag")
             .WithTags(["LLM", "RAG"]);;
         
-        ragGroup.MapPost("search", async (
-                [FromServices] IRagService ragService, 
-                [FromBody] QueryRequest request) =>
-            {
-                if(request.NResults <= 0)
-                    return Results.BadRequest();
-                
-                if(request.Query == string.Empty)
-                    return Results.BadRequest();
-                
-                var docs = await ragService.GetDocsByQuery(
-                    request.Query, 
-                    request.ParentIds, 
-                    request.NResults ?? 3);
-                return Results.Ok(docs);
-            })
+        ragGroup.MapPost("search", (
+                [FromServices] ILlmApiEndpointsHandler handler, 
+                [FromBody] Block request) => handler.SearchForChunks(request))
             .WithName("QueryDocuments")
             .WithOpenApi(x => new OpenApiOperation(x)
             {
@@ -70,15 +48,8 @@ public static class LlmApiExtensions
             });
         
         ragGroup.MapPost("", async (
-                [FromServices] IRagService ragService, 
-                [FromBody] List<RagDocument> documents) =>
-            {
-                if(documents.Count is < 1 or > 250)
-                    return Results.BadRequest();
-                
-                await ragService.AddDocs(documents);
-                return Results.Created();
-            })
+                [FromServices] ILlmApiEndpointsHandler handler, 
+                [FromBody] List<Block> documents) => await handler.AddChunksAsync(documents))
             .WithName("AddDocuments")
             .WithOpenApi(x => new OpenApiOperation(x)
             {
@@ -87,45 +58,14 @@ public static class LlmApiExtensions
             });
 
         ragGroup.MapDelete("{parentId}/{id}", async (
-                [FromServices] IRagService ragService, 
+                [FromServices] ILlmApiEndpointsHandler handler, 
                 Guid parentId,
-                Guid id) =>
-            {
-                var doc = new RagDocument() { Id = id, ParentId = parentId };
-                
-                try
-                {
-                    await ragService.DeleteSingleDoc(doc);
-                }
-                catch (ArgumentException)
-                {
-                    return Results.NotFound();
-                }
-
-                return Results.NoContent();
-            })
+                Guid id) => await handler.DeleteChunksAsync([new Block { ParentId = parentId, Id = id }]))
             .WithName("DeleteDocuments")
             .WithOpenApi(x => new OpenApiOperation(x)
             {
                 Summary = "Erases documents from the RAG vector store.",
                 Description = "Deletes the document with the specified ID from the RAG system. If it does not exist, responds with Not Found.", 
-            });
-        
-        ragGroup.MapPut("", async (
-                [FromServices] IRagService ragService, 
-                [FromBody] RagDocument doc) =>
-            {
-                if(doc.Content == string.Empty)
-                    return Results.BadRequest();
-                
-                await ragService.UpdateDoc(doc);
-                return Results.Ok();
-            })
-            .WithName("UpdateDocuments")
-            .WithOpenApi(x => new OpenApiOperation(x)
-            {
-                Summary = "Updates documents from the RAG vector store.",
-                Description = "Given a document with an already existing Id, updates all content of it.", 
             });
     }
 }
