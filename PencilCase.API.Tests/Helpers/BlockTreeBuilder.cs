@@ -7,6 +7,9 @@ public static class BlockTreeBuilder
 {
     public static Block AddTopic(this Block root, string name)
     {
+        foreach (var child in root.Children)
+            if (child.Name == name) return child;
+        
         var topic = new Block()
         {
             Id = Guid.NewGuid(),
@@ -20,6 +23,9 @@ public static class BlockTreeBuilder
 
     public static Block AddNotebook(this Block root, string name)
     {
+        foreach (var child in root.Children)
+            if (child.Name == name) return child;
+        
         var notebook = new Block()
         {
             Id = Guid.NewGuid(),
@@ -34,6 +40,9 @@ public static class BlockTreeBuilder
 
     public static Block AddDocument(this Block root, string name)
     {
+        foreach (var child in root.Children)
+            if (child.Name == name) return child;
+        
         var document = new Block()
         {
             Id = Guid.NewGuid(),
@@ -50,6 +59,9 @@ public static class BlockTreeBuilder
     {
         if (root.Type != BlockType.Notebook)
             throw new ArgumentException("Invalid root block type");
+        
+        foreach (var child in root.Children)
+            if (child.Name == question) return child;
 
         var questionCell = new Block()
         {
