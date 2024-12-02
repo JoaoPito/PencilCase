@@ -11,16 +11,16 @@ public class LlmApiEndpointsHandler : ILlmApiEndpointsHandler
 {
     private readonly IRagService _ragService;
     private readonly ILlmApiService _llmApiService;
-    private readonly BlocksDALBase _blocksDalBase;
+    private readonly IBlocksDal _blocksDal;
 
     public LlmApiEndpointsHandler(
         IRagService ragService, 
         ILlmApiService llmApiService, 
-        BlocksDALBase blocksDalBase)
+        IBlocksDal blocksDal)
     {
         _ragService = ragService;
         _llmApiService = llmApiService;
-        _blocksDalBase = blocksDalBase;
+        _blocksDal = blocksDal;
     }
 
     public async Task<IResult> AddChunksAsync(IEnumerable<Block> chunks)
@@ -50,12 +50,12 @@ public class LlmApiEndpointsHandler : ILlmApiEndpointsHandler
         if(query.Name == string.Empty)
             return Results.BadRequest();
 
-        var notebookBlock = _blocksDalBase.GetBy(b => b.Id == query.ParentId)
+        var notebookBlock = _blocksDal.GetBy(b => b.Id == query.ParentId)
                             ?? throw new ArgumentException("Query block does not have a valid parent!");
         if(notebookBlock.ParentId is null)
             throw new ArgumentException("Query block does not have a valid grandparent!");
         
-        var filterIds = _blocksDalBase.GetIdsFromSubtreeWithType((Guid)notebookBlock.ParentId!, b => b.Type == BlockType.Source);
+        var filterIds = _blocksDal.GetIdsFromSubtreeWithType((Guid)notebookBlock.ParentId!, b => b.Type == BlockType.Source);
                 
         var docs = await _ragService.GetChunksForQuery(query.Name, filterIds, 3);
         return Results.Ok(docs);

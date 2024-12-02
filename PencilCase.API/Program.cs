@@ -34,7 +34,7 @@ builder.Services.AddApiVersioning(options => {
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<BlocksDALBase, BlocksDAL>();
+builder.Services.AddScoped<IBlocksDal, BlocksDAL>();
 
 var blocksDbConnectionString = builder.Configuration.GetConnectionString("ApiDatabase");
 
