@@ -150,7 +150,9 @@ public class LlmApiFunctionalTests
         
         // After some time loading, pencilcase gets the relevant documents to the question and shows them to Carlos
         // He sees that the system returned the math pdfs he uploaded earlier
-        var expectedChunks = new List<Block>()
+        var resultChunks = AssertSearchResponseIsValidAndReturnContent(response);
+        
+        var expectedBlocks = new List<Block>()
         {
             mathChunk1,
             mathChunk2,
@@ -248,5 +250,15 @@ public class LlmApiFunctionalTests
             Is.EquivalentTo(addedDocs.Select(b => 
                 new RagDocument(){ Id = b.Id, ParentId = (Guid)b.ParentId!, Content = b.Name })),
             "Handler did not properly add chunks to RAG API.");
+    }
+    
+    private List<RagDocument> AssertSearchResponseIsValidAndReturnContent(IResult response)
+    {
+        Assert.That(response, Is.InstanceOf<Ok<List<RagDocument>>>(), 
+            "Handler did not return an OK response with a list of RagDocuments when it should.");
+        var responseOk = response as Ok<List<RagDocument>>;
+        Assert.That(responseOk, Is.Not.Null, "Response cast to Ok was null.");
+
+        return responseOk!.Value!.ToList();
     }
 }
