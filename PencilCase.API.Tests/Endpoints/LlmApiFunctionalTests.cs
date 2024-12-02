@@ -5,6 +5,7 @@ using PencilCase.API.Handlers;
 using PencilCase.API.Tests.Helpers;
 using PencilCase.LLM.Agents.Providers;
 using PencilCase.LLM.RAG;
+using PencilCase.Shared.Data.Database;
 using PencilCase.Shared.Models.LLM.Agents;
 using PencilCase.Shared.Models.LLM.RAG;
 using PencilCase.Shared.Models.Notebooks;
@@ -19,7 +20,8 @@ public class LlmApiFunctionalTests
     private Mock<ILlmApiService> _llmServiceMock = null!;
     
     private List<RagDocument> _capturedRagChunks = new();
-    private List<RagDocument> _expectedRagChunks = new();
+    private List<RagDocument> _ragChunksToReturn = new();
+    private Mock<IBlocksDal> _blocksDal;
     private const string ExpectedAnswer = "Hmmm I'm almost sure that 1+1=3.";
 
     [SetUp]
@@ -27,7 +29,8 @@ public class LlmApiFunctionalTests
     {
         SetupRagService();
         SetupLlmService();
-        _apiHandler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmServiceMock.Object);
+        SetupBlocksDal();
+        _apiHandler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmServiceMock.Object, _blocksDal.Object);
     }
 
     private void SetupRagService()
@@ -38,7 +41,7 @@ public class LlmApiFunctionalTests
                 It.IsAny<String>(), 
                 It.IsAny<List<Guid>>(),
                 It.IsAny<uint>()))
-            .ReturnsAsync(_expectedRagChunks);
+            .ReturnsAsync(_ragChunksToReturn);
 
         _ragServiceMock
             .Setup<Task>(service => service.AddChunks(It.IsAny<List<RagDocument>>()))
@@ -67,6 +70,18 @@ public class LlmApiFunctionalTests
                 }
             });
     }
+    
+    private void SetupBlocksDal()
+    {
+        _blocksDal = new Mock<IBlocksDal>();
+        _blocksDal.Setup(service => service.GetIdsFromSubtreeWithType(
+                It.IsAny<Guid>(),
+                It.IsAny<Func<Block, bool>>()))
+            .Returns(new List<Guid>()
+            {
+                Guid.Empty
+            });
+    }
 
     [Test]
     public async Task UserGetsDocumentsFromRagAndUsesOnLlm()
@@ -74,6 +89,7 @@ public class LlmApiFunctionalTests
         // Carlos is studying mathematics and just started to use pencilcase, so he sets up his workspace
         var rootTopic = new Block()
         {
+            Id = new Guid(),
             Name = "Carlos's workspace",
         };
 
@@ -109,15 +125,12 @@ public class LlmApiFunctionalTests
         
         // Under the hood pencilcase adds the information to its database
         var response = await _apiHandler.AddChunksAsync(pdfs);
-        Assert.That(response, Is.InstanceOf<Ok>(), 
-            "Handler returned IResult different than Ok when it should.");
-        
-        _expectedRagChunks.Add(new RagDocument(){ Id = mathChunk1.Id, ParentId = (Guid)mathChunk1.ParentId!, Content = mathChunk1.Name });
-        _expectedRagChunks.Add(new RagDocument(){ Id = mathChunk2.Id, ParentId = (Guid)mathChunk2.ParentId!, Content = mathChunk2.Name });
-        _expectedRagChunks.Add(new RagDocument(){ Id = algebraChunk1.Id, ParentId = (Guid)algebraChunk1.ParentId!, Content = algebraChunk1.Name });
+        Assert.That(response, Is.InstanceOf<Created>(), 
+            "Handler returned IResult different than Created when it should.");
         
         Assert.That(_capturedRagChunks, 
-            Is.EquivalentTo(_expectedRagChunks),
+            Is.EquivalentTo(pdfs.Select(b => 
+                new RagDocument(){ Id = b.Id, ParentId = (Guid)b.ParentId!, Content = b.Name })),
             "Handler did not properly add chunks to RAG API.");
         
         // He, then, creates a new notebook and starts adding cells to it
@@ -146,6 +159,10 @@ public class LlmApiFunctionalTests
             algebraChunk1,
         };
 
+        _ragChunksToReturn = expectedChunks.Select(b => new RagDocument()
+            { Id = b.Id, ParentId = (Guid)b.ParentId!, Content = b.Name })
+            .ToList();
+            
         Assert.That(resultChunks, Is.Not.Empty, 
             "Handler returned an empty list.");
         
