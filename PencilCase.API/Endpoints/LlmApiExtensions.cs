@@ -39,7 +39,7 @@ public static class LlmApiExtensions
         
         ragGroup.MapPost("search", (
                 [FromServices] ILlmApiEndpointsHandler handler, 
-                [FromBody] Block request) => handler.SearchForChunks(request))
+                [FromBody] Block request) => handler.SearchForChunksAsync(request))
             .WithName("QueryDocuments")
             .WithOpenApi(x => new OpenApiOperation(x)
             {
