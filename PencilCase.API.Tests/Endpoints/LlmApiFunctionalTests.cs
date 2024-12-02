@@ -81,6 +81,10 @@ public class LlmApiFunctionalTests
             {
                 Guid.Empty
             });
+        _blocksDal.Setup(service => service.GetIdsFromSubtreeWithType(
+                It.IsAny<Guid>(),
+                It.IsAny<Func<Block, bool>>()))
+            .Returns(new List<Guid>());
     }
 
     [Test]
