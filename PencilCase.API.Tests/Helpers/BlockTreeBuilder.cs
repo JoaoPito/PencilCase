@@ -9,6 +9,7 @@ public static class BlockTreeBuilder
     {
         var topic = new Block()
         {
+            Id = Guid.NewGuid(),
             Name = name,
             Parent = root,
             ParentId = root.Id
@@ -21,6 +22,7 @@ public static class BlockTreeBuilder
     {
         var notebook = new Block()
         {
+            Id = Guid.NewGuid(),
             Name = name,
             Parent = root,
             ParentId = root.Id,
@@ -34,6 +36,7 @@ public static class BlockTreeBuilder
     {
         var document = new Block()
         {
+            Id = Guid.NewGuid(),
             Name = name,
             Parent = root,
             ParentId = root.Id,
@@ -50,6 +53,7 @@ public static class BlockTreeBuilder
 
         var questionCell = new Block()
         {
+            Id = Guid.NewGuid(),
             Name = question,
             Parent = root,
             ParentId = root.Id,
@@ -81,6 +85,7 @@ public static class BlockTreeBuilder
         
         var answer = new Block()
         {
+            Id = Guid.NewGuid(),
             Name = contents,
             Parent = question,
             ParentId = question.Id,
@@ -102,6 +107,7 @@ public static class BlockTreeBuilder
         
         var chunk = new Block()
         {
+            Id = Guid.NewGuid(),
             Name = contents,
             Parent = document,
             ParentId = document.Id,
