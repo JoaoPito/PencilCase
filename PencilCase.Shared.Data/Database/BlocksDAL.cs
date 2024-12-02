@@ -3,7 +3,7 @@ using PencilCase.Shared.Models.Notebooks;
 
 namespace PencilCase.Shared.Data.Database;
 
-public class BlocksDAL(BlocksDbContext context) : DAL<Block>(context)
+public class BlocksDAL(BlocksDbContext context) : BlocksDALBase(context)
 {
     private const string TableName = "Block";
     private const string SubtreeSqlQuery = @"
@@ -18,7 +18,7 @@ public class BlocksDAL(BlocksDbContext context) : DAL<Block>(context)
             )
             SELECT * FROM descendants";
 
-    public List<Guid> GetIdsFromSubtreeWithType(Guid rootId, Func<Block, bool> criteria)
+    public override List<Guid> GetIdsFromSubtreeWithType(Guid rootId, Func<Block, bool> criteria)
     {
         Console.WriteLine($"GetIdsFromSubtreeWithType {rootId}");
         
