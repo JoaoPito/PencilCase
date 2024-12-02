@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PencilCase.Shared.Data.Database;
 
-public class DAL<T> where T: class
+public class DAL<T> : IDal<T> where T: class
 {
     protected readonly DbContext Context;
 
