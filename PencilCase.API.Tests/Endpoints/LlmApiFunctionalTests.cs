@@ -20,7 +20,6 @@ public class LlmApiFunctionalTests
     private Mock<ILlmApiService> _llmServiceMock = null!;
     
     private List<RagDocument> _capturedRagChunks = new();
-    private List<RagDocument> _ragChunksToReturn = new();
     private Mock<IBlocksDal> _blocksDal;
     private const string ExpectedAnswer = "Hmmm I'm almost sure that 1+1=3.";
 
@@ -30,10 +29,13 @@ public class LlmApiFunctionalTests
         SetupRagService();
         SetupLlmService();
         SetupBlocksDal();
+        SetupMockRag();
+        SetupMockLlm();
+        SetupMockBlocksDal();
         _apiHandler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmServiceMock.Object, _blocksDal.Object);
     }
 
-    private void SetupRagService()
+    private void SetupMockRag()
     {
         _ragServiceMock = new Mock<IRagService>();
         _ragServiceMock
@@ -55,7 +57,7 @@ public class LlmApiFunctionalTests
                 docs => _capturedRagChunks.RemoveAll(docs.Contains));
     }
 
-    private void SetupLlmService()
+    private void SetupMockLlm()
     {
         _llmServiceMock = new Mock<ILlmApiService>();
         _llmServiceMock.Setup(service => service.GenerateContent(
@@ -71,7 +73,7 @@ public class LlmApiFunctionalTests
             });
     }
     
-    private void SetupBlocksDal()
+    private void SetupMockBlocksDal()
     {
         _blocksDal = new Mock<IBlocksDal>();
         _blocksDal.Setup(service => service.GetIdsFromSubtreeWithType(
