@@ -23,7 +23,7 @@ public static class BlocksExtensions
                     .WithApiVersionSet(apiVersionSet)
                     .WithTags("Blocks");
 
-        group.MapGet("{id}", (Guid id, [FromServices] DAL<Block> dal) =>
+        group.MapGet("{id}", (Guid id, [FromServices] BlocksDAL dal) =>
         {
             var block = dal.GetBy(f => f.Id == id);
             if (block is null){
@@ -38,7 +38,7 @@ public static class BlocksExtensions
             Description = "Returns information about selected block using its ID."
         });
 
-        group.MapGet("{id}/children", (Guid id, [FromServices] DAL<Block> dal) =>
+        group.MapGet("{id}/children", (Guid id, [FromServices] BlocksDAL dal) =>
             {
                 var blockList = dal.GetAllBy(b => b.ParentId == id).ToList();
                 return Results.Ok(MapEntityListToResponseList(blockList));
@@ -50,7 +50,7 @@ public static class BlocksExtensions
             Description = "Given the parent's Id, returns information about every children of it."
         });
 
-        group.MapPost("", async ([FromServices] DAL<Block> dal, [FromBody] BlockPostRequest request) => 
+        group.MapPost("", async ([FromServices] BlocksDAL dal, [FromBody] BlockPostRequest request) => 
         {
             var newBlock = new Block();
             try
@@ -72,7 +72,7 @@ public static class BlocksExtensions
             Description = "Creates a new block and returns information about the created object. Created and Modified times are assigned to the current UTC time."
         });
 
-        group.MapPut("{id}", async (Guid id, [FromServices] DAL<Block> dal, [FromBody] BlockPutRequest request) => 
+        group.MapPut("{id}", async (Guid id, [FromServices] BlocksDAL dal, [FromBody] BlockPutRequest request) => 
         {
             var block = dal.GetBy(b => b.Id == id);
             if(block == null)
@@ -109,7 +109,7 @@ public static class BlocksExtensions
             Description = "Updates block contents and properties, as well as changes the parent/child relationships."
         });
 
-        group.MapPatch("{id}", async (Guid id, [FromServices] DAL<Block> dal, [FromBody] BlockPatchRequest request) => 
+        group.MapPatch("{id}", async (Guid id, [FromServices] BlocksDAL dal, [FromBody] BlockPatchRequest request) => 
         {
             var block = dal.GetBy(b => b.Id == id);
             if(block == null)
@@ -144,7 +144,7 @@ public static class BlocksExtensions
             return Results.Ok();
         });
 
-        group.MapDelete("{id}", async ([FromServices] DAL<Block> dal, Guid id) => 
+        group.MapDelete("{id}", async ([FromServices] BlocksDAL dal, Guid id) => 
         {
             var block = dal.GetBy(b => b.Id == id);
             if(block == null)
@@ -188,7 +188,7 @@ public static class BlocksExtensions
         );
     }
 
-    static Block MapRequestToEntity(BlockPostRequest request, DAL<Block> dal)
+    static Block MapRequestToEntity(BlockPostRequest request, BlocksDAL dal)
     {
         var block = new Block();
 
@@ -211,7 +211,7 @@ public static class BlocksExtensions
         return block;
     }
 
-    static Block? GetParent(Guid? parentId, DAL<Block> dal)
+    static Block? GetParent(Guid? parentId, BlocksDAL dal)
     {
         var parent = dal.GetBy(b => b.Id == parentId);
         if (parentId == null && parent != null)

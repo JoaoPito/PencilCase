@@ -2,6 +2,7 @@ using System.Net.Http.Headers;
 using Asp.Versioning;
 using Microsoft.EntityFrameworkCore;
 using PencilCase.API.Endpoints;
+using PencilCase.API.Handlers;
 using PencilCase.Shared.Data.Database;
 using PencilCase.LLM.Agents.Providers;
 using PencilCase.LLM.Agents.Providers.Gemini;
@@ -33,7 +34,7 @@ builder.Services.AddApiVersioning(options => {
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<PencilCase.Shared.Data.Database.DAL<Block>>();
+builder.Services.AddScoped<BlocksDAL>();
 
 var blocksDbConnectionString = builder.Configuration.GetConnectionString("ApiDatabase");
 
@@ -41,6 +42,8 @@ builder.Services.AddDbContext<BlocksDbContext>(options => {
     options.UseNpgsql(blocksDbConnectionString)
         .UseLazyLoadingProxies();
 });
+
+builder.Services.AddScoped<ILlmApiEndpointsHandler, LlmApiEndpointsHandler>();
 
 builder.Services.AddScoped<PencilCase.Telemetry.Data.Database.DAL<RagOperationEntry>>();
 builder.Services.AddScoped<PencilCase.Telemetry.Data.Database.DAL<GenerationResultEntry>>();
