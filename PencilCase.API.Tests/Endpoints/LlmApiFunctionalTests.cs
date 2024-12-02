@@ -225,13 +225,13 @@ public class LlmApiFunctionalTests
         return result;
     }
 
-    private LlmMessage BuildLlmMessageFromQuestionAndDocs(Block question, List<Block> docs)
+    private LlmMessage BuildLlmMessageFromQuestionAndDocs(Block question, List<RagDocument> docs)
     {
         var docsText = string.Empty;
         for (int i = 0; i < docs.Count; i++)
         {
             var doc = docs[i];
-            docsText += $"## CHUNK {i}\n{doc.Name}";
+            docsText += $"## CHUNK {i}\n{doc.Content}";
         }
         
         return new LlmMessage()
