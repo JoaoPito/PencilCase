@@ -18,7 +18,6 @@ public class LlmApiFunctionalTests
     private ILlmApiEndpointsHandler _apiHandler;
     private Mock<IRagService> _ragServiceMock = null!;
     private Mock<ILlmApiService> _llmServiceMock = null!;
-    
     private List<RagDocument> _capturedRagChunks = new();
     private Mock<IBlocksDal> _blocksDal;
     private const string ExpectedAnswer = "Hmmm I'm almost sure that 1+1=3.";
@@ -26,9 +25,6 @@ public class LlmApiFunctionalTests
     [SetUp]
     public void Setup()
     {
-        SetupRagService();
-        SetupLlmService();
-        SetupBlocksDal();
         SetupMockRag();
         SetupMockLlm();
         SetupMockBlocksDal();
@@ -38,12 +34,6 @@ public class LlmApiFunctionalTests
     private void SetupMockRag()
     {
         _ragServiceMock = new Mock<IRagService>();
-        _ragServiceMock
-            .Setup(service => service.GetChunksForQuery(
-                It.IsAny<String>(), 
-                It.IsAny<List<Guid>>(),
-                It.IsAny<uint>()))
-            .ReturnsAsync(_ragChunksToReturn);
 
         _ragServiceMock
             .Setup<Task>(service => service.AddChunks(It.IsAny<List<RagDocument>>()))
@@ -134,50 +124,28 @@ public class LlmApiFunctionalTests
         AssertAddingSuccesful(response, pdfs);
         
         // He, then, creates a new notebook and starts adding cells to it
-        var firstQuestion = mathTopic
-            .AddNotebook("really hard maths")
+        var mathsNotebook = mathTopic
+            .AddNotebook("really hard maths");
+        var firstQuestion = mathsNotebook
             .AddQuestion("What is 1+1?", 0);
 
         // he submits a cell he was working on, pencilcase starts looking for useful pieces of text
         response = await _apiHandler.SearchForChunksAsync(firstQuestion);
-        Assert.That(response, Is.InstanceOf<Ok<List<Block>>>(), 
-            "Handler did not return an OK response with a list of chunks.");
-
-        var responseOk = response as Ok<List<Block>>;
-        Assert.That(responseOk, Is.Not.Null, "Response cast to Ok was null.");
-        Assert.That(responseOk.Value, Is.Not.Null.Or.Empty, 
-            "Handler returned response with empty or null body.");
-        
-        var resultChunks = responseOk!.Value!.ToList();
         
         // After some time loading, pencilcase gets the relevant documents to the question and shows them to Carlos
         // He sees that the system returned the math pdfs he uploaded earlier
         var resultChunks = AssertSearchResponseIsValidAndReturnContent(response);
         
+        // He sees that the sources it is using are not only from the same topic, but also from its subtopics
+        // and not from the topics above
         var expectedBlocks = new List<Block>()
         {
             mathChunk1,
             mathChunk2,
-            algebraChunk1,
+            algebraChunk1
         };
-
-        _ragChunksToReturn = expectedChunks.Select(b => new RagDocument()
-            { Id = b.Id, ParentId = (Guid)b.ParentId!, Content = b.Name })
-            .ToList();
-            
-        Assert.That(resultChunks, Is.Not.Empty, 
-            "Handler returned an empty list.");
         
-        Assert.That(
-            resultChunks, 
-            Is.EquivalentTo(expectedChunks),
-            $"Chunks returned from Handler are different than expected.");
-        
-        // He sees that the sources it is using are not only from the same topic, but also from its subtopics
-        // and not from the topics above
-        Assert.That(resultChunks.Select(c => c.Parent).ToList(),
-            Is.EquivalentTo(expectedChunks.Select(c => c.Parent).ToList()),
-            "Expected parents for result chunks are different from actual result.");
+        AssertSearchResponseContentIsValid(resultChunks, expectedBlocks);
         
         // Then, pencilcase sends the chunks to the LLM using the appropriate endpoint
         var chatMessages = new List<LlmMessage>
@@ -262,5 +230,25 @@ public class LlmApiFunctionalTests
         Assert.That(responseOk, Is.Not.Null, "Response cast to Ok was null.");
 
         return responseOk!.Value!.ToList();
+    }
+    
+    private void AssertSearchResponseContentIsValid(List<RagDocument> responseContent, List<Block> expectedBlocks)
+    {
+        Assert.That(responseContent, Is.Not.Empty, 
+            "Handler returned an empty list.");
+        
+        Assert.That(
+            responseContent,
+            Is.EquivalentTo(expectedBlocks.Select(b => new RagDocument()
+            {
+                Id = b.Id, 
+                ParentId = (Guid)b.ParentId!, 
+                Content = b.Name
+            })),
+            $"Chunks returned from Handler are different than expected.");
+        
+        Assert.That(responseContent.Select(c => c.ParentId).ToList(),
+            Is.EquivalentTo(expectedBlocks.Select(c => c.ParentId).ToList()),
+            "Expected ParentIds for expected blocks are different from actual RagDocuments returned by the endpoint.");
     }
 }
