@@ -129,13 +129,7 @@ public class LlmApiFunctionalTests
         
         // Under the hood pencilcase adds the information to its database
         var response = await _apiHandler.AddChunksAsync(pdfs);
-        Assert.That(response, Is.InstanceOf<Created>(), 
-            "Handler returned IResult different than Created when it should.");
-        
-        Assert.That(_capturedRagChunks, 
-            Is.EquivalentTo(pdfs.Select(b => 
-                new RagDocument(){ Id = b.Id, ParentId = (Guid)b.ParentId!, Content = b.Name })),
-            "Handler did not properly add chunks to RAG API.");
+        AssertAddingSuccesful(response, pdfs);
         
         // He, then, creates a new notebook and starts adding cells to it
         var firstQuestion = mathTopic
@@ -243,5 +237,16 @@ public class LlmApiFunctionalTests
             Role = "user",
             Content = docsText + $"\n## QUESTION\n{question.Name}"
         };
+    }
+
+    private void AssertAddingSuccesful(IResult response, List<Block> addedDocs)
+    {
+        Assert.That(response, Is.InstanceOf<Created>(), 
+            "Handler returned IResult different than Created when it should.");
+        
+        Assert.That(_capturedRagChunks, 
+            Is.EquivalentTo(addedDocs.Select(b => 
+                new RagDocument(){ Id = b.Id, ParentId = (Guid)b.ParentId!, Content = b.Name })),
+            "Handler did not properly add chunks to RAG API.");
     }
 }
