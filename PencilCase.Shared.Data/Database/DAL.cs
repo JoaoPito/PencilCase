@@ -5,8 +5,9 @@ namespace PencilCase.Shared.Data.Database;
 
 public class DAL<T> where T: class
 {
-    private readonly BlocksDbContext _context;
-    public DAL(BlocksDbContext context)
+    protected readonly DbContext _context;
+
+    protected DAL(DbContext context)
     {
         this._context = context;
     }
