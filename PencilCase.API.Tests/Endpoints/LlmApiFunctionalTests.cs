@@ -73,10 +73,6 @@ public class LlmApiFunctionalTests
             {
                 Guid.Empty
             });
-        _blocksDal.Setup(service => service.GetIdsFromSubtreeWithType(
-                It.IsAny<Guid>(),
-                It.IsAny<Func<Block, bool>>()))
-            .Returns(new List<Guid>());
     }
 
     [Test]
@@ -120,8 +116,8 @@ public class LlmApiFunctionalTests
         };
         
         // Under the hood pencilcase adds the information to its database
-        var response = await _apiHandler.AddChunksAsync(pdfs);
-        AssertAddingSuccesful(response, pdfs);
+        var addResponse = await _apiHandler.AddChunksAsync(pdfs);
+        AssertAddingSuccesful(addResponse, pdfs);
         
         // He, then, creates a new notebook and starts adding cells to it
         var mathsNotebook = mathTopic
@@ -130,14 +126,10 @@ public class LlmApiFunctionalTests
             .AddQuestion("What is 1+1?", 0);
 
         // he submits a cell he was working on, pencilcase starts looking for useful pieces of text
-        response = await _apiHandler.SearchForChunksAsync(firstQuestion);
+        _blocksDal
+            .Setup(service => service.GetBy(It.IsAny<Func<Block, bool>>()))
+            .Returns(mathsNotebook);
         
-        // After some time loading, pencilcase gets the relevant documents to the question and shows them to Carlos
-        // He sees that the system returned the math pdfs he uploaded earlier
-        var resultChunks = AssertSearchResponseIsValidAndReturnContent(response);
-        
-        // He sees that the sources it is using are not only from the same topic, but also from its subtopics
-        // and not from the topics above
         var expectedBlocks = new List<Block>()
         {
             mathChunk1,
@@ -145,6 +137,23 @@ public class LlmApiFunctionalTests
             algebraChunk1
         };
         
+        _ragServiceMock.Setup(service =>
+            service.GetChunksForQuery(It.IsAny<string>(), It.IsAny<List<Guid>>(), It.IsAny<uint>()))
+            .ReturnsAsync(expectedBlocks.Select(b => new RagDocument()
+            {
+                Id = b.Id,
+                ParentId = (Guid)b.ParentId!,
+                Content = b.Name
+            }).ToList());
+        
+        var searchResponse = await _apiHandler.SearchForChunksAsync(firstQuestion);
+        
+        // After some time loading, pencilcase gets the relevant documents to the question and shows them to Carlos
+        // He sees that the system returned the math pdfs he uploaded earlier
+        var resultChunks = AssertSearchResponseIsValidAndReturnContents(searchResponse);
+        
+        // He sees that the sources it is using are not only from the same topic, but also from its subtopics
+        // and not from the topics above
         AssertSearchResponseContentIsValid(resultChunks, expectedBlocks);
         
         // Then, pencilcase sends the chunks to the LLM using the appropriate endpoint
@@ -156,17 +165,7 @@ public class LlmApiFunctionalTests
         var llmInvokeResponse =  await _apiHandler.InvokeAgentAsync(chatMessages);
         
         // It loads for a couple of seconds, but pencilcase finally shows him the answer to his question
-        Assert.That(llmInvokeResponse, Is.InstanceOf<Ok<List<LlmMessage>>>(), 
-            "Handler did not return an OK response with a list of chat messages.");
-        
-        var llmInvokeResponseOk = llmInvokeResponse as Ok<List<LlmMessage>>;
-        Assert.That(llmInvokeResponseOk, Is.Not.Null, "Response cast to Ok was null.");
-        Assert.That(llmInvokeResponseOk.Value, Is.Not.Null.Or.Empty, 
-            "Handler returned response with empty or null body.");
-        
-        var resultAnswer = llmInvokeResponseOk!.Value!.ToList();
-        Assert.That(resultAnswer, Is.Not.Null.And.Not.Empty, 
-            "Answer list is null or empty.");
+        AssertThatLlmResponseIsValid(llmInvokeResponse);
     }
 
     private List<LlmMessage> BuildLlmChatFromBlocks(List<Block> blocks)
@@ -222,7 +221,7 @@ public class LlmApiFunctionalTests
             "Handler did not properly add chunks to RAG API.");
     }
     
-    private List<RagDocument> AssertSearchResponseIsValidAndReturnContent(IResult response)
+    private List<RagDocument> AssertSearchResponseIsValidAndReturnContents(IResult response)
     {
         Assert.That(response, Is.InstanceOf<Ok<List<RagDocument>>>(), 
             "Handler did not return an OK response with a list of RagDocuments when it should.");
@@ -250,5 +249,20 @@ public class LlmApiFunctionalTests
         Assert.That(responseContent.Select(c => c.ParentId).ToList(),
             Is.EquivalentTo(expectedBlocks.Select(c => c.ParentId).ToList()),
             "Expected ParentIds for expected blocks are different from actual RagDocuments returned by the endpoint.");
+    }
+
+    private void AssertThatLlmResponseIsValid(IResult response)
+    {
+        Assert.That(response, Is.InstanceOf<Ok<List<LlmMessage>>>(), 
+            "Handler did not return an OK response with a list of chat messages.");
+        
+        var okResponse = response as Ok<List<LlmMessage>>;
+        Assert.That(okResponse, Is.Not.Null, "Response cast to Ok was null.");
+        Assert.That(okResponse.Value, Is.Not.Null.Or.Empty, 
+            "Handler returned response with empty or null body.");
+        
+        var answer = okResponse!.Value!.ToList();
+        Assert.That(answer, Is.Not.Null.And.Not.Empty, 
+            "Answer list is null or empty.");
     }
 }
