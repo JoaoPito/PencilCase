@@ -52,13 +52,18 @@ public class LlmApiEndpointsHandler : ILlmApiEndpointsHandler
 
         var notebookBlock = _blocksDal.GetBy(b => b.Id == query.ParentId);
         
-        if(notebookBlock is null) 
-            return Results.BadRequest("Query block does not have a valid parent!");
+        try
+        {
+            ValidateNotebookBlockForSearch(notebookBlock);
+        }
+        catch (ArgumentException ex)
+        {
+            return Results.BadRequest(ex.Message);
+        }
         
-        if(notebookBlock.ParentId is null)
-            throw new ArgumentException("Query block does not have a valid grandparent!");
-        
-        var filterIds = _blocksDal.GetIdsFromSubtreeWithType((Guid)notebookBlock.ParentId!, b => b.Type == BlockType.Source);
+        var filterIds = _blocksDal.GetIdsFromSubtreeWithType(
+            (Guid)notebookBlock!.ParentId!,
+            b => b.Type == BlockType.Source);
                 
         var docs = await _ragService.GetChunksForQuery(query.Name, filterIds, 3);
         return Results.Ok(docs);
@@ -89,5 +94,14 @@ public class LlmApiEndpointsHandler : ILlmApiEndpointsHandler
         }
 
         return Results.NoContent();
+    }
+
+    private void ValidateNotebookBlockForSearch(Block? notebookBlock)
+    {
+        if(notebookBlock is null) 
+            throw new ArgumentException("Query block does not have a valid parent!");
+        
+        if(notebookBlock.ParentId is null)
+            throw new ArgumentException("Query block does not have a valid grandparent!");
     }
 }
