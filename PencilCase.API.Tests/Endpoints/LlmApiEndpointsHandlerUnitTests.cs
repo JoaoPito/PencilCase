@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Moq;
 using PencilCase.API.Handlers;
 using PencilCase.API.Tests.Helpers;
@@ -35,19 +37,35 @@ public class LlmApiEndpointsHandlerUnitTests
         await handler.AddChunksAsync(docsToAdd);
         
         Assert.That(addedChunks.Select(d => d.ToBlock()).ToList(), Is.EquivalentTo(docsToAdd));
-        
     }
     
     [Test]
-    public async Task AddChunksAsync_ShouldRaiseException_IfChunksAlreadyAdded()
+    public async Task AddChunksAsync_ShouldRespondWithBadRequest_IfDocsQuantityIsTooLarge()
     {
+        Mock<IRagService> ragServiceMock = new();
+        Mock<IBlocksDal> blocksDalMock = new();
+        Mock<ILlmApiService> llmApiServiceMock = new();
+        const uint maxDocsQuantity = 256;
+
+        var handler = new LlmApiEndpointsHandler(ragServiceMock.Object, llmApiServiceMock.Object, blocksDalMock.Object);
         
-    }
-    
-    [Test]
-    public async Task AddChunksAsync_ShouldRaiseException_IfDocsQuantityIsTooLarge()
-    {
+        var docsToAdd = new List<Block>() { };
+        for (int i = 0; i < maxDocsQuantity + 1; i++)
+        {
+            docsToAdd.Add(new()
+            {
+                Id = Guid.NewGuid(), 
+                Name = $"test{i}", 
+                Type = BlockType.Cell, 
+                ParentId = Guid.NewGuid()
+            });
+        }
+
+        var response = await handler.AddChunksAsync(docsToAdd);
         
+        Assert.That(response,
+            Is.TypeOf<BadRequest>(),
+            $"AddChunksAsync did not return BadRequest response with docs quantity of {maxDocsQuantity + 1}");
     }
     
     [Test]
