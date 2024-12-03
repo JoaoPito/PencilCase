@@ -74,7 +74,6 @@ public class LlmApiEndpointsHandlerUnitTests
         Mock<IRagService> ragServiceMock = new();
         Mock<IBlocksDal> blocksDalMock = new();
         Mock<ILlmApiService> llmApiServiceMock = new();
-        const uint maxDocsQuantity = 256;
 
         var handler = new LlmApiEndpointsHandler(ragServiceMock.Object, llmApiServiceMock.Object, blocksDalMock.Object);
 
@@ -86,9 +85,28 @@ public class LlmApiEndpointsHandlerUnitTests
             Is.TypeOf<BadRequest>(),
             $"AddChunksAsync did not return BadRequest response with docs quantity of {docsToAdd.Count()}");
     }
-    
+
     [Test]
     public async Task AddChunksAsync_ShouldRaiseException_IfApiRaisesInvalidOperationException()
+    public async Task SearchForChunksAsync_ReturnsOkResponse_WithValidQueryBlock()
+    {
+        Mock<IRagService> ragServiceMock = new();
+        Mock<ILlmApiService> llmApiServiceMock = new();
+        Mock<IBlocksDal> blocksDalMock = new();
+        var handler = new LlmApiEndpointsHandler(ragServiceMock.Object, llmApiServiceMock.Object, blocksDalMock.Object);
+
+        var blockList = ExampleBlocksHelper.CreateRootWithSingleNotebook();
+        var notebook = blockList.First(b => b.Type == BlockType.Notebook);
+        var validQuestion = notebook.AddQuestion("What is 1+1?", 0);
+
+        blocksDalMock.Setup(s => s.GetBy(It.IsAny<Func<Block, bool>>()))
+            .Returns(notebook);
+
+        var response = await handler.SearchForChunksAsync(validQuestion);
+        
+        Assert.That(response, Is.TypeOf<Ok>());
+    }
+
     {
         
     }
