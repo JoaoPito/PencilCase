@@ -50,8 +50,11 @@ public class LlmApiEndpointsHandler : ILlmApiEndpointsHandler
         if(query.Name == string.Empty)
             return Results.BadRequest();
 
-        var notebookBlock = _blocksDal.GetBy(b => b.Id == query.ParentId)
-                            ?? throw new ArgumentException("Query block does not have a valid parent!");
+        var notebookBlock = _blocksDal.GetBy(b => b.Id == query.ParentId);
+        
+        if(notebookBlock is null) 
+            return Results.BadRequest("Query block does not have a valid parent!");
+        
         if(notebookBlock.ParentId is null)
             throw new ArgumentException("Query block does not have a valid grandparent!");
         
