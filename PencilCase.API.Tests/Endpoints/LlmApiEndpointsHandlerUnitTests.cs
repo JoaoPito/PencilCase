@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Moq;
 using PencilCase.API.Handlers;
@@ -87,7 +86,6 @@ public class LlmApiEndpointsHandlerUnitTests
     }
 
     [Test]
-    public async Task AddChunksAsync_ShouldRaiseException_IfApiRaisesInvalidOperationException()
     public async Task SearchForChunksAsync_ReturnsOkResponse_WithValidQueryBlock()
     {
         Mock<IRagService> ragServiceMock = new();
@@ -107,8 +105,22 @@ public class LlmApiEndpointsHandlerUnitTests
         Assert.That(response, Is.TypeOf<Ok>());
     }
 
+    [Test]
+    public async Task SearchForChunksAsync_ReturnsBadRequestResponse_IfQueryParentIdIsInvalid()
     {
-        
+        throw new NotImplementedException();
+    }
+    
+    [Test]
+    public async Task SearchForChunksAsync_ReturnsBadRequestResponse_IfQueryHasNoGrandparent()
+    {
+        throw new NotImplementedException();
+    }
+
+    [Test]
+    public async Task SearchForChunksAsync_UsesSubtreeIdsForFilters()
+    {
+        throw new NotImplementedException();
     }
 
     [Test]
@@ -167,48 +179,42 @@ public class LlmApiEndpointsHandlerUnitTests
     [Test]
     public async Task SearchForChunksAsync_ReturnsBlocksWithCorrectContents()
     {
-        
+        throw new NotImplementedException();
     }
     
     [Test]
     public async Task SearchForChunksAsync_ReturnsEmptyCollection_IfChunksNotFound()
     {
-        
-    }
-
-    [Test]
-    public async Task SearchForChunksAsync_RaisesArgumentException_IfQueryParentIdIsInvalid()
-    {
-        
+        throw new NotImplementedException();
     }
 
     [Test]
     public async Task DeleteChunksAsync_DeletesValidChunks()
     {
-        
+        throw new NotImplementedException();
     }
 
     [Test]
     public async Task DeleteChunksAsync_RaisesArgumentException_IfChunkIdIsInvalid()
     {
-        
+        throw new NotImplementedException();
     }
 
     [Test]
     public async Task InvokeAgentAsync_ReturnsCorrectLlmMessageContents()
     {
-        
+        throw new NotImplementedException();
     }
     
     [Test]
     public async Task InvokeAgentAsync_RaisesArgumentException_IfQueryContentIsEmpty()
     {
-        
+        throw new NotImplementedException();
     }
     
     [Test]
     public async Task InvokeAgentAsync_RaisesHttpRequestException_IfApiRaisesHttpRequestException()
     {
-        
+        throw new NotImplementedException();
     }
 }
