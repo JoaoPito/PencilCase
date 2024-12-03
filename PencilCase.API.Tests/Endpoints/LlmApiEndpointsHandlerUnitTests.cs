@@ -136,7 +136,7 @@ public class LlmApiEndpointsHandlerUnitTests
         {
             Id = Guid.NewGuid(), ParentId = null, Name = "I dont have a parent \ud83e\udd79" 
         };
-        var invalidQuestion = new Block()
+        var question = new Block()
         {
             Id = Guid.NewGuid(), ParentId = invalidNotebook.Id, Name = ":)"
         };
@@ -144,7 +144,7 @@ public class LlmApiEndpointsHandlerUnitTests
         blocksDalMock.Setup(s => s.GetBy(It.IsAny<Func<Block, bool>>()))
             .Returns(invalidNotebook);
 
-        var response = await handler.SearchForChunksAsync(invalidQuestion);
+        var response = await handler.SearchForChunksAsync(question);
         
         Assert.That(response, Is.TypeOf<BadRequest<string>>());
     }
@@ -152,7 +152,34 @@ public class LlmApiEndpointsHandlerUnitTests
     [Test]
     public async Task SearchForChunksAsync_UsesSubtreeIdsForFilters()
     {
-        throw new NotImplementedException();
+        Mock<IRagService> ragServiceMock = new();
+        Mock<ILlmApiService> llmApiServiceMock = new();
+        Mock<IBlocksDal> blocksDalMock = new();
+        var handler = new LlmApiEndpointsHandler(ragServiceMock.Object, llmApiServiceMock.Object, blocksDalMock.Object);
+
+        var blockList = ExampleBlocksHelper.CreateRootWithSingleNotebook();
+        var notebook = blockList.First(b => b.Type == BlockType.Notebook);
+        var question = notebook.AddQuestion("What is 1+1?", 0);
+
+        var expectedIds = new List<Guid> { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
+        
+        blocksDalMock.Setup(s => s.GetBy(It.IsAny<Func<Block, bool>>()))
+            .Returns(notebook);
+        blocksDalMock.Setup(s => s.GetIdsFromSubtreeWithType(
+                It.IsAny<Guid>(), 
+                It.IsAny<Func<Block, bool>>()))
+            .Returns(expectedIds);
+        
+        List<Guid> capturedIds = new();
+        ragServiceMock.Setup(s => s.GetChunksForQuery(
+            It.IsAny<string>(),
+            It.IsAny<List<Guid>>(),
+            It.IsAny<uint>()))
+            .Callback<string,List<Guid>,uint>((query, filters, nResults) => capturedIds = filters);
+
+        var response = await handler.SearchForChunksAsync(question);
+        
+        Assert.That(capturedIds, Is.EquivalentTo(expectedIds));
     }
 
     [Test]
