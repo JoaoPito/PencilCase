@@ -127,7 +127,26 @@ public class LlmApiEndpointsHandlerUnitTests
     [Test]
     public async Task SearchForChunksAsync_ReturnsBadRequestResponse_IfQueryHasNoGrandparent()
     {
-        throw new NotImplementedException();
+        Mock<IRagService> ragServiceMock = new();
+        Mock<ILlmApiService> llmApiServiceMock = new();
+        Mock<IBlocksDal> blocksDalMock = new();
+        var handler = new LlmApiEndpointsHandler(ragServiceMock.Object, llmApiServiceMock.Object, blocksDalMock.Object);
+
+        var invalidNotebook = new Block()
+        {
+            Id = Guid.NewGuid(), ParentId = null, Name = "I dont have a parent \ud83e\udd79" 
+        };
+        var invalidQuestion = new Block()
+        {
+            Id = Guid.NewGuid(), ParentId = invalidNotebook.Id, Name = ":)"
+        };
+
+        blocksDalMock.Setup(s => s.GetBy(It.IsAny<Func<Block, bool>>()))
+            .Returns(invalidNotebook);
+
+        var response = await handler.SearchForChunksAsync(invalidQuestion);
+        
+        Assert.That(response, Is.TypeOf<BadRequest<string>>());
     }
 
     [Test]
