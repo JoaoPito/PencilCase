@@ -114,7 +114,54 @@ public class LlmApiEndpointsHandlerUnitTests
     [Test]
     public async Task SearchForChunksAsync_ReturnsBlocksWithCorrectIds()
     {
+        Mock<IRagService> ragServiceMock = new();
+        Mock<IBlocksDal> blocksDalMock = new();
+        Mock<ILlmApiService> llmApiServiceMock = new();
         
+        List<RagDocument> addedChunks = new();
+        
+        var expectedIds = new List<Guid>()
+        {
+            Guid.NewGuid(),
+        };
+
+        blocksDalMock.Setup(s => s.GetBy(
+                It.IsAny<Func<Block, bool>>()))
+            .Returns(new Block()
+            {
+                Id = Guid.NewGuid(),
+                ParentId = Guid.NewGuid(),
+                Name = "test",
+            });
+
+        blocksDalMock.Setup(s => s.GetIdsFromSubtreeWithType(
+                It.IsAny<Guid>(),
+                It.IsAny<Func<Block, bool>>()))
+            .Returns(new List<Guid>());
+
+        ragServiceMock
+            .Setup(s => s.GetChunksForQuery(It.IsAny <string>(), 
+                It.IsAny<List<Guid>>(), 
+                It.IsAny<uint>()))
+            .ReturnsAsync(expectedIds
+                .Select(id => new RagDocument(){ Id = id, ParentId = Guid.NewGuid(), Content = "" })
+                .ToList());
+
+        var handler = new LlmApiEndpointsHandler(ragServiceMock.Object, llmApiServiceMock.Object, blocksDalMock.Object);
+        var result = await handler.SearchForChunksAsync(
+            new Block()
+            {
+                Id = Guid.NewGuid(), 
+                ParentId = Guid.NewGuid(), 
+                Name = "test"
+            });
+
+        var okResponse = result as Ok<List<RagDocument>>;
+
+        var responseContents = okResponse?.Value?.ToList();
+        
+        Assert.That(responseContents, Is.Not.Null);
+        Assert.That(responseContents.Select(d => d.Id), Is.EquivalentTo(expectedIds));
     }
     
     [Test]
