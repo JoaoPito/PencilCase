@@ -67,17 +67,24 @@ public class LlmApiEndpointsHandlerUnitTests
             Is.TypeOf<BadRequest>(),
             $"AddChunksAsync did not return BadRequest response with docs quantity of {maxDocsQuantity + 1}");
     }
-    
+
     [Test]
-    public async Task AddChunksAsync_ShouldRaiseException_IfDocsQuantityIsZero()
+    public async Task AddChunksAsync_ShouldRespondWithBadRequest_IfDocsQuantityIsZero()
     {
-        
-    }
-    
-    [Test]
-    public async Task AddChunksAsync_ShouldRaiseException_IfChunkIsWrongType()
-    {
-        
+        Mock<IRagService> ragServiceMock = new();
+        Mock<IBlocksDal> blocksDalMock = new();
+        Mock<ILlmApiService> llmApiServiceMock = new();
+        const uint maxDocsQuantity = 256;
+
+        var handler = new LlmApiEndpointsHandler(ragServiceMock.Object, llmApiServiceMock.Object, blocksDalMock.Object);
+
+        var docsToAdd = new List<Block>() { };
+
+        var response = await handler.AddChunksAsync(docsToAdd);
+
+        Assert.That(response,
+            Is.TypeOf<BadRequest>(),
+            $"AddChunksAsync did not return BadRequest response with docs quantity of {docsToAdd.Count()}");
     }
     
     [Test]

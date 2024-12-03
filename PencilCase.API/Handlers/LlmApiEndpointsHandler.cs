@@ -26,7 +26,7 @@ public class LlmApiEndpointsHandler : ILlmApiEndpointsHandler
     public async Task<IResult> AddChunksAsync(IEnumerable<Block> chunks)
     {
         var chunkList = chunks.ToList();
-        if(chunkList.Count is < 1 or > 250)
+        if(chunkList.Count is < 1 or > 256)
             return Results.BadRequest();
 
         var docsList = MapBlockListToRagDocumentsList(chunkList);
