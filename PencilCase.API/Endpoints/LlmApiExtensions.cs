@@ -3,7 +3,8 @@ using Asp.Versioning.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using PencilCase.API.Handlers;
-using PencilCase.Shared.Models.LLM.Agents;
+using PencilCase.Shared.DTOs.Requests.Llm;
+using PencilCase.Shared.DTOs.Requests.Rag;
 using PencilCase.Shared.Models.Notebooks;
 
 namespace PencilCase.API.Endpoints;
@@ -22,11 +23,11 @@ public static class LlmApiExtensions
             .WithTags("LLM");
         
         var agentGroup = llmGroup.MapGroup("agent")
-            .WithTags(["LLM", "Agent"]);;
+            .WithTags(["LLM", "Agent"]);
 
         agentGroup.MapPost("invoke", async (
                 [FromServices] ILlmApiEndpointsHandler handler, 
-                [FromBody] List<LlmMessage> messages) => await handler.InvokeAgentAsync(messages))
+                [FromBody] LlmMessageInvokeRequest request) => await handler.InvokeAgentAsync(request))
             .WithName("InvokeAgent")
             .WithOpenApi(x => new OpenApiOperation(x)
             {
@@ -35,11 +36,11 @@ public static class LlmApiExtensions
             });
         
         var ragGroup = llmGroup.MapGroup("rag")
-            .WithTags(["LLM", "RAG"]);;
+            .WithTags(["LLM", "RAG"]);
         
         ragGroup.MapPost("search", (
                 [FromServices] ILlmApiEndpointsHandler handler, 
-                [FromBody] Block request) => handler.SearchForChunksAsync(request))
+                [FromBody] RagDocumentSearchRequest request) => handler.SearchForChunksAsync(request))
             .WithName("QueryDocuments")
             .WithOpenApi(x => new OpenApiOperation(x)
             {
@@ -49,7 +50,7 @@ public static class LlmApiExtensions
         
         ragGroup.MapPost("", async (
                 [FromServices] ILlmApiEndpointsHandler handler, 
-                [FromBody] List<Block> documents) => await handler.AddChunksAsync(documents))
+                [FromBody] List<RagDocumentAddRequest> documents) => await handler.AddChunksAsync(documents))
             .WithName("AddDocuments")
             .WithOpenApi(x => new OpenApiOperation(x)
             {
