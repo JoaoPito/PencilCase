@@ -308,6 +308,18 @@ public class LlmApiEndpointsHandlerUnitTests
     }
 
     [Test]
+    public async Task DeleteChunksAsync_ReturnsNoContentResponse_IfDeletedSuccessfully()
+    {
+        var handler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmApiServiceMock.Object, _blocksDalMock.Object);
+
+        var chunkToDelete = new Block() { Id = Guid.NewGuid() };
+        
+        var response = await handler.DeleteChunksAsync(new List<Block>(){ chunkToDelete });
+        
+        Assert.That(response, Is.TypeOf<NoContent>());
+    }
+
+    [Test]
     public async Task DeleteChunksAsync_ReturnsNotFound_IfChunkIdIsInvalid()
     {
         var handler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmApiServiceMock.Object, _blocksDalMock.Object);
