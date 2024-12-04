@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using PencilCase.Shared.Models.Notebooks;
 
-namespace PencilCase.API.Tests.Helpers;
+namespace PencilCase.Tests.API.Helpers;
 
 public static class BlockTreeBuilder
 {

@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PencilCase.LLM", "PencilCas
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PencilCase.Telemetry.Data", "PencilCase.Telemetry.Data\PencilCase.Telemetry.Data.csproj", "{54E22143-47E4-44DD-85DA-61ABCA27968E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PencilCase.API.Tests", "PencilCase.API.Tests\PencilCase.API.Tests.csproj", "{368998F9-C83C-4FA7-8267-8743752EFAF5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PencilCase.Tests.API", "PencilCase.Tests.API\PencilCase.Tests.API.csproj", "{368998F9-C83C-4FA7-8267-8743752EFAF5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

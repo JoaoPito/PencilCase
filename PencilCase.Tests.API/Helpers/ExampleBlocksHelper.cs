@@ -1,6 +1,6 @@
 using PencilCase.Shared.Models.Notebooks;
 
-namespace PencilCase.API.Tests.Helpers;
+namespace PencilCase.Tests.API.Helpers;
 
 public static class ExampleBlocksHelper
 {

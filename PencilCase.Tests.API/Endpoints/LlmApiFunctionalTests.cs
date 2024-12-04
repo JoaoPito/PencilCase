@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Moq;
 using PencilCase.API.Handlers;
-using PencilCase.API.Tests.Helpers;
+using PencilCase.Tests.API.Helpers;
 using PencilCase.LLM.Agents.Providers;
 using PencilCase.LLM.RAG;
 using PencilCase.Shared.Data.Database;
@@ -12,7 +12,7 @@ using PencilCase.Shared.Models.LLM.Agents;
 using PencilCase.Shared.Models.LLM.RAG;
 using PencilCase.Shared.Models.Notebooks;
 
-namespace PencilCase.API.Tests.Endpoints;
+namespace PencilCase.Tests.API.Endpoints;
 
 [TestFixture]
 public class LlmApiFunctionalTests

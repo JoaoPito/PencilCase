@@ -2,7 +2,7 @@ using PencilCase.Shared.DTOs.Requests.Rag;
 using PencilCase.Shared.Models.LLM.RAG;
 using PencilCase.Shared.Models.Notebooks;
 
-namespace PencilCase.API.Tests.Helpers;
+namespace PencilCase.Tests.API.Helpers;
 
 public static class EndpointRequestsHelpers
 {
