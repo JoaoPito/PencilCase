@@ -398,9 +398,13 @@ public class LlmApiEndpointsHandlerUnitTests
     }
     
     [Test]
-    public async Task InvokeAgentAsync_RaisesArgumentException_IfQueryContentIsEmpty()
+    public async Task InvokeAgentAsync_ReturnsBadRequest_IfQueryContentIsEmpty()
     {
-        throw new NotImplementedException();
+        var handler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmApiServiceMock.Object, _blocksDalMock.Object);
+
+        var response = await handler.InvokeAgentAsync(new List<LlmMessage>() { });
+        
+        Assert.That(response, Is.TypeOf<BadRequest>());
     }
     
     [Test]
