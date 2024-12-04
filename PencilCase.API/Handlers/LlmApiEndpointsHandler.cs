@@ -46,12 +46,13 @@ public class LlmApiEndpointsHandler : ILlmApiEndpointsHandler
         }).ToList();
     }
 
-    public async Task<IResult> SearchForChunksAsync(Block query)
+    public async Task<IResult> SearchForChunksAsync(RagDocumentSearchRequest query)
     {
-        if(query.Name == string.Empty)
+        if(query.Content == string.Empty || 
+           (query.NotebookId is null && query.FilterIds is null))
             return Results.BadRequest();
 
-        var notebookBlock = _blocksDal.GetBy(b => b.Id == query.ParentId);
+        var notebookBlock = _blocksDal.GetBy(b => b.Id == query.NotebookId);
         
         try
         {
@@ -66,7 +67,7 @@ public class LlmApiEndpointsHandler : ILlmApiEndpointsHandler
             (Guid)notebookBlock!.ParentId!,
             b => b.Type == BlockType.Source);
                 
-        var docs = await _ragService.GetChunksForQuery(query.Name, filterIds, 3);
+        var docs = await _ragService.GetChunksForQuery(query.Content, filterIds, 3);
         return Results.Ok(docs);
     }
 
