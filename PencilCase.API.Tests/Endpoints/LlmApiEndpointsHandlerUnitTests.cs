@@ -293,7 +293,18 @@ public class LlmApiEndpointsHandlerUnitTests
     [Test]
     public async Task DeleteChunksAsync_DeletesValidChunks()
     {
-        throw new NotImplementedException();
+        var handler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmApiServiceMock.Object, _blocksDalMock.Object);
+
+        var chunksDeleted = new List<RagDocument>();
+        _ragServiceMock
+            .Setup(s => s.DeleteChunks(It.IsAny<List<RagDocument>>()))
+            .Callback<List<RagDocument>>(l => chunksDeleted.AddRange(l));
+
+        var chunkToDelete = new Block() { Id = Guid.NewGuid() };
+        
+        await handler.DeleteChunksAsync(new List<Block>(){ chunkToDelete });
+        Assert.That(chunksDeleted.Select(c => c.Id).ToList(),
+            Is.EquivalentTo(new[] { chunkToDelete.Id }));
     }
 
     [Test]
