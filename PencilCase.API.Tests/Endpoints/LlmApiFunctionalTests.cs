@@ -6,6 +6,7 @@ using PencilCase.API.Tests.Helpers;
 using PencilCase.LLM.Agents.Providers;
 using PencilCase.LLM.RAG;
 using PencilCase.Shared.Data.Database;
+using PencilCase.Shared.DTOs.Requests.Rag;
 using PencilCase.Shared.Models.LLM.Agents;
 using PencilCase.Shared.Models.LLM.RAG;
 using PencilCase.Shared.Models.Notebooks;
@@ -116,7 +117,12 @@ public class LlmApiFunctionalTests
         };
         
         // Under the hood pencilcase adds the information to its database
-        var addResponse = await _apiHandler.AddChunksAsync(pdfs);
+        var addResponse = await _apiHandler.AddChunksAsync(pdfs.Select(b => new RagDocumentAddRequest()
+        {
+            Id = b.Id,
+            ParentId = b.ParentId ?? Guid.Empty,
+            Content = b.Name
+        }));
         AssertAddingSuccesful(addResponse, pdfs);
         
         // He, then, creates a new notebook and starts adding cells to it
@@ -146,7 +152,11 @@ public class LlmApiFunctionalTests
                 Content = b.Name
             }).ToList());
         
-        var searchResponse = await _apiHandler.SearchForChunksAsync(firstQuestion);
+        var searchResponse = await _apiHandler.SearchForChunksAsync(new RagDocumentSearchRequest()
+        {
+            Id = firstQuestion.Id,
+            Content = firstQuestion.Name,
+        });
         
         // After some time loading, pencilcase gets the relevant documents to the question and shows them to Carlos
         // He sees that the system returned the math pdfs he uploaded earlier
@@ -157,7 +167,7 @@ public class LlmApiFunctionalTests
         AssertSearchResponseContentIsValid(resultChunks, expectedBlocks);
         
         // Then, pencilcase sends the chunks to the LLM using the appropriate endpoint
-        var chatMessages = new List<LlmMessage>
+        var chatMessages = new List<LlmMessageInvokeRequest>
         {
             BuildLlmMessageFromQuestionAndDocs(firstQuestion, resultChunks)
         };
