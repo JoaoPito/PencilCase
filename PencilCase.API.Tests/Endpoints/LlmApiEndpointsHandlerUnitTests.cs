@@ -6,6 +6,8 @@ using PencilCase.API.Tests.Helpers;
 using PencilCase.LLM.Agents.Providers;
 using PencilCase.LLM.RAG;
 using PencilCase.Shared.Data.Database;
+using PencilCase.Shared.DTOs.Requests.Llm;
+using PencilCase.Shared.DTOs.Requests.Rag;
 using PencilCase.Shared.Models.LLM.Agents;
 using PencilCase.Shared.Models.LLM.RAG;
 using PencilCase.Shared.Models.Notebooks;
@@ -38,9 +40,9 @@ public class LlmApiEndpointsHandlerUnitTests
             .Setup(s => s.AddChunks(It.IsAny<List<RagDocument>>()))
             .Callback<List<RagDocument>>(l => addedChunks.AddRange(l));
 
-        var docsToAdd = new List<Block>()
+        var docsToAdd = new List<RagDocumentAddRequest>()
         {
-            new() { Id = Guid.NewGuid(), Name = "test01", Type = BlockType.Cell, ParentId = Guid.NewGuid() },
+            new() { Id = Guid.NewGuid(), Content = "test01", ParentId = Guid.NewGuid() },
         };
         
         await handler.AddChunksAsync(docsToAdd);
@@ -54,14 +56,13 @@ public class LlmApiEndpointsHandlerUnitTests
         var handler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmApiServiceMock.Object, _blocksDalMock.Object);
         const uint maxDocsQuantity = 256;
         
-        var docsToAdd = new List<Block>() { };
+        var docsToAdd = new List<RagDocumentAddRequest>() { };
         for (int i = 0; i < maxDocsQuantity + 1; i++)
         {
             docsToAdd.Add(new()
             {
                 Id = Guid.NewGuid(), 
-                Name = $"test{i}", 
-                Type = BlockType.Cell, 
+                Content = $"test{i}",
                 ParentId = Guid.NewGuid()
             });
         }
@@ -78,7 +79,7 @@ public class LlmApiEndpointsHandlerUnitTests
     {
         var handler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmApiServiceMock.Object, _blocksDalMock.Object);
 
-        var docsToAdd = new List<Block>() { };
+        var docsToAdd = new List<RagDocumentAddRequest>() { };
 
         var response = await handler.AddChunksAsync(docsToAdd);
 
@@ -99,7 +100,7 @@ public class LlmApiEndpointsHandlerUnitTests
         _blocksDalMock.Setup(s => s.GetBy(It.IsAny<Func<Block, bool>>()))
             .Returns(notebook);
 
-        var response = await handler.SearchForChunksAsync(validQuestion);
+        var response = await handler.SearchForChunksAsync(validQuestion.ToSearchRequest());
         
         Assert.That(response, Is.TypeOf<Ok>());
     }
@@ -109,8 +110,8 @@ public class LlmApiEndpointsHandlerUnitTests
     {
         var handler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmApiServiceMock.Object, _blocksDalMock.Object);
 
-        var invalidQuestion = new Block()
-            { Id = Guid.NewGuid(), ParentId = Guid.NewGuid(), Name = "I dont have a parent \ud83e\udd79" };
+        var invalidQuestion = new RagDocumentSearchRequest()
+            { NotebookId = Guid.NewGuid(), Content = "I dont have a parent \ud83e\udd79" };
 
         _blocksDalMock.Setup(s => s.GetBy(It.IsAny<Func<Block, bool>>()))
             .Returns(null as Block);
@@ -137,7 +138,7 @@ public class LlmApiEndpointsHandlerUnitTests
         _blocksDalMock.Setup(s => s.GetBy(It.IsAny<Func<Block, bool>>()))
             .Returns(invalidNotebook);
 
-        var response = await handler.SearchForChunksAsync(question);
+        var response = await handler.SearchForChunksAsync(question.ToSearchRequest());
         
         Assert.That(response, Is.TypeOf<BadRequest<string>>());
     }
@@ -167,7 +168,7 @@ public class LlmApiEndpointsHandlerUnitTests
             It.IsAny<uint>()))
             .Callback<string,List<Guid>,uint>((query, filters, nResults) => capturedIds = filters);
 
-        var response = await handler.SearchForChunksAsync(question);
+        await handler.SearchForChunksAsync(question.ToSearchRequest());
         
         Assert.That(capturedIds, Is.EquivalentTo(expectedIds));
     }
@@ -205,11 +206,10 @@ public class LlmApiEndpointsHandlerUnitTests
                 .ToList());
 
         var result = await handler.SearchForChunksAsync(
-            new Block()
+            new RagDocumentSearchRequest()
             {
-                Id = Guid.NewGuid(), 
-                ParentId = Guid.NewGuid(), 
-                Name = "test"
+                NotebookId = Guid.NewGuid(), 
+                Content = "test"
             });
 
         var okResponse = result as Ok<List<RagDocument>>;
@@ -259,11 +259,10 @@ public class LlmApiEndpointsHandlerUnitTests
                 .ToList());
 
         var result = await handler.SearchForChunksAsync(
-            new Block()
+            new RagDocumentSearchRequest()
             {
-                Id = Guid.NewGuid(), 
-                ParentId = Guid.NewGuid(), 
-                Name = "test"
+                NotebookId = Guid.NewGuid(), 
+                Content = "test"
             });
 
         var okResponse = result as Ok<List<RagDocument>>;
@@ -292,7 +291,7 @@ public class LlmApiEndpointsHandlerUnitTests
                 It.IsAny<uint>()))
             .ReturnsAsync(new List<RagDocument>());
 
-        var response = await handler.SearchForChunksAsync(validQuestion);
+        var response = await handler.SearchForChunksAsync(validQuestion.ToSearchRequest());
         var responseContent = ((Ok<List<RagDocument>>)response)!.Value?.ToList();
         
         Assert.That(responseContent, Is.Empty);
@@ -368,7 +367,10 @@ public class LlmApiEndpointsHandlerUnitTests
         
         var handler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmApiServiceMock.Object, _blocksDalMock.Object);
 
-        var response = await handler.InvokeAgentAsync(new List<LlmMessage>() { query });
+        var response = await handler.InvokeAgentAsync(new LlmMessageInvokeRequest()
+        {
+            ChatMessages = new List<LlmMessage>() { query }
+        });
         
         Assert.That(response, Is.TypeOf<Ok<List<LlmMessage>>>());
     }
@@ -398,7 +400,10 @@ public class LlmApiEndpointsHandlerUnitTests
         
         var handler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmApiServiceMock.Object, _blocksDalMock.Object);
 
-        var response = await handler.InvokeAgentAsync(new List<LlmMessage>() { query });
+        var response = await handler.InvokeAgentAsync(new LlmMessageInvokeRequest()
+        {
+            ChatMessages = new List<LlmMessage>() { query }
+        });
         var contents = ((Ok<List<LlmMessage>>)response!).Value?.ToList();
         
         Assert.That(contents!.First(), Is.EqualTo(generatedContent));
@@ -409,7 +414,10 @@ public class LlmApiEndpointsHandlerUnitTests
     {
         var handler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmApiServiceMock.Object, _blocksDalMock.Object);
 
-        var response = await handler.InvokeAgentAsync(new List<LlmMessage>() { });
+        var response = await handler.InvokeAgentAsync(new LlmMessageInvokeRequest()
+        {
+            ChatMessages = new List<LlmMessage>() { }
+        });
         
         Assert.That(response, Is.TypeOf<BadRequest>());
     }
@@ -430,7 +438,10 @@ public class LlmApiEndpointsHandlerUnitTests
         
         var handler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmApiServiceMock.Object, _blocksDalMock.Object);
 
-        var response = await handler.InvokeAgentAsync(new List<LlmMessage>() { query });
+        var response = await handler.InvokeAgentAsync(new LlmMessageInvokeRequest()
+        {
+            ChatMessages = new List<LlmMessage>() { query }
+        });
         
         Assert.That(response, Is.EqualTo(Results.StatusCode(500)));
     }
