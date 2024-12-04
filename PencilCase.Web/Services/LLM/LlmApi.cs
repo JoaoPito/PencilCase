@@ -1,5 +1,5 @@
 using System.Net.Http.Json;
-using PencilCase.LLM.DTOs;
+using PencilCase.Shared.DTOs.Requests.Rag;
 using PencilCase.Shared.Models.LLM.Agents;
 using PencilCase.Shared.Models.LLM.RAG;
 
@@ -30,16 +30,16 @@ public class LlmApi : ILlmApi
 
     public async Task<IEnumerable<RagDocument>> QueryRagDocumentsAsync(string query, List<Guid> parentIds, uint? nResults=3)
     {
-        var request = new QueryRequest
+        var request = new RagSearchRequest()
         {
-            Query = query,
-            ParentIds = parentIds,
-            NResults = nResults ?? 3
+            Content = query,
+            FilterIds = parentIds
         };
         var response = await _httpClient.PostAsJsonAsync("rag/search", request);
         
         response.EnsureSuccessStatusCode();
-        var responseContents = await response.Content.ReadFromJsonAsync<List<RagDocument>>() ?? new List<RagDocument>();
+        var responseContents = await response.Content.ReadFromJsonAsync<List<RagDocument>>()
+                               ?? new List<RagDocument>();
         return responseContents;
     }
 
