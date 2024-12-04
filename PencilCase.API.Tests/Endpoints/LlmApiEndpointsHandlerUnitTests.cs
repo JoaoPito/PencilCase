@@ -307,9 +307,9 @@ public class LlmApiEndpointsHandlerUnitTests
             .Setup(s => s.DeleteChunks(It.IsAny<List<RagDocument>>()))
             .Callback<List<RagDocument>>(l => chunksDeleted.AddRange(l));
 
-        var chunkToDelete = new Block() { Id = Guid.NewGuid() };
+        var chunkToDelete = new RagDocumentDeleteRequest() { Id = Guid.NewGuid() };
         
-        await handler.DeleteChunksAsync(new List<Block>(){ chunkToDelete });
+        await handler.DeleteChunksAsync(new List<RagDocumentDeleteRequest>(){ chunkToDelete });
         Assert.That(chunksDeleted.Select(c => c.Id).ToList(),
             Is.EquivalentTo(new[] { chunkToDelete.Id }));
     }
@@ -319,9 +319,9 @@ public class LlmApiEndpointsHandlerUnitTests
     {
         var handler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmApiServiceMock.Object, _blocksDalMock.Object);
 
-        var chunkToDelete = new Block() { Id = Guid.NewGuid() };
+        var chunkToDelete = new RagDocumentDeleteRequest() { Id = Guid.NewGuid() };
         
-        var response = await handler.DeleteChunksAsync(new List<Block>(){ chunkToDelete });
+        var response = await handler.DeleteChunksAsync(new List<RagDocumentDeleteRequest>(){ chunkToDelete });
         
         Assert.That(response, Is.TypeOf<NoContent>());
     }
@@ -335,9 +335,9 @@ public class LlmApiEndpointsHandlerUnitTests
             .Setup(s => s.DeleteChunks(It.IsAny<List<RagDocument>>()))
             .Throws<ArgumentException>();
         
-        var chunkToDelete = new Block() { Id = Guid.NewGuid() };
+        var chunkToDelete = new RagDocumentDeleteRequest() { Id = Guid.NewGuid() };
 
-        var response = await handler.DeleteChunksAsync(new List<Block>(){ chunkToDelete });
+        var response = await handler.DeleteChunksAsync(new List<RagDocumentDeleteRequest>(){ chunkToDelete });
         
         Assert.That(response, Is.TypeOf<NotFound>());
     }
