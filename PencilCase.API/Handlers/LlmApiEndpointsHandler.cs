@@ -47,7 +47,7 @@ public class LlmApiEndpointsHandler : ILlmApiEndpointsHandler
         }).ToList();
     }
 
-    public async Task<IResult> SearchForChunksAsync(RagDocumentSearchRequest query)
+    public async Task<IResult> SearchForChunksAsync(RagSearchRequest query)
     {
         if(query.Content == string.Empty || 
            (query.NotebookId is null && query.FilterIds is null))

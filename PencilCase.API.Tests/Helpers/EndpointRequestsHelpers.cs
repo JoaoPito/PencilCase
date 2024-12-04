@@ -24,9 +24,9 @@ public static class EndpointRequestsHelpers
         };
     }
 
-    public static RagDocumentSearchRequest ToSearchRequest(this Block block)
+    public static RagSearchRequest ToSearchRequest(this Block block)
     {
-        return new RagDocumentSearchRequest()
+        return new RagSearchRequest()
         {
             Content = block.Name,
             NotebookId = block.ParentId,

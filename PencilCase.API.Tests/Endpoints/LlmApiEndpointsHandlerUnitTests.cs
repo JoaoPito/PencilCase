@@ -113,7 +113,7 @@ public class LlmApiEndpointsHandlerUnitTests
     {
         var handler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmApiServiceMock.Object, _blocksDalMock.Object);
 
-        var invalidQuestion = new RagDocumentSearchRequest()
+        var invalidQuestion = new RagSearchRequest()
             { NotebookId = Guid.NewGuid(), Content = "I dont have a parent \ud83e\udd79" };
 
         _blocksDalMock.Setup(s => s.GetBy(It.IsAny<Func<Block, bool>>()))
@@ -209,7 +209,7 @@ public class LlmApiEndpointsHandlerUnitTests
                 .ToList());
 
         var result = await handler.SearchForChunksAsync(
-            new RagDocumentSearchRequest()
+            new RagSearchRequest()
             {
                 NotebookId = Guid.NewGuid(), 
                 Content = "test"
@@ -262,7 +262,7 @@ public class LlmApiEndpointsHandlerUnitTests
                 .ToList());
 
         var result = await handler.SearchForChunksAsync(
-            new RagDocumentSearchRequest()
+            new RagSearchRequest()
             {
                 NotebookId = Guid.NewGuid(), 
                 Content = "test"
