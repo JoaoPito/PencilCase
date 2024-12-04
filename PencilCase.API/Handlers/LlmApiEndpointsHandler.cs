@@ -86,7 +86,7 @@ public class LlmApiEndpointsHandler : ILlmApiEndpointsHandler
         }
     }
 
-    public async Task<IResult> DeleteChunksAsync(List<Block> chunks)
+    public async Task<IResult> DeleteChunksAsync(List<RagDocumentDeleteRequest> chunks)
     {
         try
         {
@@ -95,7 +95,7 @@ public class LlmApiEndpointsHandler : ILlmApiEndpointsHandler
                 {
                     Id = b.Id,
                     ParentId = b.ParentId ?? Guid.Empty,
-                    Content = b.Name,
+                    Content = b.Content ?? String.Empty,
                 }).ToList());
         }
         catch (ArgumentException)
