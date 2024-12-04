@@ -114,7 +114,7 @@ public class LlmApiEndpointsHandlerUnitTests
             .Returns(null as Block);
 
         var response = await handler.SearchForChunksAsync(invalidQuestion);
-        
+         
         Assert.That(response, Is.TypeOf<BadRequest<string>>());
     }
     
@@ -269,7 +269,25 @@ public class LlmApiEndpointsHandlerUnitTests
     [Test]
     public async Task SearchForChunksAsync_ReturnsEmptyCollection_IfChunksNotFound()
     {
-        throw new NotImplementedException();
+        var handler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmApiServiceMock.Object, _blocksDalMock.Object);
+        
+        var blockList = ExampleBlocksHelper.CreateRootWithSingleNotebook();
+        var notebook = blockList.First(b => b.Type == BlockType.Notebook);
+        var validQuestion = notebook.AddQuestion("What is 1+1?", 0);
+
+        _blocksDalMock.Setup(s => s.GetBy(It.IsAny<Func<Block, bool>>()))
+            .Returns(notebook);
+
+        _ragServiceMock.Setup(s => s.GetChunksForQuery(
+                It.IsAny<string>(),
+                It.IsAny<List<Guid>>(),
+                It.IsAny<uint>()))
+            .ReturnsAsync(new List<RagDocument>());
+
+        var response = await handler.SearchForChunksAsync(validQuestion);
+        var responseContent = ((Ok<List<RagDocument>>)response)!.Value?.ToList();
+        
+        Assert.That(responseContent, Is.Empty);
     }
 
     [Test]
