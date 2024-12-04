@@ -50,7 +50,7 @@ public static class LlmApiExtensions
         
         ragGroup.MapPost("", async (
                 [FromServices] ILlmApiEndpointsHandler handler, 
-                [FromBody] List<RagDocumentAddRequest> documents) => await handler.AddChunksAsync(documents))
+                [FromBody] List<RagAddRequest> documents) => await handler.AddChunksAsync(documents))
             .WithName("AddDocuments")
             .WithOpenApi(x => new OpenApiOperation(x)
             {

@@ -40,7 +40,7 @@ public class LlmApiEndpointsHandlerUnitTests
             .Setup(s => s.AddChunks(It.IsAny<List<RagDocument>>()))
             .Callback<List<RagDocument>>(l => addedChunks.AddRange(l));
 
-        var docsToAdd = new List<RagDocumentAddRequest>()
+        var docsToAdd = new List<RagAddRequest>()
         {
             new() { Id = Guid.NewGuid(), Content = "test01", ParentId = Guid.NewGuid() },
         };
@@ -59,7 +59,7 @@ public class LlmApiEndpointsHandlerUnitTests
         var handler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmApiServiceMock.Object, _blocksDalMock.Object);
         const uint maxDocsQuantity = 256;
         
-        var docsToAdd = new List<RagDocumentAddRequest>() { };
+        var docsToAdd = new List<RagAddRequest>() { };
         for (int i = 0; i < maxDocsQuantity + 1; i++)
         {
             docsToAdd.Add(new()
@@ -82,7 +82,7 @@ public class LlmApiEndpointsHandlerUnitTests
     {
         var handler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmApiServiceMock.Object, _blocksDalMock.Object);
 
-        var docsToAdd = new List<RagDocumentAddRequest>() { };
+        var docsToAdd = new List<RagAddRequest>() { };
 
         var response = await handler.AddChunksAsync(docsToAdd);
 

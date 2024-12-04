@@ -118,7 +118,7 @@ public class LlmApiFunctionalTests
         };
         
         // Under the hood pencilcase adds the information to its database
-        var addResponse = await _apiHandler.AddChunksAsync(pdfs.Select(b => new RagDocumentAddRequest()
+        var addResponse = await _apiHandler.AddChunksAsync(pdfs.Select(b => new RagAddRequest()
         {
             Id = b.Id,
             ParentId = b.ParentId ?? Guid.Empty,

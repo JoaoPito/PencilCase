@@ -25,7 +25,7 @@ public class LlmApiEndpointsHandler : ILlmApiEndpointsHandler
         _blocksDal = blocksDal;
     }
 
-    public async Task<IResult> AddChunksAsync(IEnumerable<RagDocumentAddRequest> chunks)
+    public async Task<IResult> AddChunksAsync(IEnumerable<RagAddRequest> chunks)
     {
         var chunkList = chunks.ToList();
         if(chunkList.Count is < 1 or > 256)
@@ -37,7 +37,7 @@ public class LlmApiEndpointsHandler : ILlmApiEndpointsHandler
         return Results.Created();
     }
 
-    private List<RagDocument> MapRequestsListToRagDocumentsList(List<RagDocumentAddRequest> requestsList)
+    private List<RagDocument> MapRequestsListToRagDocumentsList(List<RagAddRequest> requestsList)
     {
         return requestsList.Select(r => new RagDocument()
         {
