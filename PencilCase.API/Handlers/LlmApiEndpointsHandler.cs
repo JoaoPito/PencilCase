@@ -86,7 +86,7 @@ public class LlmApiEndpointsHandler : ILlmApiEndpointsHandler
         }
     }
 
-    public async Task<IResult> DeleteChunksAsync(List<RagDocumentDeleteRequest> chunks)
+    public async Task<IResult> DeleteChunksAsync(List<RagDeleteRequest> chunks)
     {
         try
         {

@@ -1,6 +1,6 @@
 namespace PencilCase.Shared.DTOs.Requests.Rag;
 
-public record RagDocumentDeleteRequest
+public record RagDeleteRequest
 {
     public Guid Id { get; set; }
     public Guid? ParentId { get; set; }
