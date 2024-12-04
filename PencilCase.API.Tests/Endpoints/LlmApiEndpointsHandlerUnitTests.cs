@@ -308,9 +308,19 @@ public class LlmApiEndpointsHandlerUnitTests
     }
 
     [Test]
-    public async Task DeleteChunksAsync_RaisesArgumentException_IfChunkIdIsInvalid()
+    public async Task DeleteChunksAsync_ReturnsNotFound_IfChunkIdIsInvalid()
     {
-        throw new NotImplementedException();
+        var handler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmApiServiceMock.Object, _blocksDalMock.Object);
+        
+        _ragServiceMock
+            .Setup(s => s.DeleteChunks(It.IsAny<List<RagDocument>>()))
+            .Throws<ArgumentException>();
+        
+        var chunkToDelete = new Block() { Id = Guid.NewGuid() };
+
+        var response = await handler.DeleteChunksAsync(new List<Block>(){ chunkToDelete });
+        
+        Assert.That(response, Is.TypeOf<NotFound>());
     }
 
     [Test]
