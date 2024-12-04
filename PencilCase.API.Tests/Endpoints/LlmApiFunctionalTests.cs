@@ -6,6 +6,7 @@ using PencilCase.API.Tests.Helpers;
 using PencilCase.LLM.Agents.Providers;
 using PencilCase.LLM.RAG;
 using PencilCase.Shared.Data.Database;
+using PencilCase.Shared.DTOs.Requests.Llm;
 using PencilCase.Shared.DTOs.Requests.Rag;
 using PencilCase.Shared.Models.LLM.Agents;
 using PencilCase.Shared.Models.LLM.RAG;
@@ -167,9 +168,12 @@ public class LlmApiFunctionalTests
         AssertSearchResponseContentIsValid(resultChunks, expectedBlocks);
         
         // Then, pencilcase sends the chunks to the LLM using the appropriate endpoint
-        var chatMessages = new List<LlmMessageInvokeRequest>
+        var chatMessages = new LlmMessageInvokeRequest()
         {
-            BuildLlmMessageFromQuestionAndDocs(firstQuestion, resultChunks)
+            ChatMessages = new List<LlmMessage>()
+            {
+                BuildLlmMessageFromQuestionAndDocs(firstQuestion, resultChunks)
+            }
         };
 
         var llmInvokeResponse =  await _apiHandler.InvokeAgentAsync(chatMessages);
