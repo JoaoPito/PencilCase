@@ -47,7 +47,10 @@ public class LlmApiEndpointsHandlerUnitTests
         
         await handler.AddChunksAsync(docsToAdd);
         
-        Assert.That(addedChunks.Select(d => d.ToBlock()).ToList(), Is.EquivalentTo(docsToAdd));
+        Assert.That(addedChunks.Select(
+                d => (d.Id, d.ParentId, d.Content)).ToList(), 
+            Is.EquivalentTo(docsToAdd.Select(
+                r => (r.Id, r.ParentId, r.Content)).ToList()));
     }
     
     [Test]
