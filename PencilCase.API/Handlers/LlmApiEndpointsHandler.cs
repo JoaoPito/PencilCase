@@ -1,6 +1,7 @@
 using PencilCase.LLM.Agents.Providers;
 using PencilCase.LLM.RAG;
 using PencilCase.Shared.Data.Database;
+using PencilCase.Shared.DTOs.Requests.Rag;
 using PencilCase.Shared.Models.LLM.Agents;
 using PencilCase.Shared.Models.LLM.RAG;
 using PencilCase.Shared.Models.Notebooks;
@@ -23,25 +24,25 @@ public class LlmApiEndpointsHandler : ILlmApiEndpointsHandler
         _blocksDal = blocksDal;
     }
 
-    public async Task<IResult> AddChunksAsync(IEnumerable<Block> chunks)
+    public async Task<IResult> AddChunksAsync(IEnumerable<RagDocumentAddRequest> chunks)
     {
         var chunkList = chunks.ToList();
         if(chunkList.Count is < 1 or > 256)
             return Results.BadRequest();
 
-        var docsList = MapBlockListToRagDocumentsList(chunkList);
+        var docsList = MapRequestsListToRagDocumentsList(chunkList);
                 
         await _ragService.AddChunks(docsList);
         return Results.Created();
     }
 
-    private List<RagDocument> MapBlockListToRagDocumentsList(List<Block> blockList)
+    private List<RagDocument> MapRequestsListToRagDocumentsList(List<RagDocumentAddRequest> requestsList)
     {
-        return blockList.Select(b => new RagDocument()
+        return requestsList.Select(r => new RagDocument()
         {
-            Id = b.Id,
-            ParentId = b.ParentId ?? Guid.Empty,
-            Content = b.Name,
+            Id = r.Id,
+            ParentId = r.ParentId,
+            Content = r.Content,
         }).ToList();
     }
 
