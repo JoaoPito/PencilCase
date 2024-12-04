@@ -1,6 +1,7 @@
 using PencilCase.LLM.Agents.Providers;
 using PencilCase.LLM.RAG;
 using PencilCase.Shared.Data.Database;
+using PencilCase.Shared.DTOs.Requests.Llm;
 using PencilCase.Shared.DTOs.Requests.Rag;
 using PencilCase.Shared.Models.LLM.Agents;
 using PencilCase.Shared.Models.LLM.RAG;
@@ -71,13 +72,13 @@ public class LlmApiEndpointsHandler : ILlmApiEndpointsHandler
         return Results.Ok(docs);
     }
 
-    public async Task<IResult> InvokeAgentAsync(List<LlmMessage> chat)
+    public async Task<IResult> InvokeAgentAsync(LlmMessageInvokeRequest request)
     {
-        if(chat.Count < 1)
+        if(request.ChatMessages.Count < 1)
             return Results.BadRequest();
         try
         {
-            return Results.Ok(await _llmApiService.GenerateContent(chat));
+            return Results.Ok(await _llmApiService.GenerateContent(request.ChatMessages));
         }
         catch (HttpRequestException)
         {
