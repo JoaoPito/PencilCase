@@ -73,7 +73,14 @@ public class LlmApiEndpointsHandler : ILlmApiEndpointsHandler
     {
         if(chat.Count < 1)
             return Results.BadRequest();
-        return Results.Ok(await _llmApiService.GenerateContent(chat));
+        try
+        {
+            return Results.Ok(await _llmApiService.GenerateContent(chat));
+        }
+        catch (HttpRequestException)
+        {
+            return Results.StatusCode(500);
+        }
     }
 
     public async Task<IResult> DeleteChunksAsync(List<Block> chunks)
