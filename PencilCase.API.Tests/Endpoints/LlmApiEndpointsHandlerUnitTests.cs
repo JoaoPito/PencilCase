@@ -5,6 +5,7 @@ using PencilCase.API.Tests.Helpers;
 using PencilCase.LLM.Agents.Providers;
 using PencilCase.LLM.RAG;
 using PencilCase.Shared.Data.Database;
+using PencilCase.Shared.Models.LLM.Agents;
 using PencilCase.Shared.Models.LLM.RAG;
 using PencilCase.Shared.Models.Notebooks;
 
@@ -338,7 +339,32 @@ public class LlmApiEndpointsHandlerUnitTests
     [Test]
     public async Task InvokeAgentAsync_ReturnsCorrectLlmMessageContents()
     {
-        throw new NotImplementedException();
+        var query = new LlmMessage()
+        {
+            Role = "user",
+            Content = "This is a query from a hopefully human user"
+        };
+        
+        var generatedContent = new LlmMessage()
+        {
+            Role = "model",
+            Content = "This is a response from the wonderful LLM of your choice."
+        };
+        
+        _llmApiServiceMock.Setup(s => s.GenerateContent(
+            It.IsAny<List<LlmMessage>>(),
+            It.IsAny<LlmMessage?>()))
+            .ReturnsAsync(new List<LlmMessage>()
+            {
+                generatedContent
+            });
+        
+        var handler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmApiServiceMock.Object, _blocksDalMock.Object);
+
+        var response = await handler.InvokeAgentAsync(new List<LlmMessage>() { query });
+        var contents = ((Ok<List<LlmMessage>>)response!).Value?.ToList();
+        
+        Assert.That(contents!.First(), Is.EqualTo(generatedContent));
     }
     
     [Test]
