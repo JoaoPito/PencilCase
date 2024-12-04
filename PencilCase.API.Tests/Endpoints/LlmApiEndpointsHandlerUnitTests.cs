@@ -219,6 +219,12 @@ public class LlmApiEndpointsHandlerUnitTests
         Assert.That(responseContents, Is.Not.Null);
         Assert.That(responseContents.Select(d => d.Id), Is.EquivalentTo(expectedIds));
     }
+
+    [Test]
+    public async Task SearchForChunksAsync_UsesQueryFilters()
+    {
+        throw new NotImplementedException();
+    }
     
     [Test]
     public async Task SearchForChunksAsync_ReturnsAnswerWithCorrectContents()
