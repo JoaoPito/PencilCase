@@ -154,7 +154,7 @@ public class LlmApiFunctionalTests
         
         var searchResponse = await _apiHandler.SearchForChunksAsync(new RagDocumentSearchRequest()
         {
-            Id = firstQuestion.Id,
+            NotebookId = firstQuestion.ParentId,
             Content = firstQuestion.Name,
         });
         
