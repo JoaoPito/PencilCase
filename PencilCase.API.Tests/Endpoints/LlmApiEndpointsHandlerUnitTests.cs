@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Moq;
 using PencilCase.API.Handlers;
@@ -408,8 +409,23 @@ public class LlmApiEndpointsHandlerUnitTests
     }
     
     [Test]
-    public async Task InvokeAgentAsync_RaisesHttpRequestException_IfApiRaisesHttpRequestException()
+    public async Task InvokeAgentAsync_Returns500_IfApiRaisesHttpRequestException()
     {
-        throw new NotImplementedException();
+        var query = new LlmMessage()
+        {
+            Role = "user",
+            Content = "This is a query from a hopefully human user"
+        };
+        
+        _llmApiServiceMock.Setup(s => s.GenerateContent(
+                It.IsAny<List<LlmMessage>>(),
+                It.IsAny<LlmMessage?>()))
+            .Throws<HttpRequestException>();
+        
+        var handler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmApiServiceMock.Object, _blocksDalMock.Object);
+
+        var response = await handler.InvokeAgentAsync(new List<LlmMessage>() { query });
+        
+        Assert.That(response, Is.EqualTo(Results.StatusCode(500)));
     }
 }
