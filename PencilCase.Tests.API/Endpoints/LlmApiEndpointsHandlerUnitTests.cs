@@ -175,7 +175,7 @@ public class LlmApiEndpointsHandlerUnitTests
         
         Assert.That(capturedIds, Is.EquivalentTo(expectedIds));
     }
-
+    
     [Test]
     public async Task SearchForChunksAsync_ReturnsBlocksWithCorrectIds()
     {
@@ -226,7 +226,34 @@ public class LlmApiEndpointsHandlerUnitTests
     [Test]
     public async Task SearchForChunksAsync_UsesQueryFilters()
     {
-        throw new NotImplementedException();
+        var handler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmApiServiceMock.Object, _blocksDalMock.Object);
+
+        var blockList = ExampleBlocksHelper.CreateRootWithSingleNotebook();
+        var notebook = blockList.First(b => b.Type == BlockType.Notebook);
+        var question = notebook.AddQuestion("What is 1+1?", 0);
+
+        var expectedIds = new List<Guid> { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
+        
+        _blocksDalMock.Setup(s => s.GetBy(It.IsAny<Func<Block, bool>>()))
+            .Returns(notebook);
+        _blocksDalMock.Setup(s => s.GetIdsFromSubtreeWithType(
+                It.IsAny<Guid>(), 
+                It.IsAny<Func<Block, bool>>()))
+            .Returns(new List<Guid>());
+        
+        List<Guid> capturedIds = new();
+        _ragServiceMock.Setup(s => s.GetChunksForQuery(
+                It.IsAny<string>(),
+                It.IsAny<List<Guid>>(),
+                It.IsAny<uint>()))
+            .Callback<string,List<Guid>,uint>((query, filters, nResults) => capturedIds = filters);
+
+        var query = question.ToSearchRequest(expectedIds);
+        query.NotebookId = null;
+        
+        await handler.SearchForChunksAsync(query);
+        
+        Assert.That(capturedIds, Is.EquivalentTo(expectedIds));
     }
     
     [Test]
