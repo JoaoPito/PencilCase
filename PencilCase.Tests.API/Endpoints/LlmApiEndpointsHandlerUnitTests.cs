@@ -175,6 +175,34 @@ public class LlmApiEndpointsHandlerUnitTests
         
         Assert.That(capturedIds, Is.EquivalentTo(expectedIds));
     }
+    
+    [Test]
+    public async Task SearchForChunksAsync_UsesProvidedTopicIdToGetFilterIds()
+    {
+        var handler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmApiServiceMock.Object, _blocksDalMock.Object);
+
+        var blockList = ExampleBlocksHelper.CreateRootWithSingleNotebook();
+        var notebook = blockList.First(b => b.Type == BlockType.Notebook);
+        var question = notebook.AddQuestion("What is 1+1?", 0);
+
+        var expectedId = Guid.NewGuid();
+        
+        _blocksDalMock.Setup(s => s.GetBy(It.IsAny<Func<Block, bool>>()))
+            .Returns(notebook);
+        
+        Guid? capturedId = null;
+        _blocksDalMock.Setup(s => s.GetIdsFromSubtreeWithType(
+                It.IsAny<Guid>(), 
+                It.IsAny<Func<Block, bool>>()))
+            .Callback((Guid id, Func<Block, bool> criteria) =>
+            {
+                capturedId = id;
+            });
+
+        await handler.SearchForChunksAsync(question.ToSearchRequest(), expectedId);
+        
+        Assert.That(capturedId, Is.EqualTo(expectedId));
+    }
 
     [Test]
     public async Task SearchForChunksAsync_ReturnsBlocksWithCorrectIds()
