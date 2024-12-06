@@ -24,12 +24,13 @@ public static class EndpointRequestsHelpers
         };
     }
 
-    public static RagSearchRequest ToSearchRequest(this Block block)
+    public static RagSearchRequest ToSearchRequest(this Block block, List<Guid>? filters = null)
     {
         return new RagSearchRequest()
         {
             Content = block.Name,
             NotebookId = block.ParentId,
+            FilterIds = filters
         };
     }
 }
