@@ -100,16 +100,15 @@ public class LlmApiEndpointsHandler : ILlmApiEndpointsHandler
         }
     }
 
-    public async Task<IResult> DeleteChunksAsync(List<RagDeleteRequest> chunks)
+    public async Task<IResult> DeleteChunksAsync(RagDeleteRequest request)
     {
         try
         {
-            await _ragService.DeleteChunks(chunks.Select(b =>
+            await _ragService.DeleteChunks(request.ChunksIds.Select(b =>
                 new RagDocument()
                 {
-                    Id = b.Id,
-                    ParentId = b.ParentId ?? Guid.Empty,
-                    Content = b.Content ?? String.Empty,
+                    Id = b,
+                    ParentId = request.DocumentId
                 }).ToList());
         }
         catch (ArgumentException)
