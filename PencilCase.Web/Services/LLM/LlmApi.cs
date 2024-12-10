@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using PencilCase.Shared.DTOs.Requests.Llm;
 using PencilCase.Shared.DTOs.Requests.Rag;
 using PencilCase.Shared.Models.LLM.Agents;
 using PencilCase.Shared.Models.LLM.RAG;
@@ -14,7 +15,7 @@ public class LlmApi : ILlmApi
         _httpClient = httpClientFactory.CreateClient("LlmAPI");
     }
     
-    public async Task<IEnumerable<LlmMessage>>  InvokeLlmAgentAsync(IEnumerable<LlmMessage> llmChat)
+    public async Task<IEnumerable<LlmMessage>>  InvokeLlmAgentAsync(IEnumerable<LlmMessageInvokeRequest> llmChat)
     {
         var response = await _httpClient.PostAsJsonAsync("agent/invoke", llmChat);
         response.EnsureSuccessStatusCode();
@@ -22,19 +23,14 @@ public class LlmApi : ILlmApi
         return responseContents;
     }
 
-    public async Task AddRagDocumentsAsync(IEnumerable<RagDocument> documents)
+    public async Task AddRagDocumentsAsync(IEnumerable<RagAddRequest> documents)
     {
         var response = await _httpClient.PostAsJsonAsync("rag", documents);
         response.EnsureSuccessStatusCode();
     }
 
-    public async Task<IEnumerable<RagDocument>> QueryRagDocumentsAsync(string query, List<Guid> parentIds, uint? nResults=3)
+    public async Task<IEnumerable<RagDocument>> QueryRagDocumentsAsync(RagSearchRequest request)
     {
-        var request = new RagSearchRequest()
-        {
-            Content = query,
-            FilterIds = parentIds
-        };
         var response = await _httpClient.PostAsJsonAsync("rag/search", request);
         
         response.EnsureSuccessStatusCode();
@@ -43,7 +39,7 @@ public class LlmApi : ILlmApi
         return responseContents;
     }
 
-    public Task DeleteRagDocumentsAsync(IEnumerable<RagDocument> documents)
+    public Task DeleteRagDocumentsAsync(IEnumerable<RagDeleteRequest> documents)
     {
         throw new NotImplementedException();
     }
