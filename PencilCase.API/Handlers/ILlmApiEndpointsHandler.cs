@@ -9,5 +9,5 @@ public interface ILlmApiEndpointsHandler
     public Task<IResult> AddChunksAsync(IEnumerable<RagAddRequest> chunks);
     public Task<IResult> SearchForChunksAsync(RagSearchRequest query);
     public Task<IResult> InvokeAgentAsync(LlmMessageInvokeRequest request);
-    public Task<IResult> DeleteChunksAsync(List<RagDeleteRequest> chunks);
+    public Task<IResult> DeleteChunksAsync(RagDeleteRequest request);
 }
