@@ -39,8 +39,9 @@ public class LlmApi : ILlmApi
         return responseContents;
     }
 
-    public Task DeleteRagDocumentsAsync(IEnumerable<RagDeleteRequest> documents)
+    public async Task DeleteRagDocumentsAsync(RagDeleteRequest request)
     {
-        throw new NotImplementedException();
+        var response = await _httpClient.PostAsJsonAsync("rag/delete", request);
+        response.EnsureSuccessStatusCode();
     }
 }
