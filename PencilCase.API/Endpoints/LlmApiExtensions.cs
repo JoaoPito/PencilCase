@@ -59,9 +59,8 @@ public static class LlmApiExtensions
             });
 
         ragGroup.MapDelete("{parentId}/{id}", async (
-                [FromServices] ILlmApiEndpointsHandler handler, 
-                Guid parentId,
-                Guid id) => await handler.DeleteChunksAsync([new RagDeleteRequest { ParentId = parentId, Id = id }]))
+                [FromServices] ILlmApiEndpointsHandler handler,
+                RagDeleteRequest request) => await handler.DeleteChunksAsync(request))
             .WithName("DeleteDocuments")
             .WithOpenApi(x => new OpenApiOperation(x)
             {
