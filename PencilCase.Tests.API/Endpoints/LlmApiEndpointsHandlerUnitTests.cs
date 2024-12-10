@@ -59,8 +59,8 @@ public class LlmApiEndpointsHandlerUnitTests
         var handler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmApiServiceMock.Object, _blocksDalMock.Object);
         const uint maxDocsQuantity = 256;
         
-        var docsToAdd = new List<RagAddRequest>() { };
-        for (int i = 0; i < maxDocsQuantity + 1; i++)
+        var docsToAdd = new List<RagAddRequest>();
+        for (var i = 0; i < maxDocsQuantity + 1; i++)
         {
             docsToAdd.Add(new()
             {
@@ -337,11 +337,14 @@ public class LlmApiEndpointsHandlerUnitTests
             .Setup(s => s.DeleteChunks(It.IsAny<List<RagDocument>>()))
             .Callback<List<RagDocument>>(l => chunksDeleted.AddRange(l));
 
-        var chunkToDelete = new RagDeleteRequest() { Id = Guid.NewGuid() };
+        var chunkToDelete = new RagDeleteRequest() { 
+            ChunksIds = new List<Guid>(){ Guid.NewGuid() }, 
+            DocumentId = Guid.NewGuid() 
+        };
         
-        await handler.DeleteChunksAsync(new List<RagDeleteRequest>(){ chunkToDelete });
+        await handler.DeleteChunksAsync(chunkToDelete);
         Assert.That(chunksDeleted.Select(c => c.Id).ToList(),
-            Is.EquivalentTo(new[] { chunkToDelete.Id }));
+            Is.EquivalentTo(new[] { chunkToDelete.ChunksIds.FirstOrDefault() }));
     }
 
     [Test]
@@ -349,9 +352,13 @@ public class LlmApiEndpointsHandlerUnitTests
     {
         var handler = new LlmApiEndpointsHandler(_ragServiceMock.Object, _llmApiServiceMock.Object, _blocksDalMock.Object);
 
-        var chunkToDelete = new RagDeleteRequest() { Id = Guid.NewGuid() };
+        var request = new RagDeleteRequest()
+        {
+            ChunksIds = new List<Guid>(){ Guid.NewGuid() }, 
+            DocumentId = Guid.NewGuid() 
+        };
         
-        var response = await handler.DeleteChunksAsync(new List<RagDeleteRequest>(){ chunkToDelete });
+        var response = await handler.DeleteChunksAsync(request);
         
         Assert.That(response, Is.TypeOf<NoContent>());
     }
@@ -365,9 +372,13 @@ public class LlmApiEndpointsHandlerUnitTests
             .Setup(s => s.DeleteChunks(It.IsAny<List<RagDocument>>()))
             .Throws<ArgumentException>();
         
-        var chunkToDelete = new RagDeleteRequest() { Id = Guid.NewGuid() };
+        var request = new RagDeleteRequest()
+        {
+            ChunksIds = new List<Guid>(){ Guid.NewGuid() }, 
+            DocumentId = Guid.NewGuid() 
+        };
 
-        var response = await handler.DeleteChunksAsync(new List<RagDeleteRequest>(){ chunkToDelete });
+        var response = await handler.DeleteChunksAsync(request);
         
         Assert.That(response, Is.TypeOf<NotFound>());
     }
