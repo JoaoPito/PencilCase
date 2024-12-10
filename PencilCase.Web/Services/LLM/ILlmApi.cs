@@ -10,5 +10,5 @@ public interface ILlmApi
     public Task<IEnumerable<LlmMessage>> InvokeLlmAgentAsync(IEnumerable<LlmMessageInvokeRequest> llmChat);
     public Task AddRagDocumentsAsync(IEnumerable<RagAddRequest> documents);
     public Task<IEnumerable<RagDocument>> QueryRagDocumentsAsync(RagSearchRequest request);
-    public Task DeleteRagDocumentsAsync(IEnumerable<RagDeleteRequest> documents);
+    public Task DeleteRagDocumentsAsync(RagDeleteRequest request);
 }
