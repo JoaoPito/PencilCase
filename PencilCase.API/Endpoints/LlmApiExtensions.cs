@@ -58,9 +58,9 @@ public static class LlmApiExtensions
                 Description = "Adds documents to an index in the RAG system. Returns information about the created documents. Number of documents must be between 1 and 250", 
             });
 
-        ragGroup.MapDelete("{parentId}/{id}", async (
+        ragGroup.MapDelete("", async (
                 [FromServices] ILlmApiEndpointsHandler handler,
-                RagDeleteRequest request) => await handler.DeleteChunksAsync(request))
+                [FromBody] RagDeleteRequest request) => await handler.DeleteChunksAsync(request))
             .WithName("DeleteDocuments")
             .WithOpenApi(x => new OpenApiOperation(x)
             {
