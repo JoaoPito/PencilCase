@@ -119,15 +119,6 @@ public partial class CellView : ComponentBase
                 Block!.ChildrenIds = Block!.ChildrenIds.Append(answer.Id);
                 await BlocksApi.AddBlock(answer);
             }
-            if (_shownChild != null)
-            {
-                _shownChild.Properties.Order = 0;
-                await BlocksApi.UpdateBlock(_shownChild);
-            }
-            var lastChild = answers.Last();
-            lastChild.Properties.Order = 1;
-            await BlocksApi.UpdateBlock(lastChild);
-            _shownChild = lastChild;
         }
     }
     
