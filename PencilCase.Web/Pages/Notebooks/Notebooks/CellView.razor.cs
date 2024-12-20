@@ -42,15 +42,21 @@ public partial class CellView : ComponentBase
             {
                 _loadedChildren = await BlocksApi.GetChildren(Block.Id);
                 _loadedChildren = _loadedChildren.OrderBy(c => c.Properties.CreatedOn);
-                _shownChild = _loadedChildren
-                    .OrderBy(c => c.Properties.Order)
-                    .LastOrDefault();
+                UpdateShownChild();
             }
             catch (Exception)
             {
                 _childError = true;
             }
         }
+    }
+    
+    void UpdateShownChild()
+    {
+        _shownChild = _loadedChildren
+            .OrderBy(c => c.Properties.Order)
+            .LastOrDefault();
+        StateHasChanged();
     }
 
     async Task SubmitCell()
@@ -59,6 +65,7 @@ public partial class CellView : ComponentBase
         {
             var answers = await TrySearchAndGenerateAnswers();
             await AddNewAnswers(answers);
+            
         }
     }
 
@@ -118,7 +125,10 @@ public partial class CellView : ComponentBase
             {
                 Block!.ChildrenIds = Block!.ChildrenIds.Append(answer.Id);
                 await BlocksApi.AddBlock(answer);
+                _loadedChildren = _loadedChildren.Append(answer);
             }
+            
+            UpdateShownChild();
         }
     }
     
