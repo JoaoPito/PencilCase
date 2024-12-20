@@ -63,7 +63,7 @@ public class BlocksApi : IBlocksApi
         var request = _blockMapper.MapViewModelToPutRequest(block);
         var response = await _httpClient.PutAsJsonAsync<BlockPutRequest>($"{block.Id}", request!);
         if (!response.IsSuccessStatusCode)
-            throw new HttpRequestException($"Error while updating block with name '{block.Name}' and Id '{block.Id}'");
+            throw new HttpRequestException($"Error '{response.StatusCode}' while updating block with name '{block.Name}' and Id '{block.Id}'");
     }
 
     public async Task DeleteBlock(Guid id)
