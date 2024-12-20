@@ -1,6 +1,12 @@
+@using PencilCase.Shared.DTOs.Requests.Llm
+@using PencilCase.Shared.DTOs.Requests.Rag
+@using PencilCase.Shared.Models.LLM.Agents
+@using PencilCase.Shared.Models.LLM.RAG
 @using PencilCase.Web.Pages.Notebooks.Models
 @using PencilCase.Web.Services.LLM
 @using PencilCase.Web.Services.Notebooks
+@inject ILlmApi LlmApi
+
 <MudPaper Outlined="true">
     <MudPaper Class="mud-background-gray blueprint-dots pa-4">
         <MudStack Spacing="4">
@@ -8,7 +14,11 @@
             <!-- Cell -->
             @foreach (var child in _children)
             {
-                <CellView BlocksApi="BlocksApi" Block="child" />
+                <CellView Block="child" 
+                          BlocksApi="BlocksApi"
+                          RagSearchAsync="SearchForDocuments"
+                          InvokeLlmAsync="InvokeLlm"
+                          />
             }
             
             <!-- Add new -->
@@ -35,5 +45,53 @@
     {
         if(Block is not null)
             _children = await BlocksApi.GetChildren(Block.Id);
+    }
+
+    async Task<IEnumerable<RagDocument>> SearchForDocuments(string query)
+    {
+        var request = new RagSearchRequest()
+        {
+            NotebookId = Block!.Id,
+            Content = query,
+            FilterIds = null
+        };
+
+        var results = await LlmApi.QueryRagDocumentsAsync(request);
+        return results;
+    }
+
+    async Task<IEnumerable<LlmMessage>> InvokeLlm(string query, IEnumerable<RagDocument> docs)
+    {
+        var userMsg = new LlmMessage()
+        {
+            Role = "user",
+            Content = query
+        };
+        
+        var request = new LlmMessageInvokeRequest()
+        {
+            ChatMessages = new List<LlmMessage>()
+        };
+
+        var docsList = docs.ToList();
+        
+        if(docsList.Any())
+            request.ChatMessages.Add(ConvertDocsToLlmMessage(docsList));
+        
+        request.ChatMessages.Add(userMsg);
+        
+       return await LlmApi.InvokeLlmAgentAsync(request);
+    }
+
+    private LlmMessage ConvertDocsToLlmMessage(IEnumerable<RagDocument> docs)
+    {
+        var msgs = new LlmMessage()
+        {
+            Role = "user",
+            Content = docs
+                .Select(d => d.Content)
+                .Aggregate((acc, content) => acc + $"\n## INFO\n \"{content}\"\n")
+        };
+        return msgs;
     }
 }
