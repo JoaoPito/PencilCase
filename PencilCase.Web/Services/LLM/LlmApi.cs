@@ -15,9 +15,9 @@ public class LlmApi : ILlmApi
         _httpClient = httpClientFactory.CreateClient("LlmAPI");
     }
     
-    public async Task<IEnumerable<LlmMessage>>  InvokeLlmAgentAsync(IEnumerable<LlmMessageInvokeRequest> llmChat)
+    public async Task<IEnumerable<LlmMessage>>  InvokeLlmAgentAsync(LlmMessageInvokeRequest chatRequest)
     {
-        var response = await _httpClient.PostAsJsonAsync("agent/invoke", llmChat);
+        var response = await _httpClient.PostAsJsonAsync("agent/invoke", chatRequest);
         response.EnsureSuccessStatusCode();
         var responseContents = await response.Content.ReadFromJsonAsync<List<LlmMessage>>() ?? new List<LlmMessage>();
         return responseContents;
