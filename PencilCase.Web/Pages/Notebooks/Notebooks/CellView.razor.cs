@@ -81,11 +81,15 @@ public partial class CellView : ComponentBase
         if (Block!.ParentId is null)
             throw new ArgumentException("Cannot generate LLM result on root block!");
 
+        _isLoading = true;
         _cellMsg = "Searching for related information...";
+        StateHasChanged();
         var docs = await RagSearchAsync(Block!.Name);
-        _cellMsg = $"Found {docs.ToList().Count()} documents. Generating answer...";
+        _cellMsg = $"Found {docs.ToList().Count()} related documents. Generating answer...";
+        StateHasChanged();
         var messages =  await InvokeLlmAsync(Block!.Name, docs);
 
+        _isLoading = false;
         return messages.Select(ConvertLlmMessageToBlock).ToList();
     }
 
