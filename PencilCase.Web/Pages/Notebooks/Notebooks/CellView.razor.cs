@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using PencilCase.Shared.Models.LLM.Agents;
 using PencilCase.Shared.Models.LLM.RAG;
 using PencilCase.Shared.Models.Notebooks;
 using PencilCase.Web.Pages.Notebooks.Models;
@@ -16,10 +17,9 @@ public partial class CellView : ComponentBase
     public Guid? TopicId { get; set; }
     [Parameter] public BlockViewModel? Block { get; set; }
     [Parameter] public IBlocksApi BlocksApi { get; set; } = null!;
-    [Parameter] public Func<BlockViewModel, Guid?, Task<List<RagDocument>>> SearchDocumentsAsync { get; set; } = null!;
-    [Parameter] public Func<BlockViewModel, List<RagDocument>, Task<List<BlockViewModel>>> InvokeLlmFor { get; set; } = null!;
+    [Parameter] public Func<string, Task<IEnumerable<RagDocument>>> RagSearchAsync { get; set; } = null!;
+    [Parameter] public Func<string, IEnumerable<RagDocument>, Task<IEnumerable<LlmMessage>>> InvokeLlmAsync { get; set; } = null!;
     [Parameter] public EventCallback? OnNewCellShortcut { get; set; }
-    [Inject] public ILlmApi LlmApi { get; set; } = null!;
 
     IEnumerable<BlockViewModel> _loadedChildren = new List<BlockViewModel>();
     BlockViewModel? _shownChild;
