@@ -82,9 +82,28 @@ public partial class CellView : ComponentBase
             throw new ArgumentException("Cannot generate LLM result on root block!");
 
         _cellMsg = "Searching for related information...";
-        var docs = await SearchDocumentsAsync(Block!, TopicId);
-        _cellMsg = "Generating answer...";
-        return await InvokeLlmFor(Block!, docs);
+        var docs = await RagSearchAsync(Block!.Name);
+        _cellMsg = $"Found {docs.ToList().Count()} documents. Generating answer...";
+        var messages =  await InvokeLlmAsync(Block!.Name, docs);
+
+        return messages.Select(ConvertLlmMessageToBlock).ToList();
+    }
+
+    private BlockViewModel ConvertLlmMessageToBlock(LlmMessage msg)
+    {
+        return new BlockViewModel()
+        {
+            Id = Guid.NewGuid(),
+            Name = msg.Content,
+            ParentId = Block!.Id,
+            Properties = new BlockPropertiesViewModel()
+            {
+                CellType = CellType.Text,
+                CreatedOn = DateTime.UtcNow,
+                LastModified = DateTime.UtcNow,
+                Order = 0
+            }
+        };
     }
 
     async Task AddNewAnswers(List<BlockViewModel> answers)
