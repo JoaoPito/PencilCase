@@ -44,7 +44,7 @@ public partial class CellView : ComponentBase
                 _loadedChildren = _loadedChildren.OrderBy(c => c.Properties.CreatedOn);
                 _shownChild = _loadedChildren
                     .OrderBy(c => c.Properties.Order)
-                    .Last();
+                    .LastOrDefault();
             }
             catch (Exception)
             {
