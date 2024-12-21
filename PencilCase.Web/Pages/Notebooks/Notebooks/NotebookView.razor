@@ -2,6 +2,7 @@
 @using PencilCase.Shared.DTOs.Requests.Rag
 @using PencilCase.Shared.Models.LLM.Agents
 @using PencilCase.Shared.Models.LLM.RAG
+@using PencilCase.Shared.Models.Notebooks
 @using PencilCase.Web.Pages.Notebooks.Models
 @using PencilCase.Web.Services.LLM
 @using PencilCase.Web.Services.Notebooks
@@ -18,6 +19,7 @@
                           BlocksApi="BlocksApi"
                           RagSearchAsync="SearchForDocuments"
                           InvokeLlmAsync="InvokeLlm"
+                          OnNewCellShortcut="@OnAddCellShortcut"
                           />
             }
             
@@ -93,5 +95,34 @@
                 .Aggregate((acc, content) => acc + $"\n## INFO\n \"{content}\"\n")
         };
         return msgs;
+    }
+
+    private async Task OnAddCellShortcut() => await AddNewCell();
+    
+    private async Task AddNewCell()
+    {
+        var lastBlock = _children
+            .OrderBy(c => c.Properties.Order)
+            .LastOrDefault();
+
+        var order = 0;
+        if (lastBlock is not null)
+            order = lastBlock.Properties.Order;
+
+        var newCell = new BlockViewModel()
+        {
+            Name = "",
+            ParentId = Block.Id,
+            Type = BlockType.Cell,
+            Properties = new BlockPropertiesViewModel()
+            {
+                CellType = CellType.Question,
+                Order = order
+            }
+        };
+
+        await BlocksApi.AddBlock(newCell);
+        _children = await BlocksApi.GetChildren(Block.Id);
+        StateHasChanged();
     }
 }
