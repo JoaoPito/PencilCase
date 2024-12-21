@@ -19,7 +19,7 @@ public partial class CellView : ComponentBase
     [Parameter] public IBlocksApi BlocksApi { get; set; } = null!;
     [Parameter] public Func<string, Task<IEnumerable<RagDocument>>> RagSearchAsync { get; set; } = null!;
     [Parameter] public Func<string, IEnumerable<RagDocument>, Task<IEnumerable<LlmMessage>>> InvokeLlmAsync { get; set; } = null!;
-    [Parameter] public EventCallback? OnNewCellShortcut { get; set; }
+    [Parameter] public EventCallback OnNewCellShortcut { get; set; }
 
     IEnumerable<BlockViewModel> _loadedChildren = new List<BlockViewModel>();
     BlockViewModel? _shownChild;
