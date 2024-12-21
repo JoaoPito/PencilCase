@@ -76,7 +76,7 @@ public partial class CellView : ComponentBase
         {
             return await SearchAndGenerateAnswersTo(Block!);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             _childError = true;
             throw;
@@ -94,12 +94,19 @@ public partial class CellView : ComponentBase
         var docs = await RagSearchAsync(Block!.Name);
         _cellMsg = $"Found {docs.ToList().Count()} related documents. Generating answer...";
         StateHasChanged();
-        var messages =  await InvokeLlmAsync(Block!.Name, docs);
-
+        var messages = await InvokeLlmAsync(Block!.Name, docs);
+        ValidateLlmResponse(messages);
+        
         _isLoading = false;
         return messages.Select(ConvertLlmMessageToBlock).ToList();
     }
 
+    private void ValidateLlmResponse(IEnumerable<LlmMessage> messages)
+    {
+        if(!messages.Any())
+            throw new ArgumentException("LLM did not generate any response.");
+    }
+    
     private BlockViewModel ConvertLlmMessageToBlock(LlmMessage msg)
     {
         return new BlockViewModel()
