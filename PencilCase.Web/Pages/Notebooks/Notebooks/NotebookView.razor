@@ -27,10 +27,11 @@
             <MudStack Row="true"
                       AlignItems="AlignItems.Center" Justify="Justify.Center">
                 <MudButtonGroup Color="Color.Secondary" Variant="Variant.Filled">
-                    <MudIconButton Icon="@Icons.Material.Rounded.Add" Size="Size.Large"/>
+                    <MudIconButton Icon="@Icons.Material.Rounded.Add" Size="Size.Large" OnClick="OnAddCellClicked"/>
                     <MudMenu Icon="@Icons.Material.Filled.ArrowDropDown" Style="align-self: auto;">
-                        <MudMenuItem>Cell</MudMenuItem>
-                        <MudMenuItem>Source</MudMenuItem>
+                        <MudMenuItem>Question</MudMenuItem>
+                        <MudMenuItem>Document Search</MudMenuItem>
+                        <MudMenuItem>Web Search</MudMenuItem>
                     </MudMenu>
                 </MudButtonGroup>
             </MudStack>
@@ -45,8 +46,20 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if(Block is not null)
-            _children = await BlocksApi.GetChildren(Block.Id);
+        await LoadChildren();
+    }
+
+    private async Task LoadChildren()
+    {
+        if (Block is not null)
+        {
+            var childrenList = await BlocksApi.GetChildren(Block.Id);
+            _children = childrenList
+                .OrderBy(c => c.Properties.LastModified)
+                .ThenBy(c => c.Properties.Order);
+            
+            StateHasChanged();
+        }
     }
 
     async Task<IEnumerable<RagDocument>> SearchForDocuments(string query)
@@ -98,6 +111,7 @@
     }
 
     private async Task OnAddCellShortcut() => await AddNewCell();
+    private async Task OnAddCellClicked() => await AddNewCell();
     
     private async Task AddNewCell()
     {
@@ -112,7 +126,7 @@
         var newCell = new BlockViewModel()
         {
             Name = "",
-            ParentId = Block.Id,
+            ParentId = Block!.Id,
             Type = BlockType.Cell,
             Properties = new BlockPropertiesViewModel()
             {
@@ -122,7 +136,6 @@
         };
 
         await BlocksApi.AddBlock(newCell);
-        _children = await BlocksApi.GetChildren(Block.Id);
-        StateHasChanged();
+        await LoadChildren();
     }
 }
