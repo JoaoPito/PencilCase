@@ -19,4 +19,22 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Components\Pages\Footer\Copyright.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Footer\Footer.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Footer\Links.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Footer\SocialMediaIcons.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Home\Footer\Copyright.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Home\Footer\Footer.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Home\Footer\Links.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Home\Footer\SocialMediaIcons.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Components\Pages\Footer\Copyright.razor" />
+      <UpToDateCheckInput Remove="Components\Pages\Footer\Footer.razor" />
+      <UpToDateCheckInput Remove="Components\Pages\Footer\Links.razor" />
+      <UpToDateCheckInput Remove="Components\Pages\Footer\SocialMediaIcons.razor" />
+    </ItemGroup>
+
 </Project>
