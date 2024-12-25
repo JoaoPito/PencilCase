@@ -2,10 +2,16 @@
 
 <PageTitle>pencilcase</PageTitle>
 
-<Headline />
-
-<Features />
-
-<CallToAction />
+<MudGrid Justify="Justify.Center">
+    <MudItem xs="12" md="10">
+        <Headline @rendermode="InteractiveWebAssembly"/>
+    </MudItem>
+    <MudItem xs="12" md="10">
+        <Features/>
+    </MudItem>
+    <MudItem xs="12" md="10">
+        <CallToAction/>
+    </MudItem>
+</MudGrid>
 
 <Footer />
