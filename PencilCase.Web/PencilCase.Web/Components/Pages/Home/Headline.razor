@@ -1,5 +1,25 @@
-<h3>Headline</h3>
-
-@code {
-    
-}
+<MudCarousel Class="mud-width-full" Style="height:500px;"
+             ShowArrows="false" ShowBullets="true"
+             EnableSwipeGesture="true" AutoCycle="false" TData="object">
+    <MudCarouselItem Transition="Transition.Fade" Color="@Color.Primary" Class="rounded-xl">
+        <CarouselItemContent Title="Feature 1"
+                             Subtitle="Now you can do X, Y and Z! blablablablabla"
+                             Body="Feature 1 is a new A, different from our competitors, you can have B."
+                             Button="Get pencilcase now"
+                             Image="icon_256.png"/>
+    </MudCarouselItem>
+    <MudCarouselItem Transition="Transition.Fade" Color="@Color.Secondary" Class="rounded-xl">
+        <CarouselItemContent Title="Feature 2"
+                             Subtitle="Now you can do X, Y and Z! blablablablabla"
+                             Body="Feature 2 is a new A, different from our competitors, you can have B."
+                             Button="Start using Feature 2"
+                             Image="icon_256.png"/>
+    </MudCarouselItem>
+    <MudCarouselItem Transition="Transition.Fade" Color="Color.Tertiary" Class="rounded-xl">
+        <CarouselItemContent Title="Feature 3"
+                             Subtitle="Now you can do X, Y and Z! blablablablabla"
+                             Body="Feature 3 is a new A, different from our competitors, you can have B."
+                             Button="Read more"
+                             Image="icon_256.png"/>
+    </MudCarouselItem>
+</MudCarousel>
