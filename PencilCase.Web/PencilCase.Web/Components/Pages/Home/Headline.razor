@@ -1,11 +1,12 @@
 <MudCarousel Class="mud-width-full" Style="height:500px;"
              ShowArrows="false" ShowBullets="true"
-             EnableSwipeGesture="true" AutoCycle="false" TData="object">
+             EnableSwipeGesture="true" AutoCycle="true" AutoCycleTime="TimeSpan.FromSeconds(5)"TData="object">
     <MudCarouselItem Transition="Transition.Fade" Color="@Color.Primary" Class="rounded-xl">
         <CarouselItemContent Title="Feature 1"
                              Subtitle="Now you can do X, Y and Z! blablablablabla"
                              Body="Feature 1 is a new A, different from our competitors, you can have B."
                              Button="Get pencilcase now"
+                             ButtonHref="register"
                              Image="icon_256.png"/>
     </MudCarouselItem>
     <MudCarouselItem Transition="Transition.Fade" Color="@Color.Secondary" Class="rounded-xl">
@@ -13,6 +14,7 @@
                              Subtitle="Now you can do X, Y and Z! blablablablabla"
                              Body="Feature 2 is a new A, different from our competitors, you can have B."
                              Button="Start using Feature 2"
+                             ButtonHref="register"
                              Image="icon_256.png"/>
     </MudCarouselItem>
     <MudCarouselItem Transition="Transition.Fade" Color="Color.Tertiary" Class="rounded-xl">
@@ -20,6 +22,7 @@
                              Subtitle="Now you can do X, Y and Z! blablablablabla"
                              Body="Feature 3 is a new A, different from our competitors, you can have B."
                              Button="Read more"
+                             ButtonHref="register"
                              Image="icon_256.png"/>
     </MudCarouselItem>
 </MudCarousel>
