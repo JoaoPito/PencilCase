@@ -20,10 +20,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      
-    </ItemGroup>
-
-    <ItemGroup>
       <UpToDateCheckInput Remove="Components\Pages\Footer\Copyright.razor" />
       <UpToDateCheckInput Remove="Components\Pages\Footer\Footer.razor" />
       <UpToDateCheckInput Remove="Components\Pages\Footer\Links.razor" />
