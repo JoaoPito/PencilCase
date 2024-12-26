@@ -2,9 +2,9 @@
 
 @* MudBlazor *@
 <MudThemeProvider Theme="_customTheme"/>
-<MudPopoverProvider />
-<MudDialogProvider />
-<MudSnackbarProvider />
+<MudPopoverProvider @rendermode="InteractiveServer"/>
+<MudDialogProvider @rendermode="InteractiveServer"/>
+<MudSnackbarProvider @rendermode="InteractiveServer"/>
 
 <MudLayout>
     <AppBar />
