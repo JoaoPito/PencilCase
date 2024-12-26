@@ -1,0 +1,30 @@
+<div class="d-flex pa-12 align-center" style="height:100%">
+    <MudGrid Justify="Justify.SpaceAround">
+        <MudItem xs="6">
+            <MudText Align="Align.Left" Typo="Typo.h2">@Title</MudText>
+            <MudText Align="Align.Left" Typo="Typo.h4">@Subtitle</MudText>
+            @if (Body is not null)
+            {
+                <MudText Align="Align.Left" Typo="Typo.body1" Class="my-4">@Body</MudText>
+            }
+            <MudButton Color="Color.Primary"
+                       DropShadow="false"
+                       FullWidth="false"
+                       Size="Size.Large"
+                       Variant="Variant.Filled"
+                       Class="my-6 px-10 rounded-lg">
+                @Button
+            </MudButton>
+        </MudItem>
+        <MudItem xs="6">
+            <MudImage Src="@Image" ObjectFit="ObjectFit.Fill"></MudImage>
+        </MudItem>
+    </MudGrid>
+</div>
+@code {
+    [Parameter] public string Title { get; set; }
+    [Parameter] public string Subtitle { get; set; }
+    [Parameter] public string? Body { get; set; }
+    [Parameter] public string Button { get; set; }
+    [Parameter] public string Image { get; set; }
+}
