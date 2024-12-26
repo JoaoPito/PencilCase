@@ -22,9 +22,9 @@
     </MudGrid>
 </div>
 @code {
-    [Parameter] public string Title { get; set; }
-    [Parameter] public string Subtitle { get; set; }
+    [Parameter] public string Title { get; set; } = String.Empty;
+    [Parameter] public string Subtitle { get; set; } = String.Empty;
     [Parameter] public string? Body { get; set; }
-    [Parameter] public string Button { get; set; }
-    [Parameter] public string Image { get; set; }
+    [Parameter] public string Button { get; set; } = String.Empty;
+    [Parameter] public string Image { get; set; } = String.Empty;
 }
