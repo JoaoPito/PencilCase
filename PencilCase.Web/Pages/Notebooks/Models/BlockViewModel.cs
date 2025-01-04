@@ -19,5 +19,5 @@ public class BlockPropertiesViewModel
     public DateTime CreatedOn { get; set; }
     public DateTime LastModified { get; set; }
     public CellType CellType { get; set; }
-    public Guid CellShownAnswerId { get; set; }
+    public Guid? CellShownAnswerId { get; set; }
 }
