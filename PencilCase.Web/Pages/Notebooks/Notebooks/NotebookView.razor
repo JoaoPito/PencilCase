@@ -13,7 +13,7 @@
         <MudStack Spacing="4">
 
             <!-- Cell -->
-            @foreach (var child in _children)
+            @foreach (var child in _children.OrderBy(c => c.Properties.Order))
             {
                 <CellView Block="child" 
                           BlocksApi="BlocksApi"
