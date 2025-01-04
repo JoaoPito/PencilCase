@@ -6,5 +6,6 @@ public record class BlockPropertiesRequest
 (
     int Order,
     DateTime LastModified,
-    CellType CellType
+    CellType CellType,
+    Guid? CellShownAnswerId
 );
