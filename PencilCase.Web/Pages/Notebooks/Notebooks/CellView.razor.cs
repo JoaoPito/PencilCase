@@ -42,7 +42,7 @@ public partial class CellView : ComponentBase
             {
                 _loadedChildren = await BlocksApi.GetChildren(Block.Id);
                 _loadedChildren = _loadedChildren.OrderBy(c => c.Properties.CreatedOn);
-                UpdateShownChild();
+                LoadShownChild();
             }
             catch (Exception)
             {
@@ -50,13 +50,21 @@ public partial class CellView : ComponentBase
             }
         }
     }
-    
-    void UpdateShownChild()
+
+    void LoadShownChild()
     {
         _shownChild = _loadedChildren
-            .OrderBy(c => c.Properties.Order)
-            .LastOrDefault();
+            .SingleOrDefault(
+                c => c!.Id == Block!.Properties.CellShownAnswerId,
+                _loadedChildren.LastOrDefault()
+            );
         StateHasChanged();
+    }
+    
+    async Task UpdateShownChildTo(BlockViewModel shownChild)
+    {
+        Block!.Properties.CellShownAnswerId = shownChild.Id;
+        LoadShownChild();
     }
 
     async Task SubmitCell()
@@ -64,8 +72,8 @@ public partial class CellView : ComponentBase
         if (IsGenerator() && !string.IsNullOrWhiteSpace(Block!.Name))
         {
             var answers = await TrySearchAndGenerateAnswers();
-            await AddNewAnswers(answers);
-            
+            await AddAnswerList(answers);
+            await UpdateChangesTo(Block!);
         }
     }
 
@@ -124,19 +132,21 @@ public partial class CellView : ComponentBase
         };
     }
 
-    async Task AddNewAnswers(List<BlockViewModel> answers)
+    async Task AddAnswerList(List<BlockViewModel> answers)
     {
-        if (answers.Any())
+        foreach (var answer in answers)
         {
-            foreach (var answer in answers)
-            {
-                Block!.ChildrenIds = Block!.ChildrenIds.Append(answer.Id);
-                await BlocksApi.AddBlock(answer);
-                _loadedChildren = _loadedChildren.Append(answer);
-            }
-            
-            UpdateShownChild();
+            await AddAnswer(answer);
         }
+    }
+
+    async Task AddAnswer(BlockViewModel answer)
+    {
+        var addedBlock = await BlocksApi.AddBlock(answer);
+        if(addedBlock is not null) 
+            _loadedChildren = _loadedChildren.Append(addedBlock);
+        if(addedBlock is not null) await UpdateShownChildTo(addedBlock);
+        Block!.ChildrenIds = Block!.ChildrenIds.Append(addedBlock.Id);
     }
     
     bool IsGenerator()
@@ -149,9 +159,12 @@ public partial class CellView : ComponentBase
         await BlocksApi.UpdateBlock(block);
     }
 
-    void SwapShownChildAndUpdate(BlockViewModel? nextChild)
+    async Task SwapShownChildAndUpdate(BlockViewModel? nextChild)
     {
-        if(nextChild is not null) _shownChild = nextChild;
+        if (nextChild is not null)
+        {
+            UpdateShownChildTo(nextChild);
+        }
         StateHasChanged();
     }
 }
