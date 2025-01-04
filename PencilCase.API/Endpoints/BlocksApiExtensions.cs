@@ -96,6 +96,7 @@ public static class BlocksExtensions
             properties.Order = request.Properties.Order;
             properties.LastModified = DateTime.UtcNow;
             properties.CellType = request.Properties.CellType;
+            properties.CellShownAnswerId = request.Properties.CellShownAnswerId;
             block.Properties = properties;
             block.Children = dal.GetAllBy(b => request.ChildrenIds.Contains(b.Id)).ToList();
 
@@ -213,7 +214,7 @@ public static class BlocksExtensions
 
         return block;
     }
-
+    
     static Block? GetParent(Guid? parentId, IBlocksDal dal)
     {
         var parent = dal.GetBy(b => b.Id == parentId);
