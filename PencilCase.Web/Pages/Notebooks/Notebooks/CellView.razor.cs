@@ -18,7 +18,7 @@ public partial class CellView : ComponentBase
     [Parameter] public BlockViewModel? Block { get; set; }
     [Parameter] public IBlocksApi BlocksApi { get; set; } = null!;
     [Parameter] public Func<string, Task<IEnumerable<RagDocument>>> RagSearchAsync { get; set; } = null!;
-    [Parameter] public Func<string, IEnumerable<RagDocument>, Task<IEnumerable<LlmMessage>>> InvokeLlmAsync { get; set; } = null!;
+    [Parameter] public Func<BlockViewModel, IEnumerable<RagDocument>, Task<IEnumerable<LlmMessage>>> InvokeLlmAsync { get; set; } = null!;
     [Parameter] public EventCallback OnNewCellShortcut { get; set; }
 
     IEnumerable<BlockViewModel> _loadedChildren = new List<BlockViewModel>();
@@ -100,9 +100,10 @@ public partial class CellView : ComponentBase
         _cellMsg = "Searching for related information...";
         StateHasChanged();
         var docs = await RagSearchAsync(Block!.Name);
+        
         _cellMsg = $"Found {docs.ToList().Count()} related documents. Generating answer...";
         StateHasChanged();
-        var messages = await InvokeLlmAsync(Block!.Name, docs);
+        var messages = await InvokeLlmAsync(Block!, docs);
         ValidateLlmResponse(messages);
         
         _isLoading = false;

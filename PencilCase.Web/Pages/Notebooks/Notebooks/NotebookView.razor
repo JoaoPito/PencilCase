@@ -54,9 +54,7 @@
         if (Block is not null)
         {
             var childrenList = await BlocksApi.GetChildren(Block.Id);
-            _children = childrenList
-                .OrderBy(c => c.Properties.LastModified)
-                .ThenBy(c => c.Properties.Order);
+            _children = childrenList.OrderBy(c => c.Properties.Order);
             
             StateHasChanged();
         }
@@ -75,25 +73,65 @@
         return results;
     }
 
-    async Task<IEnumerable<LlmMessage>> InvokeLlm(string query, IEnumerable<RagDocument> docs)
+    async Task<IEnumerable<LlmMessage>> BuildNotebookHistory(Func<BlockViewModel, bool> filter)
     {
-        var userMsg = new LlmMessage()
+        var msgList = new List<LlmMessage>();
+        foreach (var child in _children
+                     .Where(filter)
+                     .OrderBy(b => b.Properties.Order))
         {
-            Role = "user",
-            Content = query
-        };
-        
+            msgList.Add(new LlmMessage()
+            {
+                Role = "user",
+                Content = child.Name
+            });
+            
+            if (child.ChildrenIds.Any() && child.Properties.CellShownAnswerId is not null)
+            {
+                var shownChild = await BlocksApi.GetBlock(child.Properties.CellShownAnswerId ?? child.ChildrenIds.Last());
+                if (shownChild is not null)
+                {
+                    msgList.Add(new LlmMessage()
+                    {
+                        Role = "model",
+                        Content = shownChild.Name
+                    });
+                }
+            }
+        }
+        return msgList;
+    }
+
+    async Task<IEnumerable<LlmMessage>> InvokeLlm(BlockViewModel queryBlock, IEnumerable<RagDocument> docs)
+    {
         var request = new LlmMessageInvokeRequest()
         {
             ChatMessages = new List<LlmMessage>()
         };
 
+        // Add other cells as history
+        request.ChatMessages.AddRange(
+            await BuildNotebookHistory(b => b.Properties.Order < queryBlock.Properties.Order)
+            );
+        
+        // Add sources
         var docsList = docs.ToList();
         
-        if(docsList.Any())
-            request.ChatMessages.Add(ConvertDocsToLlmMessage(docsList));
+        var userMsg = new LlmMessage()
+        {
+            Role = "user",
+            Content = ""
+        };
         
+        if(docsList.Any())
+            userMsg = ConvertDocsToLlmMessage(docsList);
+        
+        // Add current query
+        userMsg.Content += $"\n## QUESTION\n{queryBlock.Name}";
         request.ChatMessages.Add(userMsg);
+        
+        foreach(var msg in request.ChatMessages)
+            Console.WriteLine($"Role: {msg.Role}, Content: {msg.Content}");
         
        return await LlmApi.InvokeLlmAgentAsync(request);
     }
@@ -103,10 +141,14 @@
         var msgs = new LlmMessage()
         {
             Role = "user",
-            Content = docs
-                .Select(d => d.Content)
-                .Aggregate((acc, content) => acc + $"\n## INFO\n \"{content}\"\n")
+            Content = ""
         };
+
+        foreach (var content in docs.Select(d => d.Content))
+        {
+            msgs.Content += $"## INFO\n{content}";
+        }
+        
         return msgs;
     }
 
