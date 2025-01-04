@@ -169,13 +169,15 @@ public static class BlocksExtensions
             Order: 0,
             CreatedOn: DateTime.UtcNow,
             LastModified: DateTime.UtcNow,
-            CellType: CellType.Text
+            CellType: CellType.Text,
+            CellShownAnswerId: null
         ) :
         new BlockPropertiesResponse(
                 Order: entity.Properties!.Order ,
                 CreatedOn: entity.Properties!.CreatedOn,
                 LastModified: entity.Properties!.LastModified,
-                CellType: entity.Properties!.CellType
+                CellType: entity.Properties!.CellType,
+                CellShownAnswerId: entity.Properties!.CellShownAnswerId
             );
 
         return new BlockResponse(
@@ -196,7 +198,8 @@ public static class BlocksExtensions
             Parent = block,
             ParentId = block.Id,
             Order = request.Properties.Order,
-            CellType = request.Properties.CellType
+            CellType = request.Properties.CellType,
+            CellShownAnswerId = request.Properties.CellShownAnswerId
         };
 
         var parent = GetParent(request.ParentId, dal);
