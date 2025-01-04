@@ -164,8 +164,9 @@ public partial class CellView : ComponentBase
     {
         if (nextChild is not null)
         {
-            UpdateShownChildTo(nextChild);
+            await UpdateShownChildTo(nextChild);
         }
         StateHasChanged();
+        await UpdateChangesTo(Block!);
     }
 }
