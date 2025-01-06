@@ -28,5 +28,9 @@ v1_router = APIRouter(prefix='/v1')
 
 add_v1_parsing_endpoints(v1_router, docling_service)
 
+# App
+app = FastAPI()
+app.include_router(v1_router)
+
 if __name__=="__main__":
     uvicorn.run("main:app", host=host_name, port=host_port , reload=debug)
