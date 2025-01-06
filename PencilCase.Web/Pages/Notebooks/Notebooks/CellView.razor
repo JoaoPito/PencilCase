@@ -10,10 +10,11 @@
             </MudStack>
         </CardHeaderAvatar>
         <CardHeaderContent>
+            <MudText>@Block.Properties.Order</MudText>
             <MudTextField T="string" Class="ma-0" AutoGrow="true" Margin="Margin.Dense"
                           OnKeyDown="OnKeyDown" @ref="_inputTextField"
                           DebounceInterval="2500" MaxLength="250" Disabled="@_isLoading"
-                          Typo="Typo.h6" Variant="Variant.Outlined" 
+                          Typo="Typo.h6" Variant="Variant.Outlined"
                           ValueChanged="OnInputValueChanged" Value="@Block!.Name">
             </MudTextField>
         </CardHeaderContent>
@@ -109,23 +110,23 @@
         StateHasChanged();
     }
 
-    void OnArrowLeftClick()
+    async Task OnArrowLeftClick()
     {
         if (_shownChild is not null)
         {
             var nextChild = _loadedChildren
                 .LastOrDefault(c => c.Properties.CreatedOn < _shownChild.Properties.CreatedOn);
-            SwapShownChildAndUpdate(nextChild);
+            await SwapShownChildAndUpdate(nextChild);
         }
     }
 
-    void OnArrowRightClick()
+    async Task OnArrowRightClick()
     {
         if (_shownChild is not null)
         {
             var nextChild = _loadedChildren
                 .FirstOrDefault(c => c.Properties.CreatedOn > _shownChild.Properties.CreatedOn);
-            SwapShownChildAndUpdate(nextChild);
+            await SwapShownChildAndUpdate(nextChild);
         }
             
     }
