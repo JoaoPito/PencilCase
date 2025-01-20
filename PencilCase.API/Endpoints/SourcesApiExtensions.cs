@@ -113,6 +113,6 @@ public static class SourcesApiExtensions
             @"[\s_]+", "_")
             .Trim('_');
 
-        return sanitizedName;
+        return sanitizedName + extension;
     }
 }
