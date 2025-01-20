@@ -1,11 +1,10 @@
 using Microsoft.Extensions.Configuration;
 using PencilCase.Shared.Models.LLM.RAG;
-using PencilCase.Shared.Models.Telemetry.LLM.Agents;
 using PencilCase.Shared.Models.Telemetry.LLM.RAG;
 using PencilCase.Telemetry.Data.Database;
 using Pinecone;
 
-namespace PencilCase.LLM.RAG.Providers.Pinecone;
+namespace PencilCase.LLM.VectorDb.Providers.Pinecone;
 
 public class PineconeService : IRagService
 {
