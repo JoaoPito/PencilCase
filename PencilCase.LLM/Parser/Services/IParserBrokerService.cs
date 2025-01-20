@@ -4,6 +4,6 @@ namespace PencilCase.LLM.Parser.Services;
 
 public interface IParserBrokerService
 {
-    public Task<Guid> SubmitJobAsync(ParserJob job);
+    public Task SubmitJobAsync(ParserJob job);
     public Task<ParserJob> GetJobAsync(Guid jobId);
 }
