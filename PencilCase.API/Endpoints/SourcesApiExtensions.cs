@@ -49,10 +49,10 @@ public static class SourcesApiExtensions
             };
             
             // Submit Job
-            var jobId = await brokerService.SubmitJobAsync(job);
+            await brokerService.SubmitJobAsync(job);
 
             // Respond with Job ID and link
-            return Results.AcceptedAtRoute("GetSourceStatus", new { jobId = jobId });
+            return Results.AcceptedAtRoute("GetSourceStatus", new { jobId = job.Id });
         })
         .WithName("UploadSource");
 
