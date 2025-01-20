@@ -1,6 +1,6 @@
 using PencilCase.Shared.Models.LLM.Parser;
 
-namespace PencilCase.API.Services;
+namespace PencilCase.LLM.Parser.Services;
 
 public interface IParserBrokerService
 {

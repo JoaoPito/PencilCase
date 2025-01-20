@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 using Asp.Versioning;
 using Asp.Versioning.Builder;
 using Microsoft.AspNetCore.Mvc;
-using PencilCase.API.Services;
+using PencilCase.LLM.Parser.Services;
 using PencilCase.Shared.DTOs.Requests.Sources;
 using PencilCase.Shared.Models.LLM.Parser;
 
