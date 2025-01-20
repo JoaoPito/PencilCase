@@ -15,7 +15,7 @@ public static class SourcesApiExtensions
         Path.GetInvalidFileNameChars().Concat(Path.GetInvalidPathChars())
     );
 
-    private static readonly string SourceUploadConfig = "SourceUploadSettings:MaxFileSize";
+    private static readonly string SourceUploadConfig = "SourceServices:UploadSettings:MaxFileSize";
     
     public static void AddV1SourceEndpoints(this WebApplication app)
     {
