@@ -30,7 +30,7 @@ public static class SourcesApiExtensions
         
         sourcesGroup.MapPost("", async (
             [FromServices] IConfiguration configuration,
-            [FromServices] IParserBrokerService brokerService,
+            [FromServices] IParserProducerService brokerService,
             [FromBody] UploadSourceRequest request) =>
         {
             // Validate and Sanitize File
@@ -58,7 +58,7 @@ public static class SourcesApiExtensions
 
         sourcesGroup.MapGet("{jobId}", async (
             Guid jobId,
-            [FromServices] IParserBrokerService brokerService) =>
+            [FromServices] IParserProducerService brokerService) =>
         {
             try
             {
