@@ -10,6 +10,7 @@ public class ParserJob
         Failed = -1,
     }
 
+    public Guid Id { get; set; }
     public JobStatus Status { get; set; }
     public string? StatusMsg { get; set; }
     public ParserFile ParserFile { get; set; } = new();
