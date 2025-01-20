@@ -13,8 +13,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
       <PackageReference Include="Microsoft.Extensions.Primitives" Version="8.0.0.0" />
       <PackageReference Include="Pinecone.Client" Version="2.0.0" />
+      <PackageReference Include="StackExchange.Redis" Version="2.8.24" />
     </ItemGroup>
 
     <ItemGroup>
@@ -24,7 +26,6 @@
 
     <ItemGroup>
       <Folder Include="Agents\" />
-      <Folder Include="Parser\" />
     </ItemGroup>
 
 </Project>
