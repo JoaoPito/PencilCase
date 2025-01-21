@@ -90,8 +90,10 @@ public static class SourcesApiExtensions
         
         if(!ValidateExtension(request.FileName))
             throw new ArgumentException("File extension is not supported");
+
+        var contentBytes = Convert.FromBase64String(request.FileContents);
         
-        if((request.FileContents.Length * 3) / 4 <= maxFileSize)
+        if(contentBytes.Length > maxFileSize)
             throw new ArgumentException($"File size exceeds {maxFileSize / 1024 / 1024}MB");
     }
 
