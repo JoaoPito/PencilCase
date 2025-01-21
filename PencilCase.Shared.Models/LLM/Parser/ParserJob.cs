@@ -13,5 +13,5 @@ public class ParserJob
     public Guid Id { get; set; }
     public JobStatus Status { get; set; }
     public string? StatusMsg { get; set; }
-    public ParserFile ParserFile { get; set; } = new();
+    public ParserFile File { get; set; } = new();
 }

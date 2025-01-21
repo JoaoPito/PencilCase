@@ -41,7 +41,7 @@ public static class SourcesApiExtensions
             var job = new ParserJob
             {
                 Status = ParserJob.JobStatus.Accepted,
-                ParserFile = new()
+                File = new()
                 {
                     Name = SanitizeFileName(request.FileName),
                     Contents = request.FileContents,
@@ -85,13 +85,13 @@ public static class SourcesApiExtensions
     static void ValidateFile(UploadSourceRequest request, uint maxFileSize)
     {
         if(string.IsNullOrEmpty(request.FileName))
-            throw new ArgumentException("ParserFile name is required");
+            throw new ArgumentException("File name is required");
         
         if(!ValidateExtension(request.FileName))
-            throw new ArgumentException("ParserFile extension is not supported");
+            throw new ArgumentException("File extension is not supported");
         
         if((request.FileContents.Length * 3) / 4 <= maxFileSize)
-            throw new ArgumentException($"ParserFile size exceeds {maxFileSize / 1024 / 1024}MB");
+            throw new ArgumentException($"File size exceeds {maxFileSize / 1024 / 1024}MB");
     }
 
     static bool ValidateExtension(string filename)
