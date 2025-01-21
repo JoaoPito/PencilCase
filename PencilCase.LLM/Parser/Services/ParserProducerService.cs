@@ -7,7 +7,7 @@ namespace PencilCase.LLM.Parser.Services;
 
 public class ParserProducerService(IConfiguration configuration, IConnectionMultiplexer redis) : IParserProducerService
 {
-    private const string JobChannelConfig = "SourceServices:JobChannel";
+    private const string JobChannelConfig = "ParserBroker:JobChannel";
     private readonly string _jobChannel = configuration.GetValue<string>(JobChannelConfig) ?? "parserjobs";
 
     public async Task SubmitJobAsync(ParserJob job)
