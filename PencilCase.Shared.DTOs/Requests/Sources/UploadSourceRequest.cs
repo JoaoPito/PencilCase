@@ -4,4 +4,5 @@ public class UploadSourceRequest
 {
     public string FileName { get; set; }
     public string FileContents { get; set; }
+    public Guid ParentBlockId { get; set; }
 }
