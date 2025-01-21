@@ -41,6 +41,7 @@ public static class SourcesApiExtensions
             var job = new ParserJob
             {
                 Status = ParserJob.JobStatus.Accepted,
+                ParentBlockId = request.ParentBlockId,
                 File = new()
                 {
                     Name = SanitizeFileName(request.FileName),
