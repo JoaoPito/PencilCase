@@ -15,7 +15,7 @@ public static class SourcesApiExtensions
         Path.GetInvalidFileNameChars().Concat(Path.GetInvalidPathChars())
     );
 
-    private static readonly string SourceUploadConfig = "SourceServices:UploadSettings:MaxFileSize";
+    private static readonly string SourceUploadConfig = "LlmApi:UploadSettings:MaxFileSize";
     
     public static void AddV1SourceEndpoints(this WebApplication app)
     {
@@ -24,7 +24,7 @@ public static class SourcesApiExtensions
             .ReportApiVersions()
             .Build();
 
-        var sourcesGroup = app.MapGroup("/api/{version:apiVersion}/sources")
+        var sourcesGroup = app.MapGroup("/api/v{version:apiVersion}/sources")
             .WithApiVersionSet(apiVersionSet)
             .WithTags(["Sources", "RAG"]);
         

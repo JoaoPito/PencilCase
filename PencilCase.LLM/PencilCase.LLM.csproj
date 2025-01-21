@@ -20,6 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\PencilCase.Shared.Data\PencilCase.Shared.Data.csproj" />
       <ProjectReference Include="..\PencilCase.Shared.DTOs\PencilCase.Shared.DTOs.csproj" />
       <ProjectReference Include="..\PencilCase.Shared.Models\PencilCase.Shared.Models.csproj" />
       <ProjectReference Include="..\PencilCase.Telemetry.Data\PencilCase.Telemetry.Data.csproj" />
