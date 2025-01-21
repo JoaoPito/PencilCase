@@ -14,5 +14,4 @@ public class ParserJob
     public JobStatus Status { get; set; }
     public string? StatusMsg { get; set; }
     public ParserFile File { get; set; } = new();
-    public Guid SourceBlockId { get; set; }
 }
