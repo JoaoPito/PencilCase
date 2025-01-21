@@ -10,8 +10,8 @@ public class ParserJob
         Failed = -1,
     }
 
-    public Guid Id { get; set; }
-    public JobStatus Status { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public JobStatus Status { get; set; } = JobStatus.Accepted;
     public string? StatusMsg { get; set; }
     public ParserFile File { get; set; } = new();
     public Guid ParentBlockId { get; set; }
