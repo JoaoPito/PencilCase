@@ -78,6 +78,7 @@ public class ParserConsumerService(
         // Send document to Parser API
         // Wait for chunks
         var chunks = await TrySendFileToParserOrFailJob(job);
+        logger.LogInformation($"Got {chunks.Count} chunks for job {job.Id}. Persisting them.");
         for (var i = 0; i < chunks.Count; i++)
         {
             var chunk = chunks[i];
@@ -101,12 +102,15 @@ public class ParserConsumerService(
 
     private async Task<Block> CreateDocBlock(string fileName, Guid jobParentBlockId)
     {
+        // Use BlocksDal scoped service
+        using var scope = _serviceProvider.CreateScope();
+        var dal = scope.ServiceProvider.GetRequiredService<IBlocksDal>();
         // Create new block
         var block = new Block()
         {
             Name = fileName,
             Type = BlockType.Source,
-            ParentId = jobParentBlockId
+            ParentId = jobParentBlockId,
         };
         var blockProperties = new BlockProperties()
         {
@@ -114,15 +118,9 @@ public class ParserConsumerService(
             ParentId = block.Id
         };
         block.Properties = blockProperties;
-        
-        // Use BlocksDal scoped service
-        using (var scope = _serviceProvider.CreateScope())
-        {
-            // Add new block
-            var dal = scope.ServiceProvider.GetRequiredService<IBlocksDal>();
-            await dal.Add(block);
-        }
-
+            
+        // Add new block
+        await dal.Add(block);
         return block;
     }
 
@@ -150,7 +148,7 @@ public class ParserConsumerService(
                 .GetRequiredService<IHttpClientFactory>()
                 .CreateClient("LLMApi-FileParser");
 
-            var response = await llmApiClient.PostAsJsonAsync<ParserFile>("/file", file);
+            var response = await llmApiClient.PostAsJsonAsync<ParserFile>("v1/file", file);
             if (!response.IsSuccessStatusCode)
                 throw new HttpRequestException($"Error while submitting file with name {file.Name} to parser on LLM API");
             var parserResponse = await response.Content.ReadFromJsonAsync<ParserResponse>();
@@ -192,7 +190,7 @@ public class ParserConsumerService(
         var block = new Block()
         {
             ParentId = parent.Id,
-            Parent = parent,
+            //Parent = parent,
             Name = chunk,
             Type = BlockType.Cell,
         };
