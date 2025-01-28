@@ -14,7 +14,6 @@ public static class SourcesApiExtensions
     private static readonly HashSet<char> InvalidPathChars = new(
         Path.GetInvalidFileNameChars().Concat(Path.GetInvalidPathChars())
     );
-
     private static readonly string SourceUploadConfig = "LlmApi:UploadSettings:MaxFileSize";
     
     public static void AddV1SourceEndpoints(this WebApplication app)
@@ -41,7 +40,7 @@ public static class SourcesApiExtensions
             var job = new ParserJob
             {
                 Status = ParserJob.JobStatus.Accepted,
-                BlockId = request.ParentBlockId,
+                ParentBlockId = request.ParentBlockId,
                 File = new()
                 {
                     Name = SanitizeFileName(request.FileName),
