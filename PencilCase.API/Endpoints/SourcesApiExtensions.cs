@@ -75,12 +75,13 @@ public static class SourcesApiExtensions
         .WithDescription("Get status of a running parsing job.");
     }
 
-    private static object? MapJobToJobStatusResponse(ParserJob job)
+    private static JobStatusResponse? MapJobToJobStatusResponse(ParserJob job)
     {
         return new JobStatusResponse
         {
             StatusCode = job.Status,
             StatusMsg = job.StatusMsg,
+            SourceBlock = job.SourceBlock,
         };
     }
 
