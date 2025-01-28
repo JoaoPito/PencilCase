@@ -43,7 +43,7 @@
     <DialogActions>
         <!-- Cancel/Upload buttons -->
         <MudButton OnClick="OpenFilePickerAsync">Pick File</MudButton>
-        <MudButton Color="Color.Primary" OnClick="UploadFileAsync" Variant="Variant.Filled">Upload</MudButton>
+        <UploadButton Processing="@_processing" OnClick="OnUploadClicked" />
     </DialogActions>
 </MudDialog>
 @code {
