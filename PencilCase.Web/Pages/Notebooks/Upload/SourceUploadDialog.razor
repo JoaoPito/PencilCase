@@ -9,7 +9,7 @@
             <MudFileUpload T="IReadOnlyList<IBrowserFile>"
                            @ref="@_fileUpload"
                            OnFilesChanged="OnInputFileChanged"
-
+                           Disabled="@_processing"
                            @ondrop="@ClearDragClass"
                            @ondragenter="@SetDragClass"
                            @ondragleave="@ClearDragClass"
@@ -39,15 +39,20 @@
         </MudStack>
 
         <!-- Upload status -->
+        @if (_processing)
+        {
+            <MudText>@_processingMsg</MudText>
+        }
     </DialogContent>
     <DialogActions>
         <!-- Cancel/Upload buttons -->
-        <MudButton OnClick="OpenFilePickerAsync">Pick File</MudButton>
+        <MudButton OnClick="OpenFilePickerAsync" Disabled="@_processing">Pick File</MudButton>
         <UploadButton Processing="@_processing" OnClick="OnUploadClicked" />
     </DialogActions>
 </MudDialog>
 @code {
-    private const string DefaultDragClass = "relative rounded-lg border-2 border-dashed pa-4 mt-4 mud-width-full mud-height-full";
+    private const string DefaultDragClass = "relative rounded-lg border-2 border-dashed " +
+                                            "pa-4 mt-4 mud-width-full mud-height-full";
     private string _dragClass = DefaultDragClass;
 
     private async Task OnClearClicked() => await ClearAsync();
