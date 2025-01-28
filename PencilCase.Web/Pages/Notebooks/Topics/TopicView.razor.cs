@@ -226,7 +226,7 @@ public partial class TopicView : ComponentBase
     
     private readonly DialogOptions _uploadDialogOptions = new()
     {
-        FullScreen = true, 
+        FullScreen = false, 
         CloseButton = true, 
         BackdropClick = false,
         MaxWidth = MaxWidth.ExtraLarge,
