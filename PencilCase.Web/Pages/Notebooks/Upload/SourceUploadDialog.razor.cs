@@ -1,32 +1,48 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 using PencilCase.Shared.DTOs.Requests.Sources;
+using PencilCase.Shared.DTOs.Responses.Parser;
+using PencilCase.Shared.Models.LLM.Parser;
+using PencilCase.Web.Services.Notebooks;
 
 namespace PencilCase.Web.Pages.Notebooks.Upload;
 
 public partial class SourceUploadDialog : ComponentBase
 {
     [Parameter] public Guid ParentId { get; set; } = Guid.Empty;
+    [Inject] private ISourcesApi SourceApi { get; set; } = null!;
     
     private MudFileUpload<IReadOnlyList<IBrowserFile>>? _fileUpload;
     
     private IBrowserFile? _file;
     private string _errorMsg = "";
     private bool _showError;
+    
     private bool _processing;
+    private string _processingMsg = "";
+    
+    private readonly TimeSpan jobWaitDelayDuration = TimeSpan.FromSeconds(5);
     
     private async Task UploadFileAsync()
     {
         _processing = true;
         StateHasChanged();
-        
-        await Task.Delay(5000);
+
+        if(_file == null)
+            throw new ArgumentNullException($"Selected file is null");
         
         // Start upload job
-        // While job is not completed
-            // At each N seconds, get the job status and show to the user
+        var request = await ConvertFileToUploadRequest(_file);
+        var jobId = await SourceApi.StartUpload(request);
+
+        JobStatusResponse jobStatus;
+        while((jobStatus = await SourceApi.GetUploadStatus(jobId)).StatusCode != ParserJob.JobStatus.Completed)
+        {
+            _processingMsg = jobStatus.StatusMsg ?? "";
+            StateHasChanged();
+            await Task.Delay(jobWaitDelayDuration);
+        }
             
         _processing = false;
         StateHasChanged();
