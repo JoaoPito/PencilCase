@@ -14,7 +14,8 @@ public partial class SourceUploadDialog : ComponentBase
     
     private IBrowserFile? _file;
     private string _errorMsg = "";
-    private bool _showError = false;
+    private bool _showError;
+    private bool _processing;
     
     private async Task UploadFileAsync(MouseEventArgs arg)
     {

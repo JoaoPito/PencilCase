@@ -51,6 +51,7 @@
     private string _dragClass = DefaultDragClass;
 
     private async Task OnClearClicked() => await ClearAsync();
+    private async Task OnUploadClicked(MouseEventArgs args) => await UploadFileAsync();
 
     private Task OpenFilePickerAsync()
         => _fileUpload?.OpenFilePickerAsync() ?? Task.CompletedTask;
