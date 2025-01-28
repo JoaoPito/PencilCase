@@ -3,6 +3,7 @@ using MudBlazor;
 using MudBlazorFix;
 using PencilCase.Shared.Models.Notebooks;
 using PencilCase.Web.Pages.Notebooks.Models;
+using PencilCase.Web.Pages.Notebooks.Upload;
 using PencilCase.Web.Services;
 using PencilCase.Web.Services.Notebooks;
 
@@ -204,7 +205,7 @@ public partial class TopicView : ComponentBase
     private async Task OnAddSourceClicked()
     {
         _isLoading = true;
-        Snackbar.Add("Sorry! Adding Sources is not supported yet!", Severity.Error);
+        await OpenUploadDialogAsync();
         _isLoading = false;
     }
 
@@ -221,5 +222,22 @@ public partial class TopicView : ComponentBase
         
         await AddNewBlockAndReload(newTopic);
         _isLoading = false;
+    }
+    
+    private readonly DialogOptions _uploadDialogOptions = new()
+    {
+        FullScreen = false, 
+        CloseButton = true, 
+        BackdropClick = false,
+        MaxWidth = MaxWidth.ExtraLarge,
+        Position = DialogPosition.Center,
+    };
+    
+    private Task OpenUploadDialogAsync()
+    {
+        var parameters = new DialogParameters<SourceUploadDialog> { { x => x.ParentId, Block!.Id } };
+        return DialogService.ShowAsync<SourceUploadDialog>("Upload source",
+            parameters,
+            _uploadDialogOptions);
     }
 }

@@ -4,6 +4,7 @@
 @using PencilCase.Web.Pages.Notebooks.Topics
 @using PencilCase.Web.Pages.Notebooks.Notebooks
 @using PencilCase.Web.Services.Notebooks
+@using PencilCase.Web.Pages.Notebooks.Sources
 @inject IBlocksApi BlocksApi
 @inject NavigationManager NavigationManager
 
@@ -43,6 +44,9 @@
                                     break;
                                 case BlockType.Cell:
                                     <MudText Typo="Typo.h5">Cell placeholder</MudText>
+                                    break;
+                                case BlockType.Source:
+                                    <SourceView BlocksApi=@BlocksApi />
                                     break;
                                 default:
                                     <MudText Typo="Typo.h4">Ooops... Seems like something wrong happened :(</MudText>
