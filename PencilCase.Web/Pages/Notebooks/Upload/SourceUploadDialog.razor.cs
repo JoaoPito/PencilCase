@@ -17,12 +17,19 @@ public partial class SourceUploadDialog : ComponentBase
     private bool _showError;
     private bool _processing;
     
-    private async Task UploadFileAsync(MouseEventArgs arg)
+    private async Task UploadFileAsync()
     {
+        _processing = true;
+        StateHasChanged();
+        
+        await Task.Delay(5000);
+        
         // Start upload job
         // While job is not completed
             // At each N seconds, get the job status and show to the user
-        throw new NotImplementedException();
+            
+        _processing = false;
+        StateHasChanged();
     }
     
     private async Task<UploadSourceRequest> ConvertFileToUploadRequest(IBrowserFile file)
