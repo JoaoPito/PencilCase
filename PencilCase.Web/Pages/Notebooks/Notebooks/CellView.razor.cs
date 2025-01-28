@@ -26,7 +26,7 @@ public partial class CellView : ComponentBase
 
     MudTextField<string> _inputTextField = null!;
     private string? _cellMsg;
-    private List<RagDocument>? _docsRetrieved = null;
+    private List<RagDocument> _docsRetrieved = [];
 
     protected override async Task OnInitializedAsync()
     {
@@ -99,7 +99,7 @@ public partial class CellView : ComponentBase
 
         _isLoading = true;
         _cellMsg = "Searching for related information...";
-        _docsRetrieved = null;
+        _docsRetrieved = new();
         StateHasChanged();
         var docs = await RagSearchAsync(Block!.Name);
         
