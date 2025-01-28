@@ -1,0 +1,20 @@
+@using PencilCase.Web.Pages.Notebooks.Models
+@using PencilCase.Web.Services.Notebooks
+@foreach (var child in _children.OrderBy(b => b.Properties.Order))
+{
+    <MudPaper Elevation="5">
+        <MudText>@child.Properties.Order</MudText>
+        <MudMarkdown Value="@child.Name"/>
+    </MudPaper>
+}
+@code {
+    [CascadingParameter(Name = "block")] protected BlockViewModel? Block { get; set; }
+    [Parameter] public IBlocksApi BlocksApi { get; set; } = null!;
+    private List<BlockViewModel> _children = [];
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Block != null) _children = await BlocksApi.GetChildren(Block.Id);
+        _children = _children.OrderBy(c => c.Properties.Order).ToList();
+    }
+}
