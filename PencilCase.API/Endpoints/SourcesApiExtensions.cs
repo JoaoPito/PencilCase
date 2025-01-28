@@ -55,7 +55,8 @@ public static class SourcesApiExtensions
             // Respond with Job ID and link
             return Results.AcceptedAtRoute("GetSourceStatus", new { jobId = job.Id });
         })
-        .WithName("UploadSource");
+        .WithName("UploadSource")
+        .WithDescription("Starts a parsing job, it parses a file into Markdown, adds it to the VectorDB, and creates a new block and adds it to the Blocks DB");
 
         sourcesGroup.MapGet("{jobId}", async (
             Guid jobId,
@@ -71,7 +72,8 @@ public static class SourcesApiExtensions
                 return Results.NotFound(e.Message);
             }
         })
-        .WithName("GetSourceStatus");
+        .WithName("GetSourceStatus")
+        .WithDescription("Get status of a running parsing job.");
     }
 
     private static object? MapJobToJobStatusResponse(ParserJob job)
