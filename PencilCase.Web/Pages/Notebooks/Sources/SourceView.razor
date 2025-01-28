@@ -2,9 +2,11 @@
 @using PencilCase.Web.Services.Notebooks
 @foreach (var child in _children.OrderBy(b => b.Properties.Order))
 {
-    <MudPaper Elevation="5">
-        <MudText>@child.Properties.Order</MudText>
-        <MudMarkdown Value="@child.Name"/>
+    <MudPaper Elevation="0" Outlined="true">
+        <div class="pa-4">
+            <MudText>@child.Properties.Order</MudText>
+            <MudMarkdown Value="@child.Name"/>
+        </div>
     </MudPaper>
 }
 @code {
