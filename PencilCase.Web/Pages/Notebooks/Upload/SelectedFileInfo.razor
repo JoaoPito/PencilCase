@@ -6,7 +6,7 @@
             <MudIcon Size="Size.Large" Icon="@GetFileIcon()"></MudIcon>
             <MudStack>
                 <MudText Typo="Typo.h6">@File.Name</MudText>
-                <MudText Typo="Typo.body2">@($"{GetFileSizeInMb()}")Mb</MudText>
+                <MudText Typo="Typo.body2">@(GetFileSizeInMb())Mb</MudText>
             </MudStack>
         </MudStack>
     </div>
