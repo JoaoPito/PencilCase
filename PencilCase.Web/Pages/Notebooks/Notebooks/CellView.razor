@@ -43,17 +43,33 @@
         else if (_isLoading)
         {
             <MudStack Spacing="1" StretchItems="StretchItems.None">
-                <MudSkeleton Width="20%" Animation="Animation.Wave" />
-                <MudSkeleton Width="100%" Animation="Animation.Wave" />
-                <MudSkeleton Width="60%" Animation="Animation.Wave" />
+                <MudSkeleton Width="20%" Animation="Animation.Wave"/>
+                <MudSkeleton Width="100%" Animation="Animation.Wave"/>
+                <MudSkeleton Width="60%" Animation="Animation.Wave"/>
             </MudStack>
             <MudText Typo="Typo.h6" Align="Align.Center">@_cellMsg</MudText>
+
         }
         else if (_childError)
         {
             <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center">
                 <MudIcon Size="Size.Medium" Icon="@Icons.Material.Rounded.Warning" Color="Color.Warning"></MudIcon>
                 <MudText Color="Color.Warning">An error has occured. Try reloading this cell in a couple of minutes.</MudText>
+            </MudStack>
+        }
+        @if (_docsRetrieved is not null && 
+             _docsRetrieved.Any()
+             && !_childError)
+        {
+            <MudStack Row="true" Style="border: 2px green solid;">
+                @foreach (var doc in _docsRetrieved)
+                {
+                    <MudPaper Outlined="true" MinHeight="500" MinWidth="300">
+                        <MudText Typo="Typo.caption" >
+                            @($"{string.Join("", doc.Content.Take(150).ToArray())}...")
+                        </MudText>
+                    </MudPaper>
+                }
             </MudStack>
         }
     </MudCardContent>
