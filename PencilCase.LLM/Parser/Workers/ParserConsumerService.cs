@@ -82,14 +82,17 @@ public class ParserConsumerService(
         for (var i = 0; i < chunks.Count; i++)
         {
             var chunk = chunks[i];
+            var id = Guid.NewGuid();
             
             // Store results in VectorDB
             await StoreChunkInVectorDb(
+                id,
                 chunk,
                 docBlock.Id);
             
             // Store results in BlocksDB
             await StoreChunkInBlocksDb(
+                id,
                 chunk,
                 docBlock,
                 i);
@@ -167,12 +170,13 @@ public class ParserConsumerService(
             JsonSerializer.Serialize(job));
     }
 
-    async Task StoreChunkInVectorDb(string chunk, Guid parentBlock)
+    async Task StoreChunkInVectorDb(Guid id, string chunk, Guid parentBlock)
     {
         // Create RagDocument
         var doc = new RagDocument()
         {
             ParentId = parentBlock,
+            Id = id,
             Content = chunk,
         };
         
@@ -185,11 +189,12 @@ public class ParserConsumerService(
         }
     }
     
-    async Task StoreChunkInBlocksDb(string chunk, Block parent, int order)
+    async Task StoreChunkInBlocksDb(Guid id, string chunk, Block parent, int order)
     {
         // Create Block
         var block = new Block()
         {
+            Id = id,
             ParentId = parent.Id,
             //Parent = parent,
             Name = chunk,
