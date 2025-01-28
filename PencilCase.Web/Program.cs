@@ -32,10 +32,17 @@ builder.Services.AddHttpClient("LlmAPI", client =>
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
 
+builder.Services.AddHttpClient("SourcesAPI", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["SourcesAPI:url"]!);
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+});
+
 builder.Services.AddTransient<FragmentApi>();
 builder.Services.AddTransient<IBlocksApi, BlocksApi>();
 builder.Services.AddTransient<ILlmApi, LlmApi>();
 builder.Services.AddTransient<BlockMapper>();
+builder.Services.AddTransient<ISourcesApi, SourcesApi>();
 
 builder.Services.AddTransient<MarkdownExporter>();
 
