@@ -1,7 +1,7 @@
 using PencilCase.Shared.Models.LLM.Parser;
 using PencilCase.Shared.Models.Notebooks;
 
-namespace PencilCase.Shared.DTOs.Requests.Sources;
+namespace PencilCase.Shared.DTOs.Responses.Parser;
 
 public class JobStatusResponse
 {

@@ -4,6 +4,7 @@ using Asp.Versioning.Builder;
 using Microsoft.AspNetCore.Mvc;
 using PencilCase.LLM.Parser.Services;
 using PencilCase.Shared.DTOs.Requests.Sources;
+using PencilCase.Shared.DTOs.Responses.Parser;
 using PencilCase.Shared.Models.LLM.Parser;
 
 namespace PencilCase.API.Endpoints;
