@@ -1,22 +1,22 @@
-@using PencilCase.Web.Pages.Notebooks.Models
-@using PencilCase.Web.Services.Notebooks
-@foreach (var child in _children.OrderBy(b => b.Properties.Order))
+@if (_children.Any())
 {
-    <MudPaper Elevation="0" Outlined="true">
-        <div class="pa-4">
-            <MudText>@child.Properties.Order</MudText>
-            <MudMarkdown Value="@child.Name"/>
-        </div>
-    </MudPaper>
-}
-@code {
-    [CascadingParameter(Name = "block")] protected BlockViewModel? Block { get; set; }
-    [Parameter] public IBlocksApi BlocksApi { get; set; } = null!;
-    private List<BlockViewModel> _children = [];
-
-    protected override async Task OnParametersSetAsync()
+    foreach (var child in _children.OrderBy(b => b.Properties.Order))
     {
-        if (Block != null) _children = await BlocksApi.GetChildren(Block.Id);
-        _children = _children.OrderBy(c => c.Properties.Order).ToList();
+        <MudPaper Elevation="0" Outlined="true">
+            <div class="pa-4">
+                <MudText>@child.Properties.Order</MudText>
+                <MudMarkdown Value="@child.Name"/>
+            </div>
+        </MudPaper>
     }
+}
+else if(_loading)
+{
+    <MudProgressLinear Color="Color.Secondary" Indeterminate="true" Class="my-7"/>
+}
+else
+{
+    <div class="pa-12">
+        <MudText Typo="Typo.h4" Align="Align.Center">This file is empty</MudText>
+    </div>
 }
