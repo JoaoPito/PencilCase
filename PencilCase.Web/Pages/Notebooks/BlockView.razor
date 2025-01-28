@@ -44,6 +44,16 @@
                                 case BlockType.Cell:
                                     <MudText Typo="Typo.h5">Cell placeholder</MudText>
                                     break;
+                                case BlockType.Source:
+                                    foreach (var child in _children.OrderBy(b => b.Properties.Order))
+                                    {
+                                        <MudPaper Elevation="5">
+                                            <MudText>@child.Properties.Order</MudText>
+                                            <MudMarkdown Value="@child.Name"/>
+                                        </MudPaper>
+                                        
+                                    }
+                                    break;
                                 default:
                                     <MudText Typo="Typo.h4">Ooops... Seems like something wrong happened :(</MudText>
                                     break;
@@ -59,6 +69,7 @@
 @code {
     [Parameter] public string? BlockId { get; set; } = string.Empty;
     private BlockViewModel? _block;
+    private List<BlockViewModel> _children = new();
 
     protected override async Task OnParametersSetAsync()
     {
@@ -69,6 +80,7 @@
     private async Task LoadBlock()
     {
         _block = (BlockId == null) ? await BlocksApi.GetLastUsedBlock() : await BlocksApi.GetBlock(Guid.Parse(BlockId));
+        if (BlockId != null) _children = await BlocksApi.GetChildren(_block.Id);
     }
 
     private void RedirectTo(BlockViewModel block)
