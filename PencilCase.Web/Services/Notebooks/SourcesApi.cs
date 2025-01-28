@@ -27,7 +27,7 @@ public class SourcesApi: ISourcesApi
     {
         var response = await _httpClient.GetFromJsonAsync<JobStatusResponse>($"{jobId}");
         if(response == null) 
-            throw new NullReferenceException("Job status response is null");
+            throw new HttpRequestException("Job status response is null");
         return response;
     }
 }
