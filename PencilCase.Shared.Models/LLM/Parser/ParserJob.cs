@@ -14,5 +14,5 @@ public class ParserJob
     public JobStatus Status { get; set; } = JobStatus.Accepted;
     public string? StatusMsg { get; set; }
     public ParserFile File { get; set; } = new();
-    public Guid ParentBlockId { get; set; }
+    public Guid BlockId { get; set; }
 }

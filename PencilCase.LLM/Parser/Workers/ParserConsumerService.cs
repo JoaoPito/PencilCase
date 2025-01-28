@@ -73,7 +73,7 @@ public class ParserConsumerService(
         logger.LogInformation($"Processing job {job.Id}");
         
         // Create new Block for entire Document
-        var parentBlock = await CreateDocBlock(job.File.Name, job.ParentBlockId);
+        var parentBlock = await CreateDocBlock(job.File.Name, job.BlockId);
 
         // Send document to Parser API
         // Wait for chunks
