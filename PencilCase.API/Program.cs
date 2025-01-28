@@ -77,8 +77,9 @@ builder.Services.AddHttpClient("LLMApi-FileParser", client =>
         new MediaTypeWithQualityHeaderValue("application/json"));
 });
 // Add redis
+var redisUrl = builder.Configuration["ParserBroker:Url"] ?? "localhost:6379";
 builder.Services.AddSingleton<IConnectionMultiplexer>(
-    ConnectionMultiplexer.Connect("192.168.0.161:6379", options =>
+    ConnectionMultiplexer.Connect(redisUrl, options =>
     {
         options.AbortOnConnectFail = false;
     })
