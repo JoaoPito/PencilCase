@@ -235,6 +235,9 @@ public partial class TopicView : ComponentBase
     
     private Task OpenUploadDialogAsync()
     {
-        return DialogService.ShowAsync<SourceUploadDialog>("Upload source", _uploadDialogOptions);
+        var parameters = new DialogParameters<SourceUploadDialog> { { x => x.ParentId, Block!.Id } };
+        return DialogService.ShowAsync<SourceUploadDialog>("Upload source",
+            parameters,
+            _uploadDialogOptions);
     }
 }
