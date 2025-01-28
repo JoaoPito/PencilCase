@@ -1,3 +1,5 @@
+using PencilCase.Shared.Models.Notebooks;
+
 namespace PencilCase.Shared.Models.LLM.Parser;
 
 public class ParserJob
@@ -15,4 +17,5 @@ public class ParserJob
     public string? StatusMsg { get; set; }
     public ParserFile File { get; set; } = new();
     public Guid ParentBlockId { get; set; }
+    public Block? SourceBlock { get; set; }
 }
