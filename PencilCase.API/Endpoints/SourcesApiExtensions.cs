@@ -53,7 +53,7 @@ public static class SourcesApiExtensions
             await brokerService.SubmitJobAsync(job);
 
             // Respond with Job ID and link
-            return Results.AcceptedAtRoute("GetSourceStatus", new { jobId = job.Id });
+            return Results.AcceptedAtRoute("GetSourceStatus", new { jobId = job.Id }, job.Id);
         })
         .WithName("UploadSource")
         .WithDescription("Starts a parsing job, it parses a file into Markdown, adds it to the VectorDB, and creates a new block and adds it to the Blocks DB");
