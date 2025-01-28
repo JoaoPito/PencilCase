@@ -73,7 +73,7 @@ public class ParserConsumerService(
         logger.LogInformation($"Processing job {job.Id}");
         
         // Create new Block for entire Document
-        var parentBlock = await CreateDocBlock(job.File.Name, job.ParentBlockId);
+        var docBlock = await CreateDocBlock(job.File.Name, job.ParentBlockId);
 
         // Send document to Parser API
         // Wait for chunks
@@ -86,17 +86,18 @@ public class ParserConsumerService(
             // Store results in VectorDB
             await StoreChunkInVectorDb(
                 chunk,
-                parentBlock.Id);
+                docBlock.Id);
             
             // Store results in BlocksDB
             await StoreChunkInBlocksDb(
                 chunk,
-                parentBlock,
+                docBlock,
                 i);
         }
         
         // Update Job Status
         job.Status = ParserJob.JobStatus.Completed;
+        job.SourceBlock = docBlock;
         await UpdateJob(job);
     }
 
