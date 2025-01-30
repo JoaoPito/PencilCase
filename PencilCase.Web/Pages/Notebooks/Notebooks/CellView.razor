@@ -34,6 +34,22 @@
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
+        @if (_docsRetrieved.Any() && !_childError)
+        {
+            <MudStack Row="true" AlignItems="AlignItems.Start" 
+                      StretchItems="StretchItems.None" Class="overflow-x-scroll ">
+                @foreach (var doc in _docsRetrieved)
+                {
+                    <MudPaper Outlined="true" 
+                              Class="pa-4 overflow-hidden "
+                              Style="width: 200px; height: 150px;">
+                        <MudText Typo="Typo.caption">
+                            @($"{string.Join("", doc.Content.Take(100).ToArray())}...")
+                        </MudText>
+                    </MudPaper>
+                }
+            </MudStack>
+        }
         @if (_shownChild is not null && !_isLoading && !_childError)
         {
             <MudPaper Height="150" Outlined="false" Elevation="0" Class="pa-4">
@@ -43,9 +59,9 @@
         else if (_isLoading)
         {
             <MudStack Spacing="1" StretchItems="StretchItems.None">
-                <MudSkeleton Width="20%" Animation="Animation.Wave" />
-                <MudSkeleton Width="100%" Animation="Animation.Wave" />
-                <MudSkeleton Width="60%" Animation="Animation.Wave" />
+                <MudSkeleton Width="20%" Animation="Animation.Wave"/>
+                <MudSkeleton Width="100%" Animation="Animation.Wave"/>
+                <MudSkeleton Width="60%" Animation="Animation.Wave"/>
             </MudStack>
             <MudText Typo="Typo.h6" Align="Align.Center">@_cellMsg</MudText>
         }
