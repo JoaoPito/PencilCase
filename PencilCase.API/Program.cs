@@ -65,19 +65,25 @@ builder.Services.AddHttpClient("GeminiApi", client =>
 builder.Services.AddScoped<ILlmApiService, GeminiApiService>();
 builder.Services.AddScoped<IRagService, PineconeService>();
 
-builder.Services.AddCors(
-    options => options.AddPolicy(
-        "wasm-frontend",
-        policy => policy.WithOrigins([builder.Configuration["BackendUrl"] ?? "http://localhost:5147",
-                builder.Configuration["FrontendUrl"] ?? "http://localhost:5096"])
-            .AllowAnyMethod()
-            .SetIsOriginAllowed(pol => true)
-            .AllowAnyHeader()
-            .AllowCredentials()));
+if (!builder.Environment.IsDevelopment())
+{
+    builder.Services.AddCors(
+        options => options.AddPolicy(
+            "wasm-frontend",
+            policy => policy.WithOrigins([builder.Configuration["BackendUrl"] ?? "http://localhost:5147",
+                    builder.Configuration["FrontendUrl"] ?? "http://localhost:5096"])
+                .AllowAnyMethod()
+                .SetIsOriginAllowed(pol => true)
+                .AllowAnyHeader()
+                .AllowCredentials()));
+}
 
 var app = builder.Build();
 
-app.UseCors("wasm-frontend");
+if (!app.Environment.IsDevelopment())
+{
+    app.UseCors("wasm-frontend");
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
