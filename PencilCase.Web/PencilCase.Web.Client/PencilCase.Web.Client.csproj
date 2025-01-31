@@ -21,7 +21,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Pages\Blocks\" />
       <Folder Include="Pages\Notebooks\" />
       <Folder Include="Pages\Sources\" />
       <Folder Include="Pages\Topics\" />
