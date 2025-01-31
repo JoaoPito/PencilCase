@@ -26,7 +26,6 @@
       <Folder Include="Pages\Sources\" />
       <Folder Include="Pages\Topics\" />
       <Folder Include="Pages\Upload\" />
-      <Folder Include="Services\Sources\" />
     </ItemGroup>
 
     <ItemGroup>
