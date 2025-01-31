@@ -26,9 +26,12 @@
       <Folder Include="Pages\Sources\" />
       <Folder Include="Pages\Topics\" />
       <Folder Include="Pages\Upload\" />
-      <Folder Include="Services\Blocks\" />
       <Folder Include="Services\LLM\" />
       <Folder Include="Services\Sources\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\PencilCase.Shared.Models\PencilCase.Shared.Models.csproj" />
     </ItemGroup>
 
 </Project>
