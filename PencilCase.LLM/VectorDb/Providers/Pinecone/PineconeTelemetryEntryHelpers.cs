@@ -2,7 +2,7 @@ using PencilCase.Shared.Models.LLM.RAG;
 using PencilCase.Shared.Models.Telemetry.LLM.RAG;
 using Pinecone;
 
-namespace PencilCase.LLM.RAG.Providers.Pinecone;
+namespace PencilCase.LLM.VectorDb.Providers.Pinecone;
 
 public static class PineconeTelemetryEntryHelpers
 {

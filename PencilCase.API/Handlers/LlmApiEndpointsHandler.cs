@@ -1,5 +1,5 @@
 using PencilCase.LLM.Agents.Providers;
-using PencilCase.LLM.RAG;
+using PencilCase.LLM.VectorDb;
 using PencilCase.Shared.Data.Database;
 using PencilCase.Shared.DTOs.Requests.Llm;
 using PencilCase.Shared.DTOs.Requests.Rag;

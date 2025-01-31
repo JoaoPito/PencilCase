@@ -1,0 +1,38 @@
+<MudPaper Outlined="true" 
+          MaxWidth="500px" 
+          MaxHeight="750px">
+    <div class="pa-8">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center">
+            <MudIcon Size="Size.Large" Icon="@GetFileIcon()"></MudIcon>
+            <MudStack>
+                <MudText Typo="Typo.h6">@File.Name</MudText>
+                <MudText Typo="Typo.body2">@(GetFileSizeInMb())Mb</MudText>
+            </MudStack>
+        </MudStack>
+    </div>
+</MudPaper>
+
+@code {
+    [Parameter] public IBrowserFile File { get; set; } = null!;
+    
+    private string GetFileIcon()
+    {
+        var fileExtension = Path.GetExtension(File.Name);
+        switch (fileExtension)
+        {
+            case ".pdf":
+                return Icons.Custom.FileFormats.FilePdf;
+            case ".xlsx":
+                return Icons.Custom.FileFormats.FileExcel;
+            case ".docx":
+                return Icons.Custom.FileFormats.FileWord;
+            default:
+                return Icons.Material.Rounded.Book;
+        }
+    }
+
+    private long GetFileSizeInMb()
+    {
+        return File.Size / 1024 / 1024;
+    }
+}
