@@ -21,13 +21,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Pages\Notebooks\" />
-      <Folder Include="Pages\Sources\" />
-      <Folder Include="Pages\Topics\" />
-      <Folder Include="Pages\Upload\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\..\PencilCase.Shared.DTOs\PencilCase.Shared.DTOs.csproj" />
       <ProjectReference Include="..\..\PencilCase.Shared.Models\PencilCase.Shared.Models.csproj" />
     </ItemGroup>
