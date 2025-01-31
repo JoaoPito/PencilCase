@@ -52,7 +52,7 @@ namespace PencilCase.Telemetry.Data.Migrations
                     b.ToTable("GenerationResultEntries");
                 });
 
-            modelBuilder.Entity("PencilCase.Shared.Models.Telemetry.LLM.RAG.RagOperationEntry", b =>
+            modelBuilder.Entity("PencilCase.Shared.Models.Telemetry.LLM.VectorDb.RagOperationEntry", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()

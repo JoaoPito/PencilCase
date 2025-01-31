@@ -1,5 +1,5 @@
 using PencilCase.LLM.Agents.Providers;
-using PencilCase.LLM.RAG;
+using PencilCase.LLM.VectorDb;
 using PencilCase.Shared.Data.Database;
 using PencilCase.Shared.DTOs.Requests.Llm;
 using PencilCase.Shared.DTOs.Requests.Rag;
@@ -46,30 +46,44 @@ public class LlmApiEndpointsHandler : ILlmApiEndpointsHandler
             Content = r.Content,
         }).ToList();
     }
-
+    
     public async Task<IResult> SearchForChunksAsync(RagSearchRequest query)
     {
         if(query.Content == string.Empty || 
            (query.NotebookId is null && query.FilterIds is null))
             return Results.BadRequest();
 
-        var notebookBlock = _blocksDal.GetBy(b => b.Id == query.NotebookId);
-        
-        try
+        var filterIds = new List<Guid>();
+
+        if (query.FilterIds is not null)
         {
-            ValidateNotebookBlockForSearch(notebookBlock);
+            filterIds = query.FilterIds.ToList();
         }
-        catch (ArgumentException ex)
+        else
         {
-            return Results.BadRequest(ex.Message);
-        }
-        
-        var filterIds = _blocksDal.GetIdsFromSubtreeWithType(
-            (Guid)notebookBlock!.ParentId!,
-            b => b.Type == BlockType.Source);
+            try
+            {
+                var topicId = GetTopicIdFromId((Guid)query.NotebookId!);
                 
+                filterIds = _blocksDal.GetIdsFromSubtreeWithType(
+                    topicId,
+                    b => b.Type == BlockType.Source);
+            }
+            catch (ArgumentException ex)
+            {
+                return Results.BadRequest(ex.Message);
+            }
+        }
+        
         var docs = await _ragService.GetChunksForQuery(query.Content, filterIds, 3);
         return Results.Ok(docs);
+    }
+
+    private Guid GetTopicIdFromId(Guid id)
+    {
+        var notebookBlock = _blocksDal.GetBy(b => b.Id == id);
+        ValidateNotebookBlockForSearch(notebookBlock);
+        return (Guid)notebookBlock!.ParentId!;
     }
 
     public async Task<IResult> InvokeAgentAsync(LlmMessageInvokeRequest request)
@@ -86,16 +100,15 @@ public class LlmApiEndpointsHandler : ILlmApiEndpointsHandler
         }
     }
 
-    public async Task<IResult> DeleteChunksAsync(List<RagDeleteRequest> chunks)
+    public async Task<IResult> DeleteChunksAsync(RagDeleteRequest request)
     {
         try
         {
-            await _ragService.DeleteChunks(chunks.Select(b =>
+            await _ragService.DeleteChunks(request.ChunksIds.Select(b =>
                 new RagDocument()
                 {
-                    Id = b.Id,
-                    ParentId = b.ParentId ?? Guid.Empty,
-                    Content = b.Content ?? String.Empty,
+                    Id = b,
+                    ParentId = request.DocumentId
                 }).ToList());
         }
         catch (ArgumentException)

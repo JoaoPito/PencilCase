@@ -1,7 +1,6 @@
 using PencilCase.Shared.Models.LLM.RAG;
-using PencilCase.Shared.Models.Notebooks;
 
-namespace PencilCase.LLM.RAG;
+namespace PencilCase.LLM.VectorDb;
 
 public interface IRagService
 {
