@@ -1,0 +1,33 @@
+@using PencilCase.Web.Client.ViewModels
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h5">
+            Remove '@Block.Name'?
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudText Typo="Typo.body1">
+            You <b>cannot</b> undo this action.
+        </MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Error" OnClick="Submit">Remove this item.</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = null!;
+
+    [Parameter] public BlockViewModel Block { get; set; } = null!;
+
+    [Parameter] public Func<Guid, Task> OnAcceptAsync { get; set; } = null!;
+
+    private async Task Submit()
+    {
+        await OnAcceptAsync(Block.Id!);
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}
