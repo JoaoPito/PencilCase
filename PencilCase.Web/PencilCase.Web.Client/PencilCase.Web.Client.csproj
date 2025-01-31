@@ -31,7 +31,14 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\PencilCase.Shared.DTOs\PencilCase.Shared.DTOs.csproj" />
       <ProjectReference Include="..\..\PencilCase.Shared.Models\PencilCase.Shared.Models.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.Extensions.Http">
+        <HintPath>..\..\..\..\..\..\..\..\..\..\home\joaopito\.nuget\packages\microsoft.extensions.http\6.0.0\lib\netstandard2.0\Microsoft.Extensions.Http.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>
