@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Components;
-using MudBlazor;
 using PencilCase.Shared.Models.LLM.Agents;
 using PencilCase.Shared.Models.LLM.RAG;
 using PencilCase.Shared.Models.Notebooks;
 using PencilCase.Web.Client.Services.Blocks;
-using PencilCase.Web.Client.ViewModels;
 
 namespace PencilCase.Web.Client.Pages.Notebooks;
 

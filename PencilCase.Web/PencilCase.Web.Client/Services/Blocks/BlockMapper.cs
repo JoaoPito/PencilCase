@@ -2,7 +2,6 @@ using PencilCase.Shared.DTOs.Requests.BlockProperties;
 using PencilCase.Shared.DTOs.Requests.Blocks;
 using PencilCase.Shared.DTOs.Responses.BlockProperties;
 using PencilCase.Shared.DTOs.Responses.Blocks;
-using PencilCase.Web.Client.ViewModels;
 
 namespace PencilCase.Web.Client.Services.Blocks;
 

@@ -1,7 +1,5 @@
-using System.Net.Http.Json;
 using PencilCase.Shared.DTOs.Requests.Blocks;
 using PencilCase.Shared.DTOs.Responses.Blocks;
-using PencilCase.Web.Client.ViewModels;
 
 namespace PencilCase.Web.Client.Services.Blocks;
 

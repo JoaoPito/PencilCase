@@ -1,4 +1,3 @@
-using System.Net.Http.Json;
 using PencilCase.Shared.DTOs.Requests.Llm;
 using PencilCase.Shared.DTOs.Requests.Rag;
 using PencilCase.Shared.Models.LLM.Agents;

@@ -1,5 +1,3 @@
-using PencilCase.Web.Client.ViewModels;
-
 namespace PencilCase.Web.Client.Services.Blocks;
 
 public interface IBlocksApi

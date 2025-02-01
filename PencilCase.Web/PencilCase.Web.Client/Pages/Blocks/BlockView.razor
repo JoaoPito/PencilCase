@@ -1,7 +1,12 @@
 @page "/block/{BlockId}"
+@rendermode InteractiveAuto 
+
 @using PencilCase.Shared.Models.Notebooks
 @using PencilCase.Web.Client.Services.Blocks
 @using PencilCase.Web.Client.ViewModels
+@using PencilCase.Web.Client.Pages.Topics
+@using PencilCase.Web.Client.Pages.Notebooks
+@using PencilCase.Web.Client.Pages.Sources
 @inject IBlocksApi BlocksApi
 @inject NavigationManager NavigationManager
 

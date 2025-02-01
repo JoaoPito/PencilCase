@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Components;
 using PencilCase.Web.Client.Services.Blocks;
-using PencilCase.Web.Client.ViewModels;
 
 namespace PencilCase.Web.Client.Pages.Sources;
 
