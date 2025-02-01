@@ -75,6 +75,7 @@ builder.Services.AddHttpClient("LLMApi-FileParser", client =>
     client.BaseAddress = new Uri(builder.Configuration["LlmApi:BaseUrl"]!);
     client.DefaultRequestHeaders.Accept.Add(
         new MediaTypeWithQualityHeaderValue("application/json"));
+    client.Timeout = TimeSpan.FromHours(2); // THIS IS TEMPORARY
 });
 // Add redis
 var redisUrl = builder.Configuration["ParserBroker:Url"] ?? "localhost:6379";
