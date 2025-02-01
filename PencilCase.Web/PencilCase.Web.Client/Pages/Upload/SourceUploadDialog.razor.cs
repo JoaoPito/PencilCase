@@ -13,6 +13,7 @@ public partial class SourceUploadDialog : ComponentBase
     [Inject] private ISourcesApi SourceApi { get; set; } = null!;
     
     private MudFileUpload<IReadOnlyList<IBrowserFile>>? _fileUpload;
+    const int MaxFileSize = 32 * 1024 * 1024;
     
     private IBrowserFile? _file;
     private string _errorMsg = "";
@@ -60,7 +61,7 @@ public partial class SourceUploadDialog : ComponentBase
     private async Task<string> ConvertFileContentsToBase64(IBrowserFile file)
     {
         using var ms = new MemoryStream();
-        await file.OpenReadStream().CopyToAsync(ms);
+        await file.OpenReadStream(maxAllowedSize: MaxFileSize).CopyToAsync(ms);
         return Convert.ToBase64String(ms.ToArray());
     }
     
