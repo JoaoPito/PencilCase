@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using MudBlazorFix;
 using PencilCase.Shared.Models.Notebooks;
 using PencilCase.Web.Client.Pages.Upload;
 using PencilCase.Web.Client.Services.Blocks;
