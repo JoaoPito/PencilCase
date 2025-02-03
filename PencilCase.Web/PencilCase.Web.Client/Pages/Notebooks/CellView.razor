@@ -1,0 +1,151 @@
+@using MudBlazor.Extensions
+<MudCard Outlined="false" Elevation="4">
+    <MudCardHeader Class="mud-background-gray">
+        <CardHeaderAvatar>
+            <MudStack Justify="Justify.FlexStart">
+                <MudIcon Icon="@Icons.Material.Rounded.QuestionAnswer" Size="Size.Large"></MudIcon>
+            </MudStack>
+        </CardHeaderAvatar>
+        <CardHeaderContent>
+            <MudText>@Block.Properties.Order</MudText>
+            <MudTextField T="string" Class="ma-0" AutoGrow="true" Margin="Margin.Dense"
+                          OnKeyDown="OnKeyDown" @ref="_inputTextField"
+                          DebounceInterval="2500" MaxLength="250" Disabled="@_isLoading"
+                          Typo="Typo.h6" Variant="Variant.Outlined"
+                          ValueChanged="OnInputValueChanged" Value="@Block!.Name">
+            </MudTextField>
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <div class="mt-4 mx-4">
+                @if (_isLoading)
+                {
+                    <MudProgressCircular Color="Color.Secondary" Indeterminate="true" Size="Size.Large"/>
+                }
+                else
+                {
+                    <MudFab StartIcon="@Icons.Material.Rounded.PlayArrow" Size="Size.Large"
+                            Color="Color.Secondary" OnClick="OnSubmitClick">
+                    </MudFab>
+                }
+            </div>
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent>
+        @if (_docsRetrieved.Any() && !_childError)
+        {
+            <MudStack Row="true" AlignItems="AlignItems.Start"
+                      StretchItems="StretchItems.None" Class="overflow-x-scroll ">
+                @foreach (var doc in _docsRetrieved)
+                {
+                    <MudPaper Outlined="true"
+                              Class="pa-4 overflow-hidden "
+                              Style="width: 200px; height: 150px;">
+                        <MudText Typo="Typo.caption">
+                            @($"{string.Join("", doc.Content.Take(100).ToArray())}...")
+                        </MudText>
+                    </MudPaper>
+                }
+            </MudStack>
+        }
+        @if (_shownChild is not null && !_isLoading && !_childError)
+        {
+            <MudPaper Height="150" Outlined="false" Elevation="0" Class="pa-4">
+                <MudText>@_shownChild.Name</MudText>
+            </MudPaper>
+        }
+        else if (_isLoading)
+        {
+            <MudStack Spacing="1" StretchItems="StretchItems.None">
+                <MudSkeleton Width="20%" Animation="Animation.Wave"/>
+                <MudSkeleton Width="100%" Animation="Animation.Wave"/>
+                <MudSkeleton Width="60%" Animation="Animation.Wave"/>
+            </MudStack>
+            <MudText Typo="Typo.h6" Align="Align.Center">@_cellMsg</MudText>
+        }
+        else if (_childError)
+        {
+            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center">
+                <MudIcon Size="Size.Medium" Icon="@Icons.Material.Rounded.Warning" Color="Color.Warning"></MudIcon>
+                <MudText Color="Color.Warning">An error has occured. Try reloading this cell in a couple of minutes.</MudText>
+            </MudStack>
+        }
+    </MudCardContent>
+    <MudCardActions>
+        <MudIconButton Icon="@Icons.Material.Rounded.ArrowBack"
+                       Disabled="@(_shownChild == _loadedChildren.FirstOrDefault() || _isLoading)"
+                       OnClick="OnArrowLeftClick">
+
+        </MudIconButton>
+        <MudIconButton Icon="@Icons.Material.Rounded.ArrowForward"
+                       Disabled="@(_shownChild == _loadedChildren.LastOrDefault() || _isLoading)"
+                       OnClick="OnArrowRightClick">
+
+        </MudIconButton>
+        <MudIconButton Icon="@Icons.Material.Rounded.Delete" Color="Color.Error"
+                       Disabled="@_isLoading" OnClick="OnDeleteClick">
+
+        </MudIconButton>
+    </MudCardActions>
+</MudCard>
+
+@code {
+    async Task OnInputValueChanged(string newValue)
+    {
+        if (Block is not null)
+        {
+            Block.Name = newValue.Trim();
+            await UpdateChangesTo(Block);
+        }
+    }
+
+    async Task OnKeyDown(KeyboardEventArgs args)
+    {
+        if (args.CtrlKey && args.Key=="Enter")
+        {
+            await _inputTextField.BlurAsync();
+            await TrySearchAndGenerateAnswers();
+        }
+
+        if (args.ShiftKey && args.Key == "Enter")
+        {
+            Console.WriteLine("Creating new cell");
+            await OnNewCellShortcut.As<EventCallback>().InvokeAsync();
+        }
+    }
+
+    async Task OnSubmitClick()
+    {
+        await _inputTextField.BlurAsync();
+        _isLoading = true;
+        StateHasChanged();
+        await SubmitCell();
+        _isLoading = false;
+        StateHasChanged();
+    }
+
+    async Task OnArrowLeftClick()
+    {
+        if (_shownChild is not null)
+        {
+            var nextChild = _loadedChildren
+                .LastOrDefault(c => c.Properties.CreatedOn < _shownChild.Properties.CreatedOn);
+            await SwapShownChildAndUpdate(nextChild);
+        }
+    }
+
+    async Task OnArrowRightClick()
+    {
+        if (_shownChild is not null)
+        {
+            var nextChild = _loadedChildren
+                .FirstOrDefault(c => c.Properties.CreatedOn > _shownChild.Properties.CreatedOn);
+            await SwapShownChildAndUpdate(nextChild);
+        }
+
+    }
+
+    void OnDeleteClick()
+    {
+
+    }
+}

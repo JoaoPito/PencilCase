@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MudBlazor" Version="8.1.0" />
+        <ProjectReference Include="..\PencilCase.Web.Client\PencilCase.Web.Client.csproj"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.10"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Components\Pages\Footer\Copyright.razor" />
+      <UpToDateCheckInput Remove="Components\Pages\Footer\Footer.razor" />
+      <UpToDateCheckInput Remove="Components\Pages\Footer\Links.razor" />
+      <UpToDateCheckInput Remove="Components\Pages\Footer\SocialMediaIcons.razor" />
+    </ItemGroup>
+
+</Project>

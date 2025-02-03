@@ -1,0 +1,18 @@
+@using PencilCase.Web.Components.Layout
+@using PencilCase.Web.Components.Layout.Footer
+
+<MudDivider />
+<div class="px-8 py-4">
+    <MudStack Row="true" 
+              Justify="Justify.SpaceAround" 
+              AlignItems="AlignItems.Start" 
+              Spacing="8">
+        <MudStack StretchItems="StretchItems.All" Spacing="0" Class="pa-4">
+            <Logo/>
+            <SocialMediaIcons/>
+            </MudStack>
+        <AboutUs />
+        <Contacts />
+        <Copyright />
+    </MudStack>
+</div>

@@ -1,0 +1,27 @@
+@using MudBlazor
+@using PencilCase.Shared.Models.Notebooks
+@using PencilCase.Web.Client.ViewModels
+
+@if (Block is not null)
+{
+    @switch (Block.Type)
+    {
+        case BlockType.Notebook:
+            <MudIcon Icon="@Icons.Material.Rounded.InsertDriveFile" Size="Size"></MudIcon>
+            break;
+        case BlockType.Cell:
+            <MudIcon Icon="@Icons.Material.Rounded.TextSnippet" Size="Size"></MudIcon>
+            break;
+        case BlockType.Source:
+            <MudIcon Icon="@Icons.Material.Rounded.Book" Size = "Size"></MudIcon>
+            break;
+        default:
+            <MudIcon Icon="@Icons.Material.Rounded.Folder" Size="Size"></MudIcon>
+            break;
+    }
+}
+
+@code {
+    [Parameter] public BlockViewModel? Block { get; set; } = null;
+    [Parameter] public MudBlazor.Size Size { get; set; }
+}

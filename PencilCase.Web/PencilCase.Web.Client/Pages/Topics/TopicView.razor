@@ -1,0 +1,144 @@
+@using PencilCase.Web.Client.ViewModels
+@using PencilCase.Web.Client.Pages.Blocks
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<style>
+    .selected {
+        background-color: var(--mud-palette-primary, #1E88E5) !important;
+    }
+    .selected > td {
+        color: white !important;
+    }
+    .selected > td .mud-input {
+        color: white !important;
+    }
+</style>
+
+@if (Block is not null)
+{
+    <!-- Table -->
+    <MudTable Items="@_blockChildren" Hover="true" T="BlockViewModel" @ref="_blocksTable" Loading="@_isLoading"
+              OnRowClick="RowClickEvent" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc"
+              SortLabel="Sort By" AllowUnsorted="false"
+              EditTrigger="TableEditTrigger.EditButton"
+              ApplyButtonPosition="TableApplyButtonPosition.End" EditButtonPosition="TableEditButtonPosition.End"
+              CanCancelEdit="true" RowEditPreview="BackupItemBeforeEditing"
+              RowEditCancel="ResetRowToOriginalValues" RowEditCommit="OnRowEditCommit"
+              Elevation="0" LoadingProgressColor="Color.Secondary">
+
+        <ColGroup>
+            <col style="width: 60px;" />
+            <col style="width: 60%;" />
+            <col style="width: 10%;" />
+            <col style="width: 10%;" />
+        </ColGroup>
+
+        <HeaderContent>
+            <MudTh> </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortBy="new Func<BlockViewModel, object>(x => x.Name)"
+                                   T="BlockViewModel">
+                    Name
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortBy="new Func<BlockViewModel, object>(x => x.Type)"
+                                   T="BlockViewModel">
+                    Type
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortBy="new Func<BlockViewModel, object>(x => x.Properties.LastModified)"
+                                   T="BlockViewModel"
+                                   InitialDirection="SortDirection.Descending">
+                    Date
+                </MudTableSortLabel>
+            </MudTh>
+        </HeaderContent>
+
+        <RowTemplate>
+            <MudTd DataLabel=" " Style="text-align:center">
+                <BlockIcon Block="context" Size="Size.Medium"/>
+            </MudTd>
+            <MudTd DataLabel="Name">
+                <MudText Typo="Typo.h6">
+                    <b>@context.Name</b>
+                </MudText>
+                <MudText Typo="Typo.subtitle2">@(context.ChildrenIds.Count()) item(s)</MudText>
+            </MudTd>
+            <MudTd DataLabel="Type">
+                <MudText Typo="Typo.body2">@context.Type</MudText>
+            </MudTd>
+            <MudTd DataLabel="Date">
+                <MudText Typo="Typo.body2">@context.Properties.LastModified.ToLocalTime()</MudText>
+            </MudTd>
+        </RowTemplate>
+
+        <RowEditingTemplate>
+            <MudTd DataLabel=" " Style="text-align:center">
+                <BlockIcon Block="context" Size="Size.Medium"/>
+            </MudTd>
+            <MudTd DataLabel="Name">
+                <MudTextField @bind-Value="context.Name" Required MaxLength="50"></MudTextField>
+            </MudTd>
+            <MudTd DataLabel="Type">
+                <MudText Typo="Typo.body2">@context.Type</MudText>
+            </MudTd>
+            <MudTd DataLabel="Date">
+                <MudText Typo="Typo.body2">@context.Properties.LastModified.ToLocalTime()</MudText>
+            </MudTd>
+        </RowEditingTemplate>
+
+        <EditButtonContent Context="button">
+            <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Rounded.Edit"
+                           Class="pa-1" OnClick="@button.ButtonAction" Disabled="@(button.ButtonDisabled || _isLoading)"/>
+            <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Rounded.Delete" Color="Color.Error"
+                           Class="pa-1" OnClick="@(() => OnDeleteClicked(button))" Disabled="@(button.ButtonDisabled || _isLoading)"/>
+        </EditButtonContent>
+
+        <NoRecordsContent>
+            <MudStack>
+                <MudText Typo="Typo.h3" Class="pt-10">It's empty here...</MudText>
+                <MudText Typo="Typo.h6">You can add a knowledge source or a new notebook and start exploring!</MudText>
+                <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center" Spacing="6" Class="ma-4 pb-10">
+                    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Rounded.CloudUpload" OnClick="OnAddSourceClicked">
+                        Upload a source
+                    </MudButton>
+                    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Rounded.NoteAdd" OnClick="OnAddNotebookClicked">
+                        Add a notebook
+                    </MudButton>
+                </MudStack>
+            </MudStack>
+        </NoRecordsContent>
+
+    </MudTable>
+
+    <!-- Floating button -->
+    <div class="floating-button">
+        <MudMenu>
+            <ActivatorContent>
+                <MudFab Color="Color.Secondary" Size="Size.Large"
+                        StartIcon="@Icons.Material.Rounded.Add" Class="floating-button"/>
+            </ActivatorContent>
+            <ChildContent>
+                <MudMenuItem OnClick="OnAddTopicClicked"
+                             Icon="@Icons.Material.Rounded.CreateNewFolder" IconSize="Size.Medium">
+                    Add new <b>Topic</b>
+                </MudMenuItem>
+                <MudMenuItem OnClick="OnAddNotebookClicked"
+                             Icon="@Icons.Material.Rounded.NoteAdd" IconSize="Size.Medium">
+                    Add new <b>Notebook</b>
+                </MudMenuItem>
+                <MudMenuItem OnClick="OnAddSourceClicked"
+                             Icon="@Icons.Material.Rounded.CloudUpload" IconSize="Size.Medium">
+                    Upload <b>Source</b>
+                </MudMenuItem>
+            </ChildContent>
+        </MudMenu>
+    </div>
+}
+else
+{
+    <MudProgressCircular Color="Color.Secondary" Indeterminate="true"/>
+}
