@@ -6,5 +6,6 @@ public record class BlockPropertiesResponse(
     int Order, 
     DateTime CreatedOn, 
     DateTime LastModified,
-    CellType CellType
+    CellType CellType,
+    Guid? CellShownAnswerId
     );

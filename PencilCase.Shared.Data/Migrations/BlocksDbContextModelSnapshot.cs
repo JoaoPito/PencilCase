@@ -17,7 +17,7 @@ namespace PencilCase.Shared.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -51,6 +51,9 @@ namespace PencilCase.Shared.Data.Migrations
             modelBuilder.Entity("PencilCase.Shared.Models.Notebooks.BlockProperties", b =>
                 {
                     b.Property<Guid>("ParentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CellShownAnswerId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("CellType")

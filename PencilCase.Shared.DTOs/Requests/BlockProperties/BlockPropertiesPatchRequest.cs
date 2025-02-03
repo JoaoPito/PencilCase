@@ -6,5 +6,6 @@ public record class BlockPropertiesPatchRequest
 (
     int? Order,
     DateTime? LastModified,
-    CellType? CellType
+    CellType? CellType,
+    Guid? CellShownAnswerId
 );

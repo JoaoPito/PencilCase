@@ -1,0 +1,74 @@
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h3">Upload a knowledge source</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudStack>
+            <!-- Upload zone -->
+            <MudFileUpload T="IReadOnlyList<IBrowserFile>"
+                           @ref="@_fileUpload"
+                           OnFilesChanged="OnInputFileChanged"
+                           Disabled="@_processing"
+                           @ondrop="@ClearDragClass"
+                           @ondragenter="@SetDragClass"
+                           @ondragleave="@ClearDragClass"
+                           @ondragend="@ClearDragClass">
+                <ActivatorContent>
+                    <MudPaper Height="300px"
+                              Outlined="true"
+                              Class="@_dragClass">
+
+                        @if (_file != null)
+                        {
+                            <SelectedFileInfo File="@_file"/>
+                        }
+                        else
+                        {
+                            <MudText Typo="Typo.h6" Align="Align.Center">
+                                Drop files here
+                            </MudText>
+                        }
+                    </MudPaper>
+                </ActivatorContent>
+            </MudFileUpload>
+            @if (_file != null && !_showError)
+            {
+                <MudText Typo="Typo.body1"><b>@_errorMsg</b></MudText>
+            }
+        </MudStack>
+
+        <!-- Upload status -->
+        @if (_processing)
+        {
+            <MudText>@_processingMsg</MudText>
+        }
+    </DialogContent>
+    <DialogActions>
+        <!-- Cancel/Upload buttons -->
+        <MudButton OnClick="OpenFilePickerAsync" Disabled="@_processing">Pick File</MudButton>
+        <UploadButton Processing="@_processing" OnClick="OnUploadClicked" />
+    </DialogActions>
+</MudDialog>
+@code {
+    private const string DefaultDragClass = "relative rounded-lg border-2 border-dashed " +
+                                            "pa-4 mt-4 mud-width-full mud-height-full";
+    private string _dragClass = DefaultDragClass;
+
+    private async Task OnClearClicked() => await ClearAsync();
+    private async Task OnUploadClicked(MouseEventArgs args) => await UploadFileAsync();
+
+    private Task OpenFilePickerAsync()
+        => _fileUpload?.OpenFilePickerAsync() ?? Task.CompletedTask;
+
+    private void OnInputFileChanged(InputFileChangeEventArgs e)
+    {
+        ClearDragClass();
+        _file = e.File;
+    }
+
+    private void SetDragClass()
+        => _dragClass = $"{DefaultDragClass} mud-border-primary";
+
+    private void ClearDragClass()
+        => _dragClass = DefaultDragClass;
+}

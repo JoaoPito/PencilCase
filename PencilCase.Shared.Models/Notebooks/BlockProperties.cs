@@ -10,4 +10,5 @@ public class BlockProperties
     public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
     public DateTime LastModified { get; set; } = DateTime.UtcNow;
     public CellType CellType { get; set; } = CellType.Text;
+    public Guid? CellShownAnswerId { get; set; }
 }
