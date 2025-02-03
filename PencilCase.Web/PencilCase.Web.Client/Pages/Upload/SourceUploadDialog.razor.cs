@@ -13,7 +13,7 @@ public partial class SourceUploadDialog : ComponentBase
     [Inject] private ISourcesApi SourceApi { get; set; } = null!;
     
     private MudFileUpload<IReadOnlyList<IBrowserFile>>? _fileUpload;
-    const int MaxFileSize = 32 * 1024 * 1024;
+    const int MaxFileSize = 7 * 1024 * 1024;
     
     private IBrowserFile? _file;
     private string _errorMsg = "";
@@ -27,13 +27,27 @@ public partial class SourceUploadDialog : ComponentBase
     private async Task UploadFileAsync()
     {
         _processing = true;
+        _showError = false;
+        _errorMsg = "";
         StateHasChanged();
 
         if(_file == null)
             throw new ArgumentNullException($"Selected file is null");
         
         // Start upload job
-        var request = await ConvertFileToUploadRequest(_file);
+        UploadSourceRequest? request = null;
+        try
+        {
+            request = await ConvertFileToUploadRequest(_file);
+        }
+        catch (ArgumentException ex)
+        {
+            ShowFileError(ex.Message);
+            _processing = false;
+            StateHasChanged();
+            return;
+        }
+        
         var jobId = await SourceApi.StartUpload(request);
 
         JobStatusResponse jobStatus;
@@ -61,7 +75,14 @@ public partial class SourceUploadDialog : ComponentBase
     private async Task<string> ConvertFileContentsToBase64(IBrowserFile file)
     {
         using var ms = new MemoryStream();
-        await file.OpenReadStream(maxAllowedSize: MaxFileSize).CopyToAsync(ms);
+        try
+        {
+            await file.OpenReadStream(maxAllowedSize: MaxFileSize).CopyToAsync(ms);
+        }
+        catch (IOException ex)
+        {
+            throw new ArgumentException($"File cannot be larger than {MaxFileSize / 1024 / 1024}Mb.");
+        }
         return Convert.ToBase64String(ms.ToArray());
     }
     
@@ -72,5 +93,12 @@ public partial class SourceUploadDialog : ComponentBase
         _showError = false;
         _errorMsg = "";
         ClearDragClass();
+    }
+
+    private void ShowFileError(string msg)
+    {
+        _errorMsg = msg;
+        _showError = true;
+        StateHasChanged();
     }
 }

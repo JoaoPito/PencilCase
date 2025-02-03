@@ -31,7 +31,7 @@
                     </MudPaper>
                 </ActivatorContent>
             </MudFileUpload>
-            @if (_file != null && !_showError)
+            @if (_file != null && _showError)
             {
                 <MudText Typo="Typo.body1"><b>@_errorMsg</b></MudText>
             }

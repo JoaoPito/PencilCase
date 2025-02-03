@@ -1,0 +1,54 @@
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "12345678"
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  parsing:
+    build:
+      context: ./parsing-service
+      dockerfile: Dockerfile
+    ports:
+      - "8003:8003"
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+
+  api:
+    build:
+      context: .
+      dockerfile: ./PencilCase.API/Dockerfile
+    ports:
+      - "5147:5147"
+      - "7106:7106"
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+
+  web:
+    build:
+      context: .
+      dockerfile: ./PencilCase.Web/PencilCase.Web/Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    restart: unless-stopped
+    depends_on:
+      - api
+
+networks:
+  default:
+    name: my-network
+

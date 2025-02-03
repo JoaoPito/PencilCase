@@ -7,7 +7,11 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+
 COPY ["PencilCase.Web/PencilCase.Web.Client/PencilCase.Web.Client.csproj", "PencilCase.Web/PencilCase.Web.Client/"]
+COPY ["PencilCase.Shared.DTOs/PencilCase.Shared.DTOs.csproj", "PencilCase.Shared.DTOs/"]
+COPY ["PencilCase.Shared.Models/PencilCase.Shared.Models.csproj", "PencilCase.Shared.Models/"]
+
 RUN dotnet restore "PencilCase.Web/PencilCase.Web.Client/PencilCase.Web.Client.csproj"
 COPY . .
 WORKDIR "/src/PencilCase.Web/PencilCase.Web.Client"
