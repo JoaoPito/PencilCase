@@ -25,4 +25,4 @@ RUN dotnet publish -c $BUILD_CONFIGURATION -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "apidemo.dll"]
+ENTRYPOINT ["dotnet", "PencilCase.API.dll"]
