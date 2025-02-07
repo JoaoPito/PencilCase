@@ -68,6 +68,7 @@ public class ParserConsumerService(
     {
         // Update Job Status
         job.Status = ParserJob.JobStatus.Processing;
+        job.StatusMsg = "Reading and studying hard. \ud83e\udd14\n";
         await UpdateJob(job);
         
         logger.LogInformation($"Processing job {job.Id}");
@@ -78,6 +79,10 @@ public class ParserConsumerService(
         // Send document to Parser API
         // Wait for chunks
         var chunks = await TrySendFileToParserOrFailJob(job);
+        
+        job.StatusMsg = "Memorizing... \ud83e\udd13\n";
+        await UpdateJob(job);
+        
         logger.LogInformation($"Got {chunks.Count} chunks for job {job.Id}. Persisting them.");
         for (var i = 0; i < chunks.Count; i++)
         {
@@ -101,6 +106,7 @@ public class ParserConsumerService(
         // Update Job Status
         job.Status = ParserJob.JobStatus.Completed;
         job.SourceBlock = docBlock;
+        job.StatusMsg = "Finished! \ud83d\ude03\n";
         await UpdateJob(job);
     }
 
