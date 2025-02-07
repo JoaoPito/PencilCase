@@ -27,6 +27,10 @@ public class ParserConsumerService(
 
     private readonly IServiceProvider _serviceProvider = serviceProvider;
     
+    private const string ParsingDocumentStatusMsg = "Studying hard... \ud83e\udd14\n";
+    private const string StoringDocumentStatusMsg = "Memorizing... \ud83e\udd13\n";
+    private const string JobCompletedStatusMsg = "Finished! \ud83d\ude03\n";
+    
     public override Task StartAsync(CancellationToken cancellationToken)
     {
         logger.LogInformation("Starting Worker");
@@ -68,7 +72,7 @@ public class ParserConsumerService(
     {
         // Update Job Status
         job.Status = ParserJob.JobStatus.Processing;
-        job.StatusMsg = "Reading and studying hard. \ud83e\udd14\n";
+        job.StatusMsg = ParsingDocumentStatusMsg;
         await UpdateJob(job);
         
         logger.LogInformation($"Processing job {job.Id}");
@@ -80,7 +84,7 @@ public class ParserConsumerService(
         // Wait for chunks
         var chunks = await TrySendFileToParserOrFailJob(job);
         
-        job.StatusMsg = "Memorizing... \ud83e\udd13\n";
+        job.StatusMsg = StoringDocumentStatusMsg;
         await UpdateJob(job);
         
         logger.LogInformation($"Got {chunks.Count} chunks for job {job.Id}. Persisting them.");
@@ -106,7 +110,7 @@ public class ParserConsumerService(
         // Update Job Status
         job.Status = ParserJob.JobStatus.Completed;
         job.SourceBlock = docBlock;
-        job.StatusMsg = "Finished! \ud83d\ude03\n";
+        job.StatusMsg = JobCompletedStatusMsg;
         await UpdateJob(job);
     }
 
