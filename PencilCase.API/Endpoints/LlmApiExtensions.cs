@@ -20,7 +20,8 @@ public static class LlmApiExtensions
 
         var llmGroup = app.MapGroup("api/v{version:apiVersion}/llm")
             .WithApiVersionSet(apiVersionSet)
-            .WithTags("LLM");
+            .WithTags("LLM")
+            .RequireAuthorization();
         
         var agentGroup = llmGroup.MapGroup("agent")
             .WithTags(["LLM", "Agent"]);

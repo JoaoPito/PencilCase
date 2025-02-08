@@ -21,7 +21,8 @@ public static class BlocksExtensions
 
         var group = app.MapGroup("api/v{version:apiVersion}/blocks")
                     .WithApiVersionSet(apiVersionSet)
-                    .WithTags("Blocks");
+                    .WithTags("Blocks")
+                    .RequireAuthorization();
 
         group.MapGet("{id}", (Guid id, [FromServices] IBlocksDal dal) =>
         {

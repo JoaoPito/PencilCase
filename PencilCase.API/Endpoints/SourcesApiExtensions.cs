@@ -26,7 +26,8 @@ public static class SourcesApiExtensions
 
         var sourcesGroup = app.MapGroup("/api/v{version:apiVersion}/sources")
             .WithApiVersionSet(apiVersionSet)
-            .WithTags(["Sources", "RAG"]);
+            .WithTags(["Sources", "RAG"])
+            .RequireAuthorization();
         
         sourcesGroup.MapPost("", async (
             [FromServices] IConfiguration configuration,
