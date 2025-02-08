@@ -50,14 +50,15 @@ builder.Services.AddDbContext<BlocksDbContext>(options => {
 // Identity
 var identityDbConnectionString = builder.Configuration.GetConnectionString("UsersDatabase");
 
-builder.Services.AddDbContext<AppUserDbContext>(options => {
-    options.UseNpgsql(identityDbConnectionString)
-        .UseLazyLoadingProxies();
+builder.Services.AddDbContext<AppUserDbContext>(options =>
+{
+    options.UseNpgsql(identityDbConnectionString);
 });
 
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication();
-builder.Services.AddIdentityApiEndpoints<AppUser>()
+builder.Services
+    .AddIdentityApiEndpoints<AppUser>()
     .AddEntityFrameworkStores<AppUserDbContext>();
 
 builder.Services.AddScoped<ILlmApiEndpointsHandler, LlmApiEndpointsHandler>();

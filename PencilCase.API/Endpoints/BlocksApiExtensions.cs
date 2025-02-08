@@ -27,7 +27,7 @@ public static class BlocksExtensions
 
         group.MapGet("{id}", (Guid id, 
                 [FromServices] IBlocksDal dal,
-                [FromServices] ClaimsPrincipal claims) =>
+                ClaimsPrincipal claims) =>
         {
             var block = dal.GetBy(f => f.Id == id);
             if (block is null){
