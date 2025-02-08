@@ -17,5 +17,5 @@ public class ParserJob
     public string? StatusMsg { get; set; }
     public ParserFile File { get; set; } = new();
     public Guid ParentBlockId { get; set; }
-    public Block? SourceBlock { get; set; }
+    public Guid? DocumentBlockId { get; set; }
 }

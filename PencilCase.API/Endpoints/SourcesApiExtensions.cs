@@ -82,7 +82,7 @@ public static class SourcesApiExtensions
         {
             StatusCode = job.Status,
             StatusMsg = job.StatusMsg,
-            SourceBlock = job.SourceBlock,
+            DocumentBlockId = job.DocumentBlockId,
         };
     }
 

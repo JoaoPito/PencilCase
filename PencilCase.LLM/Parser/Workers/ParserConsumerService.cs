@@ -109,7 +109,7 @@ public class ParserConsumerService(
         
         // Update Job Status
         job.Status = ParserJob.JobStatus.Completed;
-        job.SourceBlock = docBlock;
+        job.DocumentBlockId = docBlock.Id;
         job.StatusMsg = JobCompletedStatusMsg;
         await UpdateJob(job);
     }
@@ -177,7 +177,7 @@ public class ParserConsumerService(
     {
         var db = redis.GetDatabase();
         await db.StringSetAsync($"{_jobChannel}:{job.Id}", 
-            JsonSerializer.Serialize(job));
+            JsonSerializer.Serialize(job, new JsonSerializerOptions() {  }));
     }
 
     async Task StoreChunkInVectorDb(Guid id, string chunk, Guid parentBlock)
