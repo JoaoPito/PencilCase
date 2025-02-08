@@ -5,6 +5,7 @@ namespace PencilCase.Shared.Models.Notebooks;
 public record Block
 {
     public Guid Id { get; set; } = new Guid();
+    public Guid OwnerId { get; set; } = Guid.Empty;
     public BlockType Type { get; set; } = BlockType.Topic;
     public string Name { get; set; } = String.Empty;
     public virtual BlockProperties? Properties { get; set; }
@@ -16,6 +17,7 @@ public record Block
     public virtual bool Equals(Block? other)
     {
         return other != null &&
+               OwnerId == other.OwnerId &&
                Id == other.Id &&
                Name == other.Name &&
                ParentId == other.ParentId &&
