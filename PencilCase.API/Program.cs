@@ -3,6 +3,8 @@ using Asp.Versioning;
 using Microsoft.EntityFrameworkCore;
 using PencilCase.API.Endpoints;
 using PencilCase.API.Handlers;
+using PencilCase.Identity.Data;
+using PencilCase.Identity.Models;
 using PencilCase.Shared.Data.Database;
 using PencilCase.LLM.Agents.Providers;
 using PencilCase.LLM.Agents.Providers.Gemini;
@@ -44,6 +46,12 @@ builder.Services.AddDbContext<BlocksDbContext>(options => {
     options.UseNpgsql(blocksDbConnectionString)
         .UseLazyLoadingProxies();
 });
+
+// Identity
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication();
+builder.Services.AddIdentityApiEndpoints<AppUser>()
+    .AddEntityFrameworkStores<AppUserDbContext>();
 
 builder.Services.AddScoped<ILlmApiEndpointsHandler, LlmApiEndpointsHandler>();
 
@@ -121,5 +129,7 @@ app.AddLlmApiEndpoints();
 
 // RAG file parser endpoints
 app.AddV1SourceEndpoints();
+
+app.MapIdentityApi<AppUser>();
 
 app.Run();
