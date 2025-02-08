@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PencilCase.Web", "PencilCas
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PencilCase.Web.Client", "PencilCase.Web\PencilCase.Web.Client\PencilCase.Web.Client.csproj", "{F88755FC-88D1-40D7-9CE0-73403C6EEB68}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PencilCase.Identity", "PencilCase.Identity\PencilCase.Identity.csproj", "{97D7FDBB-F03E-4C20-BB6E-96F2E2851647}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{F88755FC-88D1-40D7-9CE0-73403C6EEB68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F88755FC-88D1-40D7-9CE0-73403C6EEB68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F88755FC-88D1-40D7-9CE0-73403C6EEB68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97D7FDBB-F03E-4C20-BB6E-96F2E2851647}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97D7FDBB-F03E-4C20-BB6E-96F2E2851647}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97D7FDBB-F03E-4C20-BB6E-96F2E2851647}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97D7FDBB-F03E-4C20-BB6E-96F2E2851647}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
