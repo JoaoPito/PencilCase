@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Asp.Versioning;
 using Asp.Versioning.Builder;
 using Microsoft.AspNetCore.Mvc;
@@ -24,13 +25,20 @@ public static class BlocksExtensions
                     .WithTags("Blocks")
                     .RequireAuthorization();
 
-        group.MapGet("{id}", (Guid id, [FromServices] IBlocksDal dal) =>
+        group.MapGet("{id}", (Guid id, 
+                [FromServices] IBlocksDal dal,
+                [FromServices] ClaimsPrincipal claims) =>
         {
             var block = dal.GetBy(f => f.Id == id);
             if (block is null){
                 return Results.NotFound();
             }
-            return Results.Ok(MapEntityToResponse(block));
+
+            if (ValidateOwner(block, claims))
+            {
+                return Results.Ok(MapEntityToResponse(block));
+            }
+            return Results.Unauthorized();
         })
         .WithName("GetById")
         .WithOpenApi(x => new OpenApiOperation(x)
@@ -224,5 +232,12 @@ public static class BlocksExtensions
         if (parentId != null && parent == null)
             throw new InvalidOperationException("Parent block does not exist!");
         return parent;
+    }
+
+    static bool ValidateOwner(Block block, ClaimsPrincipal claims)
+    {
+        var userId = claims.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+        var blockOwnerId = block.OwnerId.ToString();
+        return (blockOwnerId != string.Empty && blockOwnerId.Equals(block.Id.ToString()));
     }
 }
