@@ -137,6 +137,6 @@ app.AddLlmApiEndpoints();
 // RAG file parser endpoints
 app.AddV1SourceEndpoints();
 
-app.MapIdentityApi<AppUser>();
+app.AddV1IdentityApiEndpoints();
 
 app.Run();
