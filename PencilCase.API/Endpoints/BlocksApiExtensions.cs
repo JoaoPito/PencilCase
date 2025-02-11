@@ -48,13 +48,21 @@ public static class BlocksExtensions
             Description = "Returns information about selected block using its ID."
         });
 
-        group.MapGet("{id}/children", (Guid id, [FromServices] IBlocksDal dal) =>
+        group.MapGet("{id}/children", (
+                Guid id, 
+                ClaimsPrincipal claims,
+                [FromServices] IBlocksDal dal) =>
             {
                 var parent = dal.GetBy(f => f.Id == id);
                 if (parent is null) return Results.NotFound();
-                
-                var childList = parent.Children.ToList();
-                return Results.Ok(MapEntityListToResponseList(childList));
+
+                if (ValidateOwner(parent, claims))
+                {
+                    var childList = parent.Children.ToList();
+                    return Results.Ok(MapEntityListToResponseList(childList));
+                }
+
+                return Results.Unauthorized();
             })
         .WithName("GetAllChildren")
         .WithOpenApi(x => new OpenApiOperation(x)
@@ -65,7 +73,7 @@ public static class BlocksExtensions
 
         group.MapPost("", async (
                 [FromServices] IBlocksDal dal,
-                [FromServices] ClaimsPrincipal claims,
+                ClaimsPrincipal claims,
                 [FromBody] BlockPostRequest request) => 
         {
             var parent = GetParent(request.ParentId, dal);
