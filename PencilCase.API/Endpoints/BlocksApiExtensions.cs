@@ -71,9 +71,11 @@ public static class BlocksExtensions
             if (ValidateOwner(parent, claims))
             {
                 var newBlock = new Block();
+                var userIdClaim = claims.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
                 try
                 {
                     newBlock = MapRequestToEntity(request, dal, parent);
+                    newBlock.OwnerId = Guid.Parse(userIdClaim);
                 }
                 catch(InvalidOperationException exc)
                 {
