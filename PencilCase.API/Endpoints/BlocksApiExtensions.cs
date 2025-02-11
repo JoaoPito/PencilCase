@@ -249,6 +249,6 @@ public static class BlocksExtensions
     {
         var userId = claims.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
         var blockOwnerId = block.OwnerId.ToString();
-        return (blockOwnerId != string.Empty && blockOwnerId.Equals(block.Id.ToString()));
+        return (blockOwnerId != string.Empty && blockOwnerId.Equals(userId));
     }
 }
