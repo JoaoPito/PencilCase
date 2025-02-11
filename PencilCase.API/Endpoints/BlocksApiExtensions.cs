@@ -73,7 +73,7 @@ public static class BlocksExtensions
                 var newBlock = new Block();
                 try
                 {
-                    newBlock = MapRequestToEntity(request, dal);
+                    newBlock = MapRequestToEntity(request, dal, parent);
                 }
                 catch(InvalidOperationException exc)
                 {
@@ -211,7 +211,7 @@ public static class BlocksExtensions
         );
     }
 
-    static Block MapRequestToEntity(BlockPostRequest request, IBlocksDal dal)
+    static Block MapRequestToEntity(BlockPostRequest request, IBlocksDal dal, Block parent)
     {
         var block = new Block();
 
@@ -222,8 +222,6 @@ public static class BlocksExtensions
             CellType = request.Properties.CellType,
             CellShownAnswerId = request.Properties.CellShownAnswerId
         };
-
-        var parent = GetParent(request.ParentId, dal);
 
         block.Type = request.Type;
         block.Name = request.Name;
