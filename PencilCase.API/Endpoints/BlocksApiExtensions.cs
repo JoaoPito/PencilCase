@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 using Asp.Versioning;
 using Asp.Versioning.Builder;
@@ -59,20 +60,30 @@ public static class BlocksExtensions
             Description = "Given the parent's Id, returns information about every children of it."
         });
 
-        group.MapPost("", async ([FromServices] IBlocksDal dal, [FromBody] BlockPostRequest request) => 
+        group.MapPost("", async (
+                [FromServices] IBlocksDal dal,
+                [FromServices] ClaimsPrincipal claims,
+                [FromBody] BlockPostRequest request) => 
         {
-            var newBlock = new Block();
-            try
+            var parent = GetParent(request.ParentId, dal);
+            if (parent == null) return Results.BadRequest();
+            
+            if (ValidateOwner(parent, claims))
             {
-                newBlock = MapRequestToEntity(request, dal);
-            }
-            catch(InvalidOperationException exc)
-            {
-                return Results.BadRequest(new { message = exc.Message });
-            }
+                var newBlock = new Block();
+                try
+                {
+                    newBlock = MapRequestToEntity(request, dal);
+                }
+                catch(InvalidOperationException exc)
+                {
+                    return Results.BadRequest(new { message = exc.Message });
+                }
 
-            await dal.Add(newBlock);
-            return Results.CreatedAtRoute("GetById", new { id = newBlock.Id }, MapEntityToResponse(newBlock));
+                await dal.Add(newBlock);
+                return Results.CreatedAtRoute("GetById", new { id = newBlock.Id }, MapEntityToResponse(newBlock));
+            }
+            return Results.Unauthorized();
         })
         .WithName("CreateNew")
         .WithOpenApi(x => new OpenApiOperation(x)
