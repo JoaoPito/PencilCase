@@ -50,8 +50,11 @@ public static class BlocksExtensions
 
         group.MapGet("{id}/children", (Guid id, [FromServices] IBlocksDal dal) =>
             {
-                var blockList = dal.GetAllBy(b => b.ParentId == id).ToList();
-                return Results.Ok(MapEntityListToResponseList(blockList));
+                var parent = dal.GetBy(f => f.Id == id);
+                if (parent is null) return Results.NotFound();
+                
+                var childList = parent.Children.ToList();
+                return Results.Ok(MapEntityListToResponseList(childList));
             })
         .WithName("GetAllChildren")
         .WithOpenApi(x => new OpenApiOperation(x)
