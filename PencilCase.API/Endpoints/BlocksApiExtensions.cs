@@ -158,39 +158,48 @@ public static class BlocksExtensions
             Description = "Updates block contents and properties, as well as changes the parent/child relationships."
         });
 
-        group.MapPatch("{id}", async (Guid id, [FromServices] IBlocksDal dal, [FromBody] BlockPatchRequest request) => 
+        group.MapPatch("{id}", async (
+            Guid id, 
+            ClaimsPrincipal claims,
+            [FromServices] IBlocksDal dal, 
+            [FromBody] BlockPatchRequest request) => 
         {
             var block = dal.GetBy(b => b.Id == id);
             if(block == null)
                 return Results.NotFound();
 
-            var properties = block.Properties ?? new BlockProperties();
-            if(request.Properties != null)
+            if (ValidateOwner(block, claims))
             {
-                properties.Order = request.Properties.Order ?? properties.Order;
-                properties.CellType = request.Properties.CellType ?? properties.CellType;
-            }
-            properties.LastModified = DateTime.UtcNow;
-            block.Properties = properties;
-
-            block.Name = request.Name ?? block.Name;
-            block.Type = request.Type ?? block.Type;
-            if(request.ParentId != null)
-            {
-                try
+                var properties = block.Properties ?? new BlockProperties();
+                if(request.Properties != null)
                 {
-                    block.Parent = GetParent(request.ParentId, dal);
+                    properties.Order = request.Properties.Order ?? properties.Order;
+                    properties.CellType = request.Properties.CellType ?? properties.CellType;
                 }
-                catch(InvalidOperationException exc)
-                {
-                    return Results.BadRequest(new { message = exc.Message });
-                }
-                block.ParentId = request.ParentId;
-            }
-            block.Children = request.ChildrenIds != null ? dal.GetAllBy(b => request.ChildrenIds.Contains(b.Id)).ToList() : block.Children;
+                properties.LastModified = DateTime.UtcNow;
+                block.Properties = properties;
 
-            await dal.Update(block);
-            return Results.Ok();
+                block.Name = request.Name ?? block.Name;
+                block.Type = request.Type ?? block.Type;
+                if(request.ParentId != null)
+                {
+                    try
+                    {
+                        block.Parent = GetParent(request.ParentId, dal);
+                    }
+                    catch(InvalidOperationException exc)
+                    {
+                        return Results.BadRequest(new { message = exc.Message });
+                    }
+                    block.ParentId = request.ParentId;
+                }
+                block.Children = request.ChildrenIds != null ? dal.GetAllBy(b => request.ChildrenIds.Contains(b.Id)).ToList() : block.Children;
+
+                await dal.Update(block);
+                return Results.Ok();
+            }
+
+            return Results.Unauthorized();
         });
 
         group.MapDelete("{id}", async (
