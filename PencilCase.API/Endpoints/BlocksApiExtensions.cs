@@ -110,6 +110,7 @@ public static class BlocksExtensions
                 [FromBody] BlockPutRequest request,
                 ClaimsPrincipal claims) => 
         {
+            
             var block = dal.GetBy(b => b.Id == id);
             if(block == null)
                 return Results.NotFound();
@@ -126,17 +127,23 @@ public static class BlocksExtensions
                 {
                     return Results.BadRequest(new { message = exc.Message });
                 }
-
-                block.Name = request.Name;
-                block.Type = request.Type;
-                block.Parent = GetParent(request.ParentId, dal);
-                block.ParentId = request.ParentId;
-                properties.Order = request.Properties.Order;
-                properties.LastModified = DateTime.UtcNow;
-                properties.CellType = request.Properties.CellType;
-                properties.CellShownAnswerId = request.Properties.CellShownAnswerId;
-                block.Properties = properties;
-                block.Children = dal.GetAllBy(b => request.ChildrenIds.Contains(b.Id)).ToList();
+                try
+                {
+                    block.Name = request.Name;
+                    block.Type = request.Type;
+                    block.Parent = GetParent(request.ParentId, dal);
+                    block.ParentId = request.ParentId;
+                    properties.Order = request.Properties.Order;
+                    properties.LastModified = DateTime.UtcNow;
+                    properties.CellType = request.Properties.CellType;
+                    properties.CellShownAnswerId = request.Properties.CellShownAnswerId;
+                    block.Properties = properties;
+                    block.Children = dal.GetAllBy(b => request.ChildrenIds.Contains(b.Id)).ToList();
+                }
+                catch (NullReferenceException)
+                {
+                    return Results.BadRequest();
+                }
 
                 await dal.Update(block);
                 return Results.Ok();
