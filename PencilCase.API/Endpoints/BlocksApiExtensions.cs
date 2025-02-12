@@ -105,36 +105,44 @@ public static class BlocksExtensions
             Description = "Creates a new block and returns information about the created object. Created and Modified times are assigned to the current UTC time."
         });
 
-        group.MapPut("{id}", async (Guid id, [FromServices] IBlocksDal dal, [FromBody] BlockPutRequest request) => 
+        group.MapPut("{id}", async (Guid id, 
+                [FromServices] IBlocksDal dal, 
+                [FromBody] BlockPutRequest request,
+                ClaimsPrincipal claims) => 
         {
             var block = dal.GetBy(b => b.Id == id);
             if(block == null)
                 return Results.NotFound();
 
-            var properties = block.Properties ?? new BlockProperties();
-
-            try
+            if (ValidateOwner(block, claims))
             {
+                var properties = block.Properties ?? new BlockProperties();
+
+                try
+                {
+                    block.Parent = GetParent(request.ParentId, dal);
+                }
+                catch(InvalidOperationException exc)
+                {
+                    return Results.BadRequest(new { message = exc.Message });
+                }
+
+                block.Name = request.Name;
+                block.Type = request.Type;
                 block.Parent = GetParent(request.ParentId, dal);
-            }
-            catch(InvalidOperationException exc)
-            {
-                return Results.BadRequest(new { message = exc.Message });
+                block.ParentId = request.ParentId;
+                properties.Order = request.Properties.Order;
+                properties.LastModified = DateTime.UtcNow;
+                properties.CellType = request.Properties.CellType;
+                properties.CellShownAnswerId = request.Properties.CellShownAnswerId;
+                block.Properties = properties;
+                block.Children = dal.GetAllBy(b => request.ChildrenIds.Contains(b.Id)).ToList();
+
+                await dal.Update(block);
+                return Results.Ok();
             }
 
-            block.Name = request.Name;
-            block.Type = request.Type;
-            block.Parent = GetParent(request.ParentId, dal);
-            block.ParentId = request.ParentId;
-            properties.Order = request.Properties.Order;
-            properties.LastModified = DateTime.UtcNow;
-            properties.CellType = request.Properties.CellType;
-            properties.CellShownAnswerId = request.Properties.CellShownAnswerId;
-            block.Properties = properties;
-            block.Children = dal.GetAllBy(b => request.ChildrenIds.Contains(b.Id)).ToList();
-
-            await dal.Update(block);
-            return Results.Ok();
+            return Results.Unauthorized();
         })
         .WithName("Update")
         .WithOpenApi(x => new OpenApiOperation(x)
