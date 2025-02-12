@@ -178,17 +178,24 @@ public static class BlocksExtensions
             return Results.Ok();
         });
 
-        group.MapDelete("{id}", async ([FromServices] IBlocksDal dal, Guid id) => 
+        group.MapDelete("{id}", async (
+            [FromServices] IBlocksDal dal, 
+            Guid id,
+            ClaimsPrincipal claims) => 
         {
             var block = dal.GetBy(b => b.Id == id);
             if(block == null)
                 return Results.NotFound();
+            if (ValidateOwner(block, claims))
+            {
+                if(block.ParentId == null)
+                    return Results.BadRequest("Cannot delete root block!");
             
-            if(block.ParentId == null)
-                return Results.BadRequest("Cannot delete root block!");
-            
-            await dal.Delete(block);
-            return Results.NoContent();
+                await dal.Delete(block);
+                return Results.NoContent();
+            }
+
+            return Results.Unauthorized();
         });
     }
 
