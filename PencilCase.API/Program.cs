@@ -62,6 +62,7 @@ builder.Services
     .AddEntityFrameworkStores<AppUserDbContext>();
 
 builder.Services.AddScoped<ILlmApiEndpointsHandler, LlmApiEndpointsHandler>();
+builder.Services.AddScoped<IBlocksApiEndpointsHandler, BlocksApiEndpointsHandler>();
 
 builder.Services.AddScoped<PencilCase.Telemetry.Data.Database.DAL<RagOperationEntry>>();
 builder.Services.AddScoped<PencilCase.Telemetry.Data.Database.DAL<GenerationResultEntry>>();
