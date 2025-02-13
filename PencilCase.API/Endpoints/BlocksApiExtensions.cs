@@ -1,16 +1,10 @@
-using System.Diagnostics.SymbolStore;
-using System.Runtime.InteropServices;
 using System.Security.Claims;
 using Asp.Versioning;
 using Asp.Versioning.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using PencilCase.API.Handlers;
-using PencilCase.Shared.Data.Database;
 using PencilCase.Shared.DTOs.Requests.Blocks;
-using PencilCase.Shared.DTOs.Responses.BlockProperties;
-using PencilCase.Shared.DTOs.Responses.Blocks;
-using PencilCase.Shared.Models.Notebooks;
 
 namespace PencilCase.API.Endpoints;
 
