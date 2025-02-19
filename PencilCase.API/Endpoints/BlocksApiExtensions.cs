@@ -1,9 +1,11 @@
 using System.Security.Claims;
 using Asp.Versioning;
 using Asp.Versioning.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using PencilCase.API.Handlers;
+using PencilCase.Identity.Models;
 using PencilCase.Shared.DTOs.Requests.Blocks;
 
 namespace PencilCase.API.Endpoints;
@@ -76,6 +78,11 @@ public static class BlocksExtensions
             [FromServices] IBlocksApiEndpointsHandler handler, 
             Guid id,
             ClaimsPrincipal claims) => await handler.DeleteAsync(id, claims));
+        
+        group.MapGet("rootBlock", async (
+            [FromServices] IBlocksApiEndpointsHandler handler, 
+            [FromServices] UserManager<AppUser> userManager,
+        ClaimsPrincipal claims) => await handler.GetUserRootBlockAsync(claims,userManager));
     }
 
     
