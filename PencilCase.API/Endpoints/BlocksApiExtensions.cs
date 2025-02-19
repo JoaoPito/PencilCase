@@ -82,7 +82,13 @@ public static class BlocksExtensions
         group.MapGet("rootBlock", async (
             [FromServices] IBlocksApiEndpointsHandler handler, 
             [FromServices] UserManager<AppUser> userManager,
-        ClaimsPrincipal claims) => await handler.GetUserRootBlockAsync(claims,userManager));
+        ClaimsPrincipal claims) => await handler.GetUserRootBlockAsync(claims,userManager))
+            .WithName("GetUserRootBlock")
+            .WithOpenApi(x => new OpenApiOperation(x)
+            {
+                Summary = "Gets the user root block.",
+                Description = "Gets the user root block created at registration. Returns a JSON response of the contents of the block."
+            });
     }
 
     
