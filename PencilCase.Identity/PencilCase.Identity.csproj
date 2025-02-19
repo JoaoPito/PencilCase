@@ -12,6 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\PencilCase.Shared.Data\PencilCase.Shared.Data.csproj" />
       <ProjectReference Include="..\PencilCase.Shared.Models\PencilCase.Shared.Models.csproj" />
     </ItemGroup>
 
