@@ -1,4 +1,6 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using PencilCase.Identity.Models;
 using PencilCase.Shared.Data.Database;
 using PencilCase.Shared.DTOs.Requests.Blocks;
 using PencilCase.Shared.DTOs.Responses.BlockProperties;
@@ -162,6 +164,20 @@ public class BlocksApiEndpointsHandler(IBlocksDal dal) : IBlocksApiEndpointsHand
         }
 
         return Results.Unauthorized();
+    }
+
+    public async Task<IResult> GetUserRootBlockAsync(ClaimsPrincipal claims, UserManager<AppUser> userManager)
+    {
+        var userId = claims.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+        var user = await userManager.FindByIdAsync(userId);
+        if (user == null)
+            return Results.BadRequest();
+        
+        var rootBlock = dal.GetBy(b => b.Id == user.RootBlockId);
+        if (rootBlock == null)
+            return Results.NotFound();
+        
+        return Results.Ok(MapEntityToResponse(rootBlock));
     }
 
     private IEnumerable<BlockResponse> MapEntityListToResponseList(IEnumerable<Block> entities)
