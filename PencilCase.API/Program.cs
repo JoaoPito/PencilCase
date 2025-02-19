@@ -1,10 +1,12 @@
 using System.Net.Http.Headers;
 using Asp.Versioning;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PencilCase.API.Endpoints;
 using PencilCase.API.Handlers;
 using PencilCase.Identity.Data;
 using PencilCase.Identity.Models;
+using PencilCase.Identity.Services;
 using PencilCase.Shared.Data.Database;
 using PencilCase.LLM.Agents.Providers;
 using PencilCase.LLM.Agents.Providers.Gemini;
@@ -60,6 +62,7 @@ builder.Services.AddAuthentication();
 builder.Services
     .AddIdentityApiEndpoints<AppUser>()
     .AddEntityFrameworkStores<AppUserDbContext>();
+builder.Services.AddScoped<UserManager<AppUser>, AppUserManager>();
 
 builder.Services.AddScoped<ILlmApiEndpointsHandler, LlmApiEndpointsHandler>();
 builder.Services.AddScoped<IBlocksApiEndpointsHandler, BlocksApiEndpointsHandler>();
